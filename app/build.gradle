@@ -68,6 +68,12 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
 
+    // mask date edit text
+    implementation 'com.github.santalu:maskara:1.0.0'
+
+    // crop image  view
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
 
