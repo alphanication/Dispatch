@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentSignInBinding
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserAuth
@@ -36,6 +38,10 @@ class SignInFragment : Fragment() {
     }
 
     private fun setOnClickListeners() {
+        binding.buttonSignUp.setOnClickListener {
+            findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
+        }
+
         binding.buttonSignIn.setOnClickListener {
             if(validEditTextError()) {
                 userAuthEditTextInit()
