@@ -1,16 +1,24 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
+        maven { url "https://maven.google.com" }
         google()
         mavenCentral()
+        maven { url "https://jitpack.io"}
+        jcenter()
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
+        maven { url "https://maven.google.com" }
         google()
         mavenCentral()
+        maven { url "https://jitpack.io"}
+        jcenter()
     }
 }
 rootProject.name = "Dispatch"
 include ':app'
+include ':domain'
+include ':data'
