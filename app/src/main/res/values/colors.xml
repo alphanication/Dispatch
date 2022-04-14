@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="orange">#E14412</color>
 
     <color name="primary">#098E3A</color>
     <color name="primary_dark">#044008</color>
@@ -9,4 +10,5 @@
     <color name="secondary_text">#757575</color>
 
     <color name="background_edittext">#ECECEC</color>
+    <color name="background_shapeableimageview">#ECECEC</color>
 </resources>

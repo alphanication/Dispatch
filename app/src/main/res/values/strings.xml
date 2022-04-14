@@ -8,4 +8,13 @@
     <string name="fragmentSignIn_sign_up">SIGN UP</string>
     <string name="fragmentSignIn_sign_in">SIGN IN</string>
     <string name="fragmentSignIn_restore_password">Forgot your account password? Restore!</string>
+    <string name="fragmentSignUp_create_new_account">CREATE NEW ACCOUNT</string>
+    <string name="fragmentSignUp_add_image">ADD IMAGE</string>
+    <string name="fragmentSignUp_fullname">Enter fullname</string>
+    <string name="fragmentSignUp_date_birth">Enter date birth</string>
+    <string name="fragmentSignUp_email">Enter email</string>
+    <string name="fragmentSignUp_password">Enter password</string>
+    <string name="fragmentSignUp_confirm_password">Confirm password</string>
+    <string name="fragmentSignUp_back">BACK</string>
+    <string name="fragmentSignUp_sign_up">SIGN UP</string>
 </resources>
