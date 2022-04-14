@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Dispatch</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fragmentSignIn_app_description">- learn English in practice!</string>
+    <string name="fragmentSignIn_enter_email">Enter email address</string>
+    <string name="fragmentSignIn_enter_password">Enter password</string>
+    <string name="fragmentSignIn_sign_up">SIGN UP</string>
+    <string name="fragmentSignIn_sign_in">SIGN IN</string>
+    <string name="fragmentSignIn_restore_password">Forgot your account password? Restore!</string>
 </resources>
