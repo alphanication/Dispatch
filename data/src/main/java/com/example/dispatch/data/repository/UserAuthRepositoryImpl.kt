@@ -32,4 +32,8 @@ class UserAuthRepositoryImpl(private val userAuthStorage: UserAuthStorage) : Use
     override suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>> {
         return userAuthStorage.deleteCurrentUser()
     }
+
+    override suspend fun restorePasswordByEmail(email: String): Flow<FbResponse<Boolean>> {
+        return userAuthStorage.restorePasswordByEmail(email = email)
+    }
 }

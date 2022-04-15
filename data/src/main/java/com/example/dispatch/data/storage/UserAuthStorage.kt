@@ -14,4 +14,6 @@ interface UserAuthStorage {
     suspend fun getCurrentUserUid(): Flow<FbResponse<String>>
 
     suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>>
+
+    suspend fun restorePasswordByEmail(email: String): Flow<FbResponse<Boolean>>
 }
