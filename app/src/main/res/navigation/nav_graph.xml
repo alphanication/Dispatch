@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_restorePasswordFragment"
+            app:destination="@id/restorePasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.example.dispatch.presentation.registration.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" />
+    <fragment
+        android:id="@+id/restorePasswordFragment"
+        android:name="com.example.dispatch.presentation.restore.RestorePasswordFragment"
+        android:label="fragment_restore_password"
+        tools:layout="@layout/fragment_restore_password" />
 </navigation>
