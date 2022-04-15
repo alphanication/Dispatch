@@ -2,8 +2,10 @@ package com.example.dispatch.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.example.dispatch.R
 import com.example.dispatch.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,5 +25,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupNav() {
         navController = Navigation.findNavController(this, R.id.container_fragment)
+        NavigationUI.setupWithNavController(binding.bottomNavigation, navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+//                R.id.idfragment -> showBottomNav()
+                else -> hideBottomNav()
+            }
+        }
+    }
+
+    private fun showBottomNav() {
+        binding.bottomNavigation.visibility = View.VISIBLE
+
+    }
+
+    private fun hideBottomNav() {
+        binding.bottomNavigation.visibility = View.GONE
     }
 }
