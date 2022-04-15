@@ -17,4 +17,8 @@
     <string name="fragmentSignUp_confirm_password">Confirm password</string>
     <string name="fragmentSignUp_back">BACK</string>
     <string name="fragmentSignUp_sign_up">SIGN UP</string>
+    <string name="fragmentRestorePassword_restore_password">RESTORE PASSWORD</string>
+    <string name="fragmentRestorePassword_email">Enter email address</string>
+    <string name="fragmentRestorePassword_back">BACK</string>
+    <string name="fragmentRestorePassword_restore">RESTORE</string>
 </resources>
