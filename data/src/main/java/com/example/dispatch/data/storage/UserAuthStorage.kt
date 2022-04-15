@@ -8,4 +8,10 @@ import kotlinx.coroutines.flow.Flow
 @ExperimentalCoroutinesApi
 interface UserAuthStorage {
     suspend fun login(userAuthD: UserAuthD): Flow<FbResponse<Boolean>>
+
+    suspend fun register(userAuthD: UserAuthD): Flow<FbResponse<Boolean>>
+
+    suspend fun getCurrentUserUid(): Flow<FbResponse<String>>
+
+    suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>>
 }

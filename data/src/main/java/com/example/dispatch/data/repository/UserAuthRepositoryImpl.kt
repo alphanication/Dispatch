@@ -15,4 +15,21 @@ class UserAuthRepositoryImpl(private val userAuthStorage: UserAuthStorage) : Use
 
         return userAuthStorage.login(userAuthD = userAuthD)
     }
+
+    override suspend fun register(userAuth: UserAuth): Flow<FbResponse<Boolean>> {
+        val userAuthD = UserAuthD(
+            email = userAuth.email,
+            password = userAuth.password
+        )
+
+        return userAuthStorage.register(userAuthD = userAuthD)
+    }
+
+    override suspend fun getCurrentUserUid(): Flow<FbResponse<String>> {
+        return userAuthStorage.getCurrentUserUid()
+    }
+
+    override suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>> {
+        return userAuthStorage.deleteCurrentUser()
+    }
 }
