@@ -8,6 +8,6 @@ import kotlinx.coroutines.flow.Flow
 @ExperimentalCoroutinesApi
 class DeleteUserImageProfileUseCase(private val userDetailsRepository: UserDetailsRepository) {
     suspend fun execute(): Flow<FbResponse<Boolean>> {
-        return userDetailsRepository.deleteProfileImage()
+        return userDetailsRepository.deleteImageProfile()
     }
 }
