@@ -7,8 +7,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
-class SignInUserAuthUseCase(private val userAuthRepository: UserAuthRepository) {
+class SignUpUserAuthUseCase(private val userAuthRepository: UserAuthRepository) {
     suspend fun execute(userAuth: UserAuth): Flow<FbResponse<Boolean>> {
-        return userAuthRepository.login(userAuth = userAuth)
+        return userAuthRepository.register(userAuth = userAuth)
     }
 }
