@@ -48,6 +48,10 @@ class SignInFragment : Fragment() {
                 loginUserAuthObserve(userAuth = userAuth)
             }
         }
+
+        binding.textviewRestorePassword.setOnClickListener {
+            findNavController().navigate(R.id.action_signInFragment_to_restorePasswordFragment)
+        }
     }
 
     private fun loginUserAuthObserve(userAuth: UserAuth) {
