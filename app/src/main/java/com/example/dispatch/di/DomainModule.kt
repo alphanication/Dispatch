@@ -47,4 +47,9 @@ class DomainModule {
     fun providesSaveUseDetailsUseCase(userDetailsRepository: UserDetailsRepository) : SaveUserDetailsUseCase {
         return SaveUserDetailsUseCase(userDetailsRepository = userDetailsRepository)
     }
+
+    @Provides
+    fun providesRestoreUserByEmailUseCase(userAuthRepository: UserAuthRepository) : RestoreUserByEmailUseCase {
+        return RestoreUserByEmailUseCase(userAuthRepository = userAuthRepository)
+    }
 }
