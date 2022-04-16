@@ -1,13 +1,17 @@
 <resources>
     <string name="app_name">Dispatch</string>
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="bottomMenu_messages">Messages</string>
+    <string name="bottomMenu_profile">Profile</string>
+
     <string name="fragmentSignIn_app_description">- learn English in practice!</string>
     <string name="fragmentSignIn_enter_email">Enter email address</string>
     <string name="fragmentSignIn_enter_password">Enter password</string>
     <string name="fragmentSignIn_sign_up">SIGN UP</string>
     <string name="fragmentSignIn_sign_in">SIGN IN</string>
     <string name="fragmentSignIn_restore_password">Forgot your account password? Restore!</string>
+
     <string name="fragmentSignUp_create_new_account">CREATE NEW ACCOUNT</string>
     <string name="fragmentSignUp_add_image">ADD IMAGE</string>
     <string name="fragmentSignUp_fullname">Enter fullname</string>
@@ -17,10 +21,16 @@
     <string name="fragmentSignUp_confirm_password">Confirm password</string>
     <string name="fragmentSignUp_back">BACK</string>
     <string name="fragmentSignUp_sign_up">SIGN UP</string>
+
     <string name="fragmentRestorePassword_restore_password">RESTORE PASSWORD</string>
     <string name="fragmentRestorePassword_email">Enter email address</string>
     <string name="fragmentRestorePassword_back">BACK</string>
     <string name="fragmentRestorePassword_restore">RESTORE</string>
-    <string name="bottomMenu_messages">Messages</string>
-    <string name="bottomMenu_profile">Profile</string>
+
+    <string name="fragmentCurrentUserProfile_fullname">Change fullname</string>
+    <string name="fragmentCurrentUserProfile_date_birth">Change date birth</string>
+    <string name="fragmentCurrentUserProfile_email">Change email</string>
+    <string name="fragmentCurrentUserProfile_password">Change password</string>
+    <string name="fragmentCurrentUserProfile_update_profile">UPDATE PROFILE</string>
+    <string name="fragmentCurrentUserProfile_change_password">UPDATE PASSWORD</string>
 </resources>
