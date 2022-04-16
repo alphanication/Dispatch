@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentSignUpBinding
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserAuth
@@ -167,9 +168,8 @@ class SignUpFragment : Fragment() {
                         showProgressBar(false)
                     }
                     is FbResponse.Success -> {
-                        Toast.makeText(activity, "User register success!", Toast.LENGTH_SHORT)
-                            .show()
                         showProgressBar(false)
+                        findNavController().navigate(R.id.action_signUpFragment_to_currentUserProfileFragment)
                     }
                 }
             }

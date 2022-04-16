@@ -29,7 +29,7 @@
         tools:layout="@layout/fragment_sign_up" >
         <action
             android:id="@+id/action_signUpFragment_to_currentUserProfileFragment"
-            app:popUpTo="@+id/signUpFragment"
+            app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true"
             app:destination="@id/currentUserProfileFragment" />
     </fragment>
