@@ -18,6 +18,10 @@ class UserDetailsRepositoryImpl(private val userDetailsStorage: UserDetailsStora
         return userDetailsStorage.getCurrentUser()
     }
 
+    override suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>> {
+        return userDetailsStorage.deleteCurrentUser()
+    }
+
     override suspend fun saveImageProfile(imageUriStr: String): Flow<FbResponse<String>> {
         return userDetailsStorage.saveImageProfile(imageUriStr = imageUriStr)
     }
