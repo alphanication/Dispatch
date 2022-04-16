@@ -2,8 +2,8 @@ package com.example.dispatch.data.storage.firebase
 
 import android.net.Uri
 import com.example.dispatch.data.storage.UserDetailsStorage
-import com.example.dispatch.data.storage.models.UserDetailsD
 import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.UserDetails
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -21,11 +21,11 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         private val fDatabase = FirebaseDatabase.getInstance()
     }
 
-    override suspend fun save(userDetailsD: UserDetailsD): Flow<FbResponse<Boolean>> =
+    override suspend fun save(userDetails: UserDetails): Flow<FbResponse<Boolean>> =
         callbackFlow {
-            val refUser = fDatabase.getReference("/users/${userDetailsD.uid}")
+            val refUser = fDatabase.getReference("/users/${userDetails.uid}")
 
-            refUser.setValue(userDetailsD)
+            refUser.setValue(userDetails)
                 .addOnSuccessListener {
                     trySend(FbResponse.Success(data = true))
                 }
