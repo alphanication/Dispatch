@@ -66,7 +66,7 @@ class SignInFragment : Fragment() {
                 }
                 is FbResponse.Success -> {
                     showProgressBar(showOrNo = false)
-                    Toast.makeText(activity, "User auth success! :)", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_signInFragment_to_currentUserProfileFragment)
                 }
             }
         }
