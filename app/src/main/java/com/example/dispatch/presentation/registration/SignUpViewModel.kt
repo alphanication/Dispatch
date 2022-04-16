@@ -17,7 +17,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class SignUpViewModel @Inject constructor(
     private val getCurrentUserUidUseCase: GetCurrentUserUidUseCase,
-    private val deleteCurrentUserUseCase: DeleteCurrentUserUseCase,
+    private val deleteCurrentUserAuthUseCase: DeleteCurrentUserAuthUseCase,
     private val signUpUserAuthUseCase: SignUpUserAuthUseCase,
     private val saveUserDetailsUseCase: SaveUserDetailsUseCase,
     private val saveUserImageProfileUseCase: SaveUserImageProfileUseCase,
@@ -38,7 +38,7 @@ class SignUpViewModel @Inject constructor(
     fun deleteCurrentUser() = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
-            deleteCurrentUserUseCase.execute().collect { emit(it) }
+            deleteCurrentUserAuthUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e))
         }

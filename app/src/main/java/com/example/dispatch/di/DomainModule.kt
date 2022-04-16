@@ -24,8 +24,8 @@ class DomainModule {
     }
 
     @Provides
-    fun providesDeleteCurrentUserUseCase(userAuthRepository: UserAuthRepository) : DeleteCurrentUserUseCase {
-        return DeleteCurrentUserUseCase(userAuthRepository = userAuthRepository)
+    fun providesDeleteCurrentUserAuthUseCase(userAuthRepository: UserAuthRepository) : DeleteCurrentUserAuthUseCase {
+        return DeleteCurrentUserAuthUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides

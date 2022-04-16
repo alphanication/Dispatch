@@ -6,7 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
-class DeleteCurrentUserUseCase(private val userAuthRepository: UserAuthRepository) {
+class DeleteCurrentUserAuthUseCase(private val userAuthRepository: UserAuthRepository) {
     suspend fun execute(): Flow<FbResponse<Boolean>> {
         return userAuthRepository.deleteCurrentUser()
     }
