@@ -6,5 +6,6 @@
 
     <item
         android:title="@string/bottomMenu_profile"
+        android:id="@+id/currentUserProfileFragment"
         android:icon="@drawable/ic_person" />
 </menu>
