@@ -34,6 +34,16 @@
                 android:textStyle="bold" />
 
             <ImageView
+                android:id="@+id/imageview_delete_current_user"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:src="@drawable/ic_delete"
+                app:tint="@color/white" />
+
+            <ImageView
                 android:id="@+id/imageview_logout"
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_25sdp"
