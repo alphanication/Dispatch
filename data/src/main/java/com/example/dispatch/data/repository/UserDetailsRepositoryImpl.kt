@@ -14,6 +14,10 @@ class UserDetailsRepositoryImpl(private val userDetailsStorage: UserDetailsStora
         return userDetailsStorage.save(userDetails = userDetails)
     }
 
+    override suspend fun getCurrentUser(): Flow<FbResponse<UserDetails>> {
+        return userDetailsStorage.getCurrentUser()
+    }
+
     override suspend fun saveImageProfile(imageUriStr: String): Flow<FbResponse<String>> {
         return userDetailsStorage.saveImageProfile(imageUriStr = imageUriStr)
     }

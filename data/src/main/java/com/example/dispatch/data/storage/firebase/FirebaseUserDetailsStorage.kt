@@ -5,7 +5,10 @@ import com.example.dispatch.data.storage.UserDetailsStorage
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserDetails
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -19,13 +22,14 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         private val fAuth = FirebaseAuth.getInstance()
         private val fStorage = FirebaseStorage.getInstance()
         private val fDatabase = FirebaseDatabase.getInstance()
+
+        val uid = fAuth.currentUser?.uid.toString()
+        private val refCurrentUser = fDatabase.getReference("/users/${fAuth.currentUser?.uid}")
     }
 
     override suspend fun save(userDetails: UserDetails): Flow<FbResponse<Boolean>> =
         callbackFlow {
-            val refUser = fDatabase.getReference("/users/${userDetails.uid}")
-
-            refUser.setValue(userDetails)
+            refCurrentUser.setValue(userDetails)
                 .addOnSuccessListener {
                     trySend(FbResponse.Success(data = true))
                 }
@@ -36,9 +40,21 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
             awaitClose { this.cancel() }
         }
 
+    override suspend fun getCurrentUser(): Flow<FbResponse<UserDetails>> = callbackFlow {
+        refCurrentUser.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user: UserDetails = snapshot.getValue(UserDetails::class.java)!!
+                trySend(FbResponse.Success(data = user))
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                trySend(FbResponse.Fail(e = error.toException()))
+            }
+        })
+    }
+
     override suspend fun saveImageProfile(imageUriStr: String): Flow<FbResponse<String>> =
         callbackFlow {
-            val uid = fAuth.currentUser?.uid.toString()
             val imageProfileUri: Uri = Uri.parse(imageUriStr)
             val refImage = fStorage.getReference("/$uid/profile.jpg")
 
@@ -57,7 +73,6 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         }
 
     override suspend fun deleteImageProfile(): Flow<FbResponse<Boolean>> = callbackFlow {
-        val uid = fAuth.uid.toString()
         val refImage = fStorage.getReference("/$uid/profile.jpg")
 
         refImage.delete()
