@@ -18,6 +18,8 @@
             app:destination="@id/restorePasswordFragment" />
         <action
             android:id="@+id/action_signInFragment_to_currentUserProfileFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"
             app:destination="@id/currentUserProfileFragment" />
     </fragment>
     <fragment
@@ -27,6 +29,8 @@
         tools:layout="@layout/fragment_sign_up" >
         <action
             android:id="@+id/action_signUpFragment_to_currentUserProfileFragment"
+            app:popUpTo="@+id/signUpFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/currentUserProfileFragment" />
     </fragment>
     <fragment
