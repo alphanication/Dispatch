@@ -11,6 +11,8 @@ interface UserAuthRepository {
 
     suspend fun register(userAuth: UserAuth): Flow<FbResponse<Boolean>>
 
+    suspend fun checkSignedIn() : Flow<FbResponse<Boolean>>
+
     suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>>
 
     suspend fun getCurrentUserUid(): Flow<FbResponse<String>>
