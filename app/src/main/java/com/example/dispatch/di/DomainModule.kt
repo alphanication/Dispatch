@@ -34,6 +34,21 @@ class DomainModule {
     }
 
     @Provides
+    fun providesRestoreUserByEmailUseCase(userAuthRepository: UserAuthRepository) : RestoreUserByEmailUseCase {
+        return RestoreUserByEmailUseCase(userAuthRepository = userAuthRepository)
+    }
+
+    @Provides
+    fun providesChangeUserEmailUseCase(userAuthRepository: UserAuthRepository) : ChangeUserEmailUseCase {
+        return ChangeUserEmailUseCase(userAuthRepository = userAuthRepository)
+    }
+
+    @Provides
+    fun providesChangeUserPasswordUseCase(userAuthRepository: UserAuthRepository) : ChangeUserPasswordUseCase {
+        return ChangeUserPasswordUseCase(userAuthRepository = userAuthRepository)
+    }
+
+    @Provides
     fun providesSaveImageProfileUseCase(userDetailsRepository: UserDetailsRepository) : SaveUserImageProfileUseCase {
         return SaveUserImageProfileUseCase(userDetailsRepository = userDetailsRepository)
     }
@@ -49,7 +64,7 @@ class DomainModule {
     }
 
     @Provides
-    fun providesRestoreUserByEmailUseCase(userAuthRepository: UserAuthRepository) : RestoreUserByEmailUseCase {
-        return RestoreUserByEmailUseCase(userAuthRepository = userAuthRepository)
+    fun providesGetCurrentUserDetailsUseCase(userDetailsRepository: UserDetailsRepository) : GetCurrentUserDetailsUseCase {
+        return GetCurrentUserDetailsUseCase(userDetailsRepository = userDetailsRepository)
     }
 }
