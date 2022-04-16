@@ -67,4 +67,9 @@ class DomainModule {
     fun providesGetCurrentUserDetailsUseCase(userDetailsRepository: UserDetailsRepository) : GetCurrentUserDetailsUseCase {
         return GetCurrentUserDetailsUseCase(userDetailsRepository = userDetailsRepository)
     }
+
+    @Provides
+    fun providesDeleteCurrentUserDetailsUseCase(userDetailsRepository: UserDetailsRepository) : DeleteCurrentUserDetailsUseCase {
+        return DeleteCurrentUserDetailsUseCase(userDetailsRepository = userDetailsRepository)
+    }
 }
