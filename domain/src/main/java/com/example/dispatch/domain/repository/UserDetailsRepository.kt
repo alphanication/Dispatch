@@ -12,4 +12,6 @@ interface UserDetailsRepository {
     suspend fun deleteImageProfile(): Flow<FbResponse<Boolean>>
 
     suspend fun save(userDetails: UserDetails): Flow<FbResponse<Boolean>>
+
+    suspend fun getCurrentUser() : Flow<FbResponse<UserDetails>>
 }
