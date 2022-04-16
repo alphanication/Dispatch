@@ -1,8 +1,8 @@
 package com.example.dispatch.data.storage.firebase
 
 import com.example.dispatch.data.storage.UserAuthStorage
-import com.example.dispatch.data.storage.models.UserAuthD
 import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.UserAuth
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -16,8 +16,8 @@ class FirebaseUserAuthStorage : UserAuthStorage {
         private val fAuth = FirebaseAuth.getInstance()
     }
 
-    override suspend fun login(userAuthD: UserAuthD): Flow<FbResponse<Boolean>> = callbackFlow {
-        fAuth.signInWithEmailAndPassword(userAuthD.email, userAuthD.password)
+    override suspend fun login(userAuth: UserAuth): Flow<FbResponse<Boolean>> = callbackFlow {
+        fAuth.signInWithEmailAndPassword(userAuth.email, userAuth.password)
             .addOnSuccessListener {
                 trySend(FbResponse.Success(data = true))
             }.addOnFailureListener { e ->
@@ -27,9 +27,9 @@ class FirebaseUserAuthStorage : UserAuthStorage {
         awaitClose { this.cancel() }
     }
 
-    override suspend fun register(userAuthD: UserAuthD): Flow<FbResponse<Boolean>> =
+    override suspend fun register(userAuth: UserAuth): Flow<FbResponse<Boolean>> =
         callbackFlow {
-            fAuth.createUserWithEmailAndPassword(userAuthD.email, userAuthD.password)
+            fAuth.createUserWithEmailAndPassword(userAuth.email, userAuth.password)
                 .addOnSuccessListener {
                     trySend(FbResponse.Success(data = true))
                 }.addOnFailureListener { e ->

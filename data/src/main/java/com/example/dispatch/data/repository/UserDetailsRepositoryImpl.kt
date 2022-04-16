@@ -1,7 +1,6 @@
 package com.example.dispatch.data.repository
 
 import com.example.dispatch.data.storage.UserDetailsStorage
-import com.example.dispatch.data.storage.models.UserDetailsD
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserDetails
 import com.example.dispatch.domain.repository.UserDetailsRepository
@@ -12,15 +11,7 @@ import kotlinx.coroutines.flow.Flow
 class UserDetailsRepositoryImpl(private val userDetailsStorage: UserDetailsStorage) :
     UserDetailsRepository {
     override suspend fun save(userDetails: UserDetails): Flow<FbResponse<Boolean>> {
-        val userDetailsD = UserDetailsD(
-            userDetails.uid,
-            userDetails.fullname,
-            userDetails.dateBirth,
-            userDetails.email,
-            userDetails.photoProfileUrl
-        )
-
-        return userDetailsStorage.save(userDetailsD = userDetailsD)
+        return userDetailsStorage.save(userDetails = userDetails)
     }
 
     override suspend fun saveImageProfile(imageUriStr: String): Flow<FbResponse<String>> {
