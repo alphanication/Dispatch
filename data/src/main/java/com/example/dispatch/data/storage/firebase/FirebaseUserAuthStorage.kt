@@ -39,6 +39,18 @@ class FirebaseUserAuthStorage : UserAuthStorage {
             awaitClose { this.cancel() }
         }
 
+    override suspend fun checkSignedIn(): Flow<FbResponse<Boolean>> = callbackFlow {
+        val user = fAuth.currentUser
+
+        if (user != null) {
+            trySend(FbResponse.Success(true))
+        } else {
+            trySend(FbResponse.Fail(Exception("current user = null")))
+        }
+
+        awaitClose { this.cancel() }
+    }
+
     override suspend fun getCurrentUserUid(): Flow<FbResponse<String>> = callbackFlow {
         try {
             val uid = fAuth.currentUser?.uid.toString()

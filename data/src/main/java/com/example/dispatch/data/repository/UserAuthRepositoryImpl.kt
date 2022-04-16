@@ -17,6 +17,10 @@ class UserAuthRepositoryImpl(private val userAuthStorage: UserAuthStorage) : Use
         return userAuthStorage.register(userAuth = userAuth)
     }
 
+    override suspend fun checkSignedIn(): Flow<FbResponse<Boolean>> {
+        return userAuthStorage.checkSignedIn()
+    }
+
     override suspend fun getCurrentUserUid(): Flow<FbResponse<String>> {
         return userAuthStorage.getCurrentUserUid()
     }
