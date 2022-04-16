@@ -53,6 +53,16 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         })
     }
 
+    override suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>> = callbackFlow {
+        refCurrentUser.removeValue().addOnSuccessListener {
+            trySend(FbResponse.Success(data = true))
+        }.addOnFailureListener { e ->
+            trySend(FbResponse.Fail(e = e))
+        }
+
+        awaitClose { this.cancel() }
+    }
+
     override suspend fun saveImageProfile(imageUriStr: String): Flow<FbResponse<String>> =
         callbackFlow {
             val imageProfileUri: Uri = Uri.parse(imageUriStr)
