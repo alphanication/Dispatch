@@ -115,4 +115,10 @@ class FirebaseUserAuthStorage : UserAuthStorage {
         awaitClose { this.cancel() }
     }
 
+    override suspend fun signOut(): Flow<FbResponse<Boolean>> = callbackFlow {
+        fAuth.signOut()
+        trySend(FbResponse.Success(true))
+
+        awaitClose { this.cancel() }
+    }
 }

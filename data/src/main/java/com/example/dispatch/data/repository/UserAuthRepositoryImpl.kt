@@ -40,4 +40,8 @@ class UserAuthRepositoryImpl(private val userAuthStorage: UserAuthStorage) : Use
     override suspend fun changePassword(password: String): Flow<FbResponse<Boolean>> {
         return userAuthStorage.changePassword(password = password)
     }
+
+    override suspend fun signOut(): Flow<FbResponse<Boolean>> {
+        return userAuthStorage.signOut()
+    }
 }
