@@ -42,5 +42,11 @@
         android:id="@+id/currentUserProfileFragment"
         android:name="com.example.dispatch.presentation.profile.CurrentUserProfileFragment"
         android:label="fragment_current_user_profile"
-        tools:layout="@layout/fragment_current_user_profile" />
+        tools:layout="@layout/fragment_current_user_profile" >
+        <action
+            android:id="@+id/action_currentUserProfileFragment_to_signInFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"
+            app:destination="@id/signInFragment" />
+    </fragment>
 </navigation>

@@ -1,5 +1,6 @@
 package com.example.dispatch.data.storage.firebase
 
+import android.util.Log
 import com.example.dispatch.data.storage.UserAuthStorage
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserAuth

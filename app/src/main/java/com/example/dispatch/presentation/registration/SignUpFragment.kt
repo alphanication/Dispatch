@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -127,6 +128,7 @@ class SignUpFragment : Fragment() {
                 }
                 is FbResponse.Success -> {
                     userDetails.uid = result.data
+                    Log.d("logUserUID", "result: ${result.data}")
                     val imageUriCache = viewModel.cropImageView.value.toString()
                     if (imageUriCache.isNotEmpty()) {
                         saveUserImageObserver(imageUriCache = imageUriCache)
@@ -169,6 +171,7 @@ class SignUpFragment : Fragment() {
                     }
                     is FbResponse.Success -> {
                         showProgressBar(false)
+                        Log.d("logUserUID", "resultx: ${userDetails.uid}")
                         findNavController().navigate(R.id.action_signUpFragment_to_currentUserProfileFragment)
                     }
                 }

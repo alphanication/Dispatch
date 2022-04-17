@@ -49,6 +49,11 @@ class DomainModule {
     }
 
     @Provides
+    fun providesUserAuthSignOutUseCase(userAuthRepository: UserAuthRepository) : UserAuthSignOutUseCase {
+        return UserAuthSignOutUseCase(userAuthRepository = userAuthRepository)
+    }
+
+    @Provides
     fun providesSaveImageProfileUseCase(userDetailsRepository: UserDetailsRepository) : SaveUserImageProfileUseCase {
         return SaveUserImageProfileUseCase(userDetailsRepository = userDetailsRepository)
     }
