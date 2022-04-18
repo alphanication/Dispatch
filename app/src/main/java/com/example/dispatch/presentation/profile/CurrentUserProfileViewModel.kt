@@ -3,10 +3,7 @@ package com.example.dispatch.presentation.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.example.dispatch.domain.models.FbResponse
-import com.example.dispatch.domain.usecase.DeleteCurrentUserAuthUseCase
-import com.example.dispatch.domain.usecase.DeleteCurrentUserDetailsUseCase
-import com.example.dispatch.domain.usecase.DeleteUserImageProfileUseCase
-import com.example.dispatch.domain.usecase.UserAuthSignOutUseCase
+import com.example.dispatch.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,7 +16,8 @@ class CurrentUserProfileViewModel @Inject constructor(
     private val userAuthSignOutUseCase: UserAuthSignOutUseCase,
     private val deleteUserImageProfileUseCase: DeleteUserImageProfileUseCase,
     private val deleteCurrentUserAuthUseCase: DeleteCurrentUserAuthUseCase,
-    private val deleteCurrentUserDetailsUseCase: DeleteCurrentUserDetailsUseCase
+    private val deleteCurrentUserDetailsUseCase: DeleteCurrentUserDetailsUseCase,
+    private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase
 ) : ViewModel() {
     fun userSignOut() = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
@@ -52,6 +50,15 @@ class CurrentUserProfileViewModel @Inject constructor(
         emit(FbResponse.Loading())
         try {
             deleteCurrentUserDetailsUseCase.execute().collect { emit(it) }
+        } catch (e: Exception) {
+            emit(FbResponse.Fail(e = e))
+        }
+    }
+
+    fun getCurrentUserDetails() = liveData(Dispatchers.IO) {
+        emit(FbResponse.Loading())
+        try {
+            getCurrentUserDetailsUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e = e))
         }
