@@ -8,9 +8,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentCurrentUserProfileBinding
 import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.UserDetails
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -31,6 +33,7 @@ class CurrentUserProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        getCurrentUserDetailsObserve()
         setOnClickListeners()
     }
 
@@ -99,6 +102,37 @@ class CurrentUserProfileFragment : Fragment() {
                     findNavController().navigate(R.id.action_currentUserProfileFragment_to_signInFragment)
                 }
             }
+        }
+    }
+
+    private fun getCurrentUserDetailsObserve() {
+        viewModel.getCurrentUserDetails().observe(viewLifecycleOwner) { result ->
+            when(result) {
+                is FbResponse.Loading -> { showProgressBarLoadInfoUser(showOrNo = true) }
+                is FbResponse.Fail -> {}
+                is FbResponse.Success -> {
+                    showProgressBarLoadInfoUser(showOrNo = false)
+                    val userDetails = result.data
+                    binding.textviewCurrentUserName.text = userDetails.fullname
+                    binding.edittextFullname.setText(userDetails.fullname)
+                    binding.edittextDateBirth.setText(userDetails.dateBirth)
+                    binding.edittextEmail.setText(userDetails.email)
+                    Glide.with(this)
+                        .load(userDetails.photoProfileUrl)
+                        .fitCenter()
+                        .into(binding.shapeableimagePhotoUser)
+                }
+            }
+        }
+    }
+
+    private fun showProgressBarLoadInfoUser(showOrNo: Boolean) {
+        if (showOrNo){
+            binding.textviewCurrentUserName.visibility = View.INVISIBLE
+            binding.progressbarUserInfoLoad.visibility = View.VISIBLE
+        } else {
+            binding.progressbarUserInfoLoad.visibility = View.INVISIBLE
+            binding.textviewCurrentUserName.visibility = View.VISIBLE
         }
     }
 

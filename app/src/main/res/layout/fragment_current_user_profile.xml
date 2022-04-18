@@ -25,6 +25,7 @@
             <TextView
                 android:id="@+id/textview_current_user_name"
                 android:layout_width="wrap_content"
+                android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/_60sdp"
@@ -62,6 +63,15 @@
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:visibility="invisible" />
 
+            <ProgressBar
+                android:id="@+id/progressbar_user_info_load"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:visibility="invisible" />
+
         </FrameLayout>
 
         <LinearLayout
@@ -89,6 +99,8 @@
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_100sdp"
                     android:layout_gravity="center"
+                    app:strokeWidth="@dimen/_1sdp"
+                    app:strokeColor="@color/black"
                     android:background="@drawable/background_shapeableimageview"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/circleShapeableImageView" />

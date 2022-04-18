@@ -1,6 +1,7 @@
 package com.example.dispatch.data.storage.firebase
 
 import android.net.Uri
+import android.util.Log
 import com.example.dispatch.data.storage.UserDetailsStorage
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserDetails
@@ -46,14 +47,24 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
 
         refCurrentUser.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val user: UserDetails = snapshot.getValue(UserDetails::class.java)!!
-                trySend(FbResponse.Success(data = user))
+                Log.d("userGET", "user get +-")
+                val user: UserDetails? = snapshot.getValue(UserDetails::class.java)
+                Log.d("userGET", "user get +")
+                if (user != null) {
+                    trySend(FbResponse.Success(data = user))
+                    Log.d("userGET", "user get data")
+                } else {
+                    trySend(FbResponse.Fail(e = Exception("user null")))
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 trySend(FbResponse.Fail(e = error.toException()))
+                Log.d("userGET", "exception: ${error.toException()}")
             }
         })
+
+        awaitClose { this.cancel() }
     }
 
     override suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>> = callbackFlow {
