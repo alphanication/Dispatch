@@ -39,13 +39,13 @@ class DomainModule {
     }
 
     @Provides
-    fun providesChangeUserEmailUseCase(userAuthRepository: UserAuthRepository) : ChangeUserEmailUseCase {
-        return ChangeUserEmailUseCase(userAuthRepository = userAuthRepository)
+    fun providesChangeUserAuthEmailUseCase(userAuthRepository: UserAuthRepository) : ChangeUserAuthEmailUseCase {
+        return ChangeUserAuthEmailUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides
-    fun providesChangeUserPasswordUseCase(userAuthRepository: UserAuthRepository) : ChangeUserPasswordUseCase {
-        return ChangeUserPasswordUseCase(userAuthRepository = userAuthRepository)
+    fun providesChangeUserAuthPasswordUseCase(userAuthRepository: UserAuthRepository) : ChangeUserAuthPasswordUseCase {
+        return ChangeUserAuthPasswordUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides
