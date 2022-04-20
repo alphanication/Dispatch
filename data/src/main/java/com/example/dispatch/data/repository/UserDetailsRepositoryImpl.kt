@@ -22,6 +22,22 @@ class UserDetailsRepositoryImpl(private val userDetailsStorage: UserDetailsStora
         return userDetailsStorage.deleteCurrentUser()
     }
 
+    override suspend fun changeFullname(fullname: String): Flow<FbResponse<Boolean>> {
+        return userDetailsStorage.changeFullname(fullname = fullname)
+    }
+
+    override suspend fun changeDateBirth(dateBirth: String): Flow<FbResponse<Boolean>> {
+        return userDetailsStorage.changeDateBirth(dateBirth = dateBirth)
+    }
+
+    override suspend fun changePhotoProfileUrl(photoUrl: String): Flow<FbResponse<Boolean>> {
+        return userDetailsStorage.changePhotoProfileUrl(photoUrl = photoUrl)
+    }
+
+    override suspend fun changeEmailAddress(email: String): Flow<FbResponse<Boolean>> {
+        return userDetailsStorage.changeEmailAddress(email = email)
+    }
+
     override suspend fun saveImageProfile(imageUriStr: String): Flow<FbResponse<String>> {
         return userDetailsStorage.saveImageProfile(imageUriStr = imageUriStr)
     }

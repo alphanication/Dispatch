@@ -47,12 +47,9 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
 
         refCurrentUser.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("userGET", "user get +-")
                 val user: UserDetails? = snapshot.getValue(UserDetails::class.java)
-                Log.d("userGET", "user get +")
                 if (user != null) {
                     trySend(FbResponse.Success(data = user))
-                    Log.d("userGET", "user get data")
                 } else {
                     trySend(FbResponse.Fail(e = Exception("user null")))
                 }
@@ -79,6 +76,67 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
 
         awaitClose { this.cancel() }
     }
+
+    override suspend fun changeFullname(fullname: String): Flow<FbResponse<Boolean>> =
+        callbackFlow {
+
+            val uid = fAuth.currentUser?.uid.toString()
+            val refCurrentUser = fDatabase.getReference("/users/$uid")
+
+            refCurrentUser.child("fullname").setValue(fullname)
+                .addOnSuccessListener {
+                    trySend(FbResponse.Success(data = true))
+                }.addOnFailureListener { e ->
+                    trySend(FbResponse.Fail(e = e))
+                }
+
+            awaitClose { this.cancel() }
+        }
+
+    override suspend fun changeDateBirth(dateBirth: String): Flow<FbResponse<Boolean>> =
+        callbackFlow {
+            val uid = fAuth.currentUser?.uid.toString()
+            val refCurrentUser = fDatabase.getReference("/users/$uid")
+
+            refCurrentUser.child("dateBirth").setValue(dateBirth)
+                .addOnSuccessListener {
+                    trySend(FbResponse.Success(data = true))
+                }.addOnFailureListener { e ->
+                    trySend(FbResponse.Fail(e = e))
+                }
+
+            awaitClose { this.cancel() }
+        }
+
+    override suspend fun changePhotoProfileUrl(photoUrl: String): Flow<FbResponse<Boolean>> =
+        callbackFlow {
+            val uid = fAuth.currentUser?.uid.toString()
+            val refCurrentUser = fDatabase.getReference("/users/$uid")
+
+            refCurrentUser.child("photoProfileUrl").setValue(photoUrl)
+                .addOnSuccessListener {
+                    trySend(FbResponse.Success(data = true))
+                }.addOnFailureListener { e ->
+                    trySend(FbResponse.Fail(e = e))
+                }
+
+            awaitClose { this.cancel() }
+        }
+
+    override suspend fun changeEmailAddress(email: String): Flow<FbResponse<Boolean>> =
+        callbackFlow {
+            val uid = fAuth.currentUser?.uid.toString()
+            val refCurrentUser = fDatabase.getReference("/users/$uid")
+
+            refCurrentUser.child("email").setValue(email)
+                .addOnSuccessListener {
+                    trySend(FbResponse.Success(data = true))
+                }.addOnFailureListener { e ->
+                    trySend(FbResponse.Fail(e = e))
+                }
+
+            awaitClose { this.cancel() }
+        }
 
     override suspend fun saveImageProfile(imageUriStr: String): Flow<FbResponse<String>> =
         callbackFlow {
