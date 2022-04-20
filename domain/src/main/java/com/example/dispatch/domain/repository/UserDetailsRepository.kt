@@ -16,4 +16,12 @@ interface UserDetailsRepository {
     suspend fun getCurrentUser() : Flow<FbResponse<UserDetails>>
 
     suspend fun deleteCurrentUser() : Flow<FbResponse<Boolean>>
+
+    suspend fun changeFullname(fullname: String) : Flow<FbResponse<Boolean>>
+
+    suspend fun changeDateBirth(dateBirth: String) : Flow<FbResponse<Boolean>>
+
+    suspend fun changePhotoProfileUrl(photoUrl: String) : Flow<FbResponse<Boolean>>
+
+    suspend fun changeEmailAddress(email: String) : Flow<FbResponse<Boolean>>
 }
