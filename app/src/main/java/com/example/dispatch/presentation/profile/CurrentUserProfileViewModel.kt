@@ -21,7 +21,7 @@ class CurrentUserProfileViewModel @Inject constructor(
     private val deleteCurrentUserDetailsUseCase: DeleteCurrentUserDetailsUseCase,
     private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase,
     private val saveUserImageProfileUseCase: SaveUserImageProfileUseCase,
-    private val saveUserDetailsUseCase: SaveUserDetailsUseCase
+    private val changeUserDetailsPhotoProfileUrlUseCase: ChangeUserDetailsPhotoProfileUrlUseCase
 ) : ViewModel() {
     private val _cropImageView = MutableLiveData("")
     val cropImageView: LiveData<String> = _cropImageView
@@ -80,10 +80,10 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun saveUser(userDetails: UserDetails) = liveData(Dispatchers.IO) {
+    fun changeUserDetailsPhotoProfile(photoProfileUrl: String) = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
-            saveUserDetailsUseCase.execute(userDetails = userDetails).collect { emit(it) }
+            changeUserDetailsPhotoProfileUrlUseCase.execute(photoUrl = photoProfileUrl).collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e))
         }

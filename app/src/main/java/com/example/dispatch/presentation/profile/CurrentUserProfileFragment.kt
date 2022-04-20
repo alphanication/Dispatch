@@ -190,22 +190,22 @@ class CurrentUserProfileFragment : Fragment() {
                     is FbResponse.Success -> {
                         viewModel.deleteUserImageLiveData()
 
-                        userDetails.photoProfileUrl = result.data
-                        saveUserObserve(userDetails = userDetails)
+                        val photoProfileUrl = result.data
+                        changeUserPhotoProfileObserve(photoProfileUrl = photoProfileUrl)
                     }
                 }
             }
     }
 
-    private fun saveUserObserve(userDetails: UserDetails) {
-        viewModel.saveUser(userDetails = userDetails)
+    private fun changeUserPhotoProfileObserve(photoProfileUrl: String) {
+        viewModel.changeUserDetailsPhotoProfile(photoProfileUrl = photoProfileUrl)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is FbResponse.Loading -> {
                         showProgressBarLoadInfoUser(showOrNo = true)
                     }
                     is FbResponse.Fail -> {
-                        Toast.makeText(activity, "Save user info false :(", Toast.LENGTH_SHORT)
+                        Toast.makeText(activity, "Save user photo false :(", Toast.LENGTH_SHORT)
                             .show()
                         showProgressBarLoadInfoUser(showOrNo = false)
                     }
