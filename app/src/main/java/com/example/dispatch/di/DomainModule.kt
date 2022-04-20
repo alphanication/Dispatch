@@ -14,67 +14,87 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @InstallIn(SingletonComponent::class)
 class DomainModule {
     @Provides
-    fun providesSignInUserAuthUseCase(userAuthRepository: UserAuthRepository) : SignInUserAuthUseCase {
+    fun providesSignInUserAuthUseCase(userAuthRepository: UserAuthRepository): SignInUserAuthUseCase {
         return SignInUserAuthUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides
-    fun providesSignUpUserAuthUseCase(userAuthRepository: UserAuthRepository) : SignUpUserAuthUseCase {
+    fun providesSignUpUserAuthUseCase(userAuthRepository: UserAuthRepository): SignUpUserAuthUseCase {
         return SignUpUserAuthUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides
-    fun providesDeleteCurrentUserAuthUseCase(userAuthRepository: UserAuthRepository) : DeleteCurrentUserAuthUseCase {
+    fun providesDeleteCurrentUserAuthUseCase(userAuthRepository: UserAuthRepository): DeleteCurrentUserAuthUseCase {
         return DeleteCurrentUserAuthUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides
-    fun providesGetCurrentUserUidUseCase(userAuthRepository: UserAuthRepository) : GetCurrentUserUidUseCase {
+    fun providesGetCurrentUserUidUseCase(userAuthRepository: UserAuthRepository): GetCurrentUserUidUseCase {
         return GetCurrentUserUidUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides
-    fun providesRestoreUserByEmailUseCase(userAuthRepository: UserAuthRepository) : RestoreUserByEmailUseCase {
+    fun providesRestoreUserByEmailUseCase(userAuthRepository: UserAuthRepository): RestoreUserByEmailUseCase {
         return RestoreUserByEmailUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides
-    fun providesChangeUserAuthEmailUseCase(userAuthRepository: UserAuthRepository) : ChangeUserAuthEmailUseCase {
+    fun providesChangeUserAuthEmailUseCase(userAuthRepository: UserAuthRepository): ChangeUserAuthEmailUseCase {
         return ChangeUserAuthEmailUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides
-    fun providesChangeUserAuthPasswordUseCase(userAuthRepository: UserAuthRepository) : ChangeUserAuthPasswordUseCase {
+    fun providesChangeUserAuthPasswordUseCase(userAuthRepository: UserAuthRepository): ChangeUserAuthPasswordUseCase {
         return ChangeUserAuthPasswordUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides
-    fun providesUserAuthSignOutUseCase(userAuthRepository: UserAuthRepository) : UserAuthSignOutUseCase {
+    fun providesUserAuthSignOutUseCase(userAuthRepository: UserAuthRepository): UserAuthSignOutUseCase {
         return UserAuthSignOutUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides
-    fun providesSaveImageProfileUseCase(userDetailsRepository: UserDetailsRepository) : SaveUserImageProfileUseCase {
+    fun providesSaveImageProfileUseCase(userDetailsRepository: UserDetailsRepository): SaveUserImageProfileUseCase {
         return SaveUserImageProfileUseCase(userDetailsRepository = userDetailsRepository)
     }
 
     @Provides
-    fun providesDeleteUserImageProfileUseCase(userDetailsRepository: UserDetailsRepository) : DeleteUserImageProfileUseCase {
+    fun providesDeleteUserImageProfileUseCase(userDetailsRepository: UserDetailsRepository): DeleteUserImageProfileUseCase {
         return DeleteUserImageProfileUseCase(userDetailsRepository = userDetailsRepository)
     }
 
     @Provides
-    fun providesSaveUseDetailsUseCase(userDetailsRepository: UserDetailsRepository) : SaveUserDetailsUseCase {
+    fun providesSaveUseDetailsUseCase(userDetailsRepository: UserDetailsRepository): SaveUserDetailsUseCase {
         return SaveUserDetailsUseCase(userDetailsRepository = userDetailsRepository)
     }
 
     @Provides
-    fun providesGetCurrentUserDetailsUseCase(userDetailsRepository: UserDetailsRepository) : GetCurrentUserDetailsUseCase {
+    fun providesGetCurrentUserDetailsUseCase(userDetailsRepository: UserDetailsRepository): GetCurrentUserDetailsUseCase {
         return GetCurrentUserDetailsUseCase(userDetailsRepository = userDetailsRepository)
     }
 
     @Provides
-    fun providesDeleteCurrentUserDetailsUseCase(userDetailsRepository: UserDetailsRepository) : DeleteCurrentUserDetailsUseCase {
+    fun providesDeleteCurrentUserDetailsUseCase(userDetailsRepository: UserDetailsRepository): DeleteCurrentUserDetailsUseCase {
         return DeleteCurrentUserDetailsUseCase(userDetailsRepository = userDetailsRepository)
+    }
+
+    @Provides
+    fun providesChangeUserDetailsDateBirthUseCase(userDetailsRepository: UserDetailsRepository): ChangeUserDetailsDateBirthUseCase {
+        return ChangeUserDetailsDateBirthUseCase(userDetailsRepository = userDetailsRepository)
+    }
+
+    @Provides
+    fun providesChangeUserDetailsFullnameUseCase(userDetailsRepository: UserDetailsRepository): ChangeUserDetailsFullnameUseCase {
+        return ChangeUserDetailsFullnameUseCase(userDetailsRepository = userDetailsRepository)
+    }
+
+    @Provides
+    fun providesChangeUserDetailsEmailUseCase(userDetailsRepository: UserDetailsRepository): ChangeUserDetailsEmailUseCase {
+        return ChangeUserDetailsEmailUseCase(userDetailsRepository = userDetailsRepository)
+    }
+
+    @Provides
+    fun providesChangeUserDetailsPhotoProfileUrlUseCase(userDetailsRepository: UserDetailsRepository): ChangeUserDetailsPhotoProfileUrlUseCase {
+        return ChangeUserDetailsPhotoProfileUrlUseCase(userDetailsRepository = userDetailsRepository)
     }
 }
