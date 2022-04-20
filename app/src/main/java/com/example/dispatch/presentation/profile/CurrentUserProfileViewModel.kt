@@ -1,13 +1,15 @@
 package com.example.dispatch.presentation.profile
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.UserDetails
 import com.example.dispatch.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,8 +19,13 @@ class CurrentUserProfileViewModel @Inject constructor(
     private val deleteUserImageProfileUseCase: DeleteUserImageProfileUseCase,
     private val deleteCurrentUserAuthUseCase: DeleteCurrentUserAuthUseCase,
     private val deleteCurrentUserDetailsUseCase: DeleteCurrentUserDetailsUseCase,
-    private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase
+    private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase,
+    private val saveUserImageProfileUseCase: SaveUserImageProfileUseCase,
+    private val saveUserDetailsUseCase: SaveUserDetailsUseCase
 ) : ViewModel() {
+    private val _cropImageView = MutableLiveData("")
+    val cropImageView: LiveData<String> = _cropImageView
+
     fun userSignOut() = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
@@ -62,5 +69,33 @@ class CurrentUserProfileViewModel @Inject constructor(
         } catch (e: Exception) {
             emit(FbResponse.Fail(e = e))
         }
+    }
+
+    fun saveUserProfileImage(imageUriCache: String) = liveData(Dispatchers.IO) {
+        emit(FbResponse.Loading())
+        try {
+            saveUserImageProfileUseCase.execute(imageUriStr = imageUriCache).collect { emit(it) }
+        } catch (e: Exception) {
+            emit(FbResponse.Fail(e))
+        }
+    }
+
+    fun saveUser(userDetails: UserDetails) = liveData(Dispatchers.IO) {
+        emit(FbResponse.Loading())
+        try {
+            saveUserDetailsUseCase.execute(userDetails = userDetails).collect { emit(it) }
+        } catch (e: Exception) {
+            emit(FbResponse.Fail(e))
+        }
+    }
+
+    fun saveUserImageLiveData(textUri: String) {
+        if (textUri.isNotEmpty()) {
+            _cropImageView.value = textUri
+        }
+    }
+
+    fun deleteUserImageLiveData() {
+        _cropImageView.value = ""
     }
 }
