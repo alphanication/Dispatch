@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class GetCurrentUserDetailsUseCase(private val userDetailsRepository: UserDetailsRepository) {
-    suspend fun execute() : Flow<FbResponse<UserDetails>> {
+    suspend fun execute(): Flow<FbResponse<UserDetails>> {
         return userDetailsRepository.getCurrentUser()
     }
 }

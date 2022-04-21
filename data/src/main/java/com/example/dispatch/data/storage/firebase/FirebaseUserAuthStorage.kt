@@ -1,6 +1,5 @@
 package com.example.dispatch.data.storage.firebase
 
-import android.util.Log
 import com.example.dispatch.data.storage.UserAuthStorage
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserAuth
@@ -44,7 +43,7 @@ class FirebaseUserAuthStorage : UserAuthStorage {
         val user = fAuth.currentUser
 
         if (user != null) {
-            trySend(FbResponse.Success(true))
+            trySend(FbResponse.Success(data = true))
         } else {
             trySend(FbResponse.Fail(Exception("current user = null")))
         }
@@ -118,7 +117,7 @@ class FirebaseUserAuthStorage : UserAuthStorage {
 
     override suspend fun signOut(): Flow<FbResponse<Boolean>> = callbackFlow {
         fAuth.signOut()
-        trySend(FbResponse.Success(true))
+        trySend(FbResponse.Success(data = true))
 
         awaitClose { this.cancel() }
     }

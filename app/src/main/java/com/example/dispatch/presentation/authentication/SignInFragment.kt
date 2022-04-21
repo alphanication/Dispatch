@@ -2,11 +2,11 @@ package com.example.dispatch.presentation.authentication
 
 import android.os.Bundle
 import android.util.Patterns
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
@@ -43,7 +43,7 @@ class SignInFragment : Fragment() {
         }
 
         binding.buttonSignIn.setOnClickListener {
-            if(validEditTextError()) {
+            if (validEditTextError()) {
                 userAuthEditTextInit()
                 loginUserAuthObserve(userAuth = userAuth)
             }
@@ -72,7 +72,7 @@ class SignInFragment : Fragment() {
         }
     }
 
-    private fun validEditTextError() : Boolean {
+    private fun validEditTextError(): Boolean {
         val email = binding.edittextEmail.text.toString()
         val password = binding.edittextPassword.text.toString()
 

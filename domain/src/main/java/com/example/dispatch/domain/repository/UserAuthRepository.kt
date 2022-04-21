@@ -11,7 +11,7 @@ interface UserAuthRepository {
 
     suspend fun register(userAuth: UserAuth): Flow<FbResponse<Boolean>>
 
-    suspend fun checkSignedIn() : Flow<FbResponse<Boolean>>
+    suspend fun checkSignedIn(): Flow<FbResponse<Boolean>>
 
     suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>>
 
@@ -19,9 +19,9 @@ interface UserAuthRepository {
 
     suspend fun restorePasswordByEmail(email: String): Flow<FbResponse<Boolean>>
 
-    suspend fun changeEmail(email: String) : Flow<FbResponse<Boolean>>
+    suspend fun changeEmail(email: String): Flow<FbResponse<Boolean>>
 
-    suspend fun changePassword(password: String) : Flow<FbResponse<Boolean>>
+    suspend fun changePassword(password: String): Flow<FbResponse<Boolean>>
 
-    suspend fun signOut() : Flow<FbResponse<Boolean>>
+    suspend fun signOut(): Flow<FbResponse<Boolean>>
 }
