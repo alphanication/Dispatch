@@ -5,5 +5,6 @@ data class UserDetails(
     var fullname: String = "",
     var dateBirth: String = "",
     var email: String = "",
+    var password: String = "",
     var photoProfileUrl: String = ""
 )

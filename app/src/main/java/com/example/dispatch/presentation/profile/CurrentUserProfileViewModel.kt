@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.example.dispatch.domain.models.FbResponse
-import com.example.dispatch.domain.models.UserDetails
 import com.example.dispatch.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +82,8 @@ class CurrentUserProfileViewModel @Inject constructor(
     fun changeUserDetailsPhotoProfile(photoProfileUrl: String) = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
-            changeUserDetailsPhotoProfileUrlUseCase.execute(photoUrl = photoProfileUrl).collect { emit(it) }
+            changeUserDetailsPhotoProfileUrlUseCase.execute(photoUrl = photoProfileUrl)
+                .collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e))
         }

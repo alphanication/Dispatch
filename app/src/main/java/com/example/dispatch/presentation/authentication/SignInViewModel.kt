@@ -20,7 +20,7 @@ class SignInViewModel @Inject constructor(
         try {
             signInUserAuthUseCase.execute(userAuth = userAuth).collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e))
+            emit(FbResponse.Fail(e = e))
         }
     }
 }

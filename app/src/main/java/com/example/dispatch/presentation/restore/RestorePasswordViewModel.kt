@@ -19,7 +19,7 @@ class RestorePasswordViewModel @Inject constructor(
         try {
             restoreUserByEmailUseCase.execute(email).collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e))
+            emit(FbResponse.Fail(e = e))
         }
     }
 }

@@ -1,16 +1,15 @@
 package com.example.dispatch.presentation.registration
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -34,6 +33,7 @@ class SignUpFragment : Fragment() {
         fullname = "",
         dateBirth = "",
         email = "",
+        password = "",
         photoProfileUrl = ""
     )
     private val userAuth = UserAuth("", "")
@@ -53,12 +53,13 @@ class SignUpFragment : Fragment() {
         cropImageViewObserver()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == AppCompatActivity.RESULT_OK && data != null) {
-            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-                val imageUri = CropImage.getActivityResult(data).uri
-                viewModel.saveUserImageLiveData(textUri = imageUri.toString())
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (resultCode == Activity.RESULT_OK) {
+                val resultUri = result.uri
+                viewModel.saveUserImageLiveData(textUri = resultUri.toString())
             }
         }
     }
@@ -72,7 +73,6 @@ class SignUpFragment : Fragment() {
             if (validEditTextShowError()) {
                 userDetailsEditTextInit()
                 userAuthEditTextInit()
-                val userAuth = UserAuth(userAuth.email, userAuth.password)
                 registerUserAuthObserver(userAuth = userAuth)
             }
         }
@@ -103,12 +103,12 @@ class SignUpFragment : Fragment() {
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is FbResponse.Loading -> {
-                        showProgressBar(true)
+                        showProgressBar(showOrNo = true)
                     }
                     is FbResponse.Fail -> {
                         Toast.makeText(activity, "User register false :(", Toast.LENGTH_SHORT)
                             .show()
-                        showProgressBar(false)
+                        showProgressBar(showOrNo = false)
                     }
                     is FbResponse.Success -> {
                         getUserUidObserver()
@@ -124,11 +124,10 @@ class SignUpFragment : Fragment() {
                 is FbResponse.Fail -> {
                     Toast.makeText(activity, "Get user uid false :(", Toast.LENGTH_SHORT).show()
                     deleteCurrentUserAuthObserve()
-                    showProgressBar(false)
+                    showProgressBar(showOrNo = false)
                 }
                 is FbResponse.Success -> {
                     userDetails.uid = result.data
-                    Log.d("logUserUID", "result: ${result.data}")
                     val imageUriCache = viewModel.cropImageView.value.toString()
                     if (imageUriCache.isNotEmpty()) {
                         saveUserImageObserver(imageUriCache = imageUriCache)
@@ -167,11 +166,10 @@ class SignUpFragment : Fragment() {
                             .show()
                         deleteCurrentUserAuthObserve()
                         deleteUserProfileImageObserve()
-                        showProgressBar(false)
+                        showProgressBar(showOrNo = false)
                     }
                     is FbResponse.Success -> {
-                        showProgressBar(false)
-                        Log.d("logUserUID", "resultx: ${userDetails.uid}")
+                        showProgressBar(showOrNo = false)
                         findNavController().navigate(R.id.action_signUpFragment_to_currentUserProfileFragment)
                     }
                 }
@@ -215,6 +213,7 @@ class SignUpFragment : Fragment() {
         userDetails.fullname = binding.edittextFullname.text.toString()
         userDetails.dateBirth = binding.edittextDateBirth.text.toString()
         userDetails.email = binding.edittextEmail.text.toString()
+        userDetails.password = binding.edittextPassword.text.toString()
         userDetails.photoProfileUrl = viewModel.cropImageView.value.toString()
     }
 
