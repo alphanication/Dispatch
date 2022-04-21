@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class ChangeUserAuthPasswordUseCase(private val userAuthRepository: UserAuthRepository) {
-    suspend fun execute(password: String): Flow<FbResponse<Boolean>> {
-        return userAuthRepository.changePassword(password = password)
+    suspend fun execute(newPassword: String): Flow<FbResponse<Boolean>> {
+        return userAuthRepository.changePassword(newPassword = newPassword)
     }
 }

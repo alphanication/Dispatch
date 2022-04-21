@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class SaveUserImageProfileUseCase(private val userDetailsRepository: UserDetailsRepository) {
-    suspend fun execute(imageUriStr: String): Flow<FbResponse<String>> {
-        return userDetailsRepository.saveImageProfile(imageUriStr = imageUriStr)
+    suspend fun execute(newImageUrlStr: String): Flow<FbResponse<String>> {
+        return userDetailsRepository.saveImageProfile(newImageUrlStr = newImageUrlStr)
     }
 }
