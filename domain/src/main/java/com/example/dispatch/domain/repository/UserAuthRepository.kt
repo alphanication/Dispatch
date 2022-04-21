@@ -19,9 +19,9 @@ interface UserAuthRepository {
 
     suspend fun restorePasswordByEmail(email: String): Flow<FbResponse<Boolean>>
 
-    suspend fun changeEmail(newEmail: String): Flow<FbResponse<Boolean>>
+    suspend fun changeEmail(userAuth: UserAuth, newEmail: String): Flow<FbResponse<Boolean>>
 
-    suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>>
+    suspend fun changePassword(userAuth: UserAuth, newPassword: String): Flow<FbResponse<Boolean>>
 
     suspend fun signOut(): Flow<FbResponse<Boolean>>
 }
