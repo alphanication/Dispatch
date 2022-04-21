@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 @ExperimentalCoroutinesApi
 class CurrentUserProfileViewModel @Inject constructor(
-    private val userAuthSignOutUseCase: UserAuthSignOutUseCase,
+    private val signOutUserAuthUseCase: SignOutUserAuthUseCase,
     private val deleteUserImageProfileUseCase: DeleteUserImageProfileUseCase,
     private val deleteCurrentUserAuthUseCase: DeleteCurrentUserAuthUseCase,
     private val deleteCurrentUserDetailsUseCase: DeleteCurrentUserDetailsUseCase,
@@ -28,7 +28,7 @@ class CurrentUserProfileViewModel @Inject constructor(
     fun userSignOut() = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
-            userAuthSignOutUseCase.execute().collect { emit(it) }
+            signOutUserAuthUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e = e))
         }

@@ -49,12 +49,17 @@ class DomainModule {
     }
 
     @Provides
-    fun providesUserAuthSignOutUseCase(userAuthRepository: UserAuthRepository): UserAuthSignOutUseCase {
-        return UserAuthSignOutUseCase(userAuthRepository = userAuthRepository)
+    fun providesCheckUserAuthSignedInUseCase(userAuthRepository: UserAuthRepository) : CheckUserAuthSignedInUseCase {
+        return CheckUserAuthSignedInUseCase(userAuthRepository = userAuthRepository)
     }
 
     @Provides
-    fun providesSaveImageProfileUseCase(userDetailsRepository: UserDetailsRepository): SaveUserImageProfileUseCase {
+    fun providesSignOutUserAuthUseCase(userAuthRepository: UserAuthRepository): SignOutUserAuthUseCase {
+        return SignOutUserAuthUseCase(userAuthRepository = userAuthRepository)
+    }
+
+    @Provides
+    fun providesUserImageProfileUseCase(userDetailsRepository: UserDetailsRepository): SaveUserImageProfileUseCase {
         return SaveUserImageProfileUseCase(userDetailsRepository = userDetailsRepository)
     }
 
@@ -64,7 +69,7 @@ class DomainModule {
     }
 
     @Provides
-    fun providesSaveUseDetailsUseCase(userDetailsRepository: UserDetailsRepository): SaveUserDetailsUseCase {
+    fun providesSaveUserDetailsUseCase(userDetailsRepository: UserDetailsRepository): SaveUserDetailsUseCase {
         return SaveUserDetailsUseCase(userDetailsRepository = userDetailsRepository)
     }
 
@@ -91,6 +96,11 @@ class DomainModule {
     @Provides
     fun providesChangeUserDetailsEmailUseCase(userDetailsRepository: UserDetailsRepository): ChangeUserDetailsEmailUseCase {
         return ChangeUserDetailsEmailUseCase(userDetailsRepository = userDetailsRepository)
+    }
+
+    @Provides
+    fun providesChangeUserDetailsPasswordUseCase(userDetailsRepository: UserDetailsRepository) : ChangeUserDetailsPasswordUseCase {
+        return ChangeUserDetailsPasswordUseCase(userDetailsRepository = userDetailsRepository)
     }
 
     @Provides

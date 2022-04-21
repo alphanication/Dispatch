@@ -6,7 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
-class UserAuthSignOutUseCase(private val userAuthRepository: UserAuthRepository) {
+class SignOutUserAuthUseCase(private val userAuthRepository: UserAuthRepository) {
     suspend fun execute(): Flow<FbResponse<Boolean>> {
         return userAuthRepository.signOut()
     }
