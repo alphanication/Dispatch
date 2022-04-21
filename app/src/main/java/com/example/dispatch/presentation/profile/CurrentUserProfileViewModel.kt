@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,13 @@ class CurrentUserProfileViewModel @Inject constructor(
     private val deleteCurrentUserDetailsUseCase: DeleteCurrentUserDetailsUseCase,
     private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase,
     private val saveUserImageProfileUseCase: SaveUserImageProfileUseCase,
-    private val changeUserDetailsPhotoProfileUrlUseCase: ChangeUserDetailsPhotoProfileUrlUseCase
+    private val changeUserDetailsPhotoProfileUrlUseCase: ChangeUserDetailsPhotoProfileUrlUseCase,
+    private val changeUserAuthEmailUseCase: ChangeUserAuthEmailUseCase,
+    private val changeUserAuthPasswordUseCase: ChangeUserAuthPasswordUseCase,
+    private val changeUserDetailsEmailUseCase: ChangeUserDetailsEmailUseCase,
+    private val changeUserDetailsPasswordUseCase: ChangeUserDetailsPasswordUseCase,
+    private val changeUserDetailsFullnameUseCase: ChangeUserDetailsFullnameUseCase,
+    private val changeUserDetailsDateBirthUseCase: ChangeUserDetailsDateBirthUseCase
 ) : ViewModel() {
     private val _cropImageView = MutableLiveData("")
     val cropImageView: LiveData<String> = _cropImageView
@@ -86,6 +93,63 @@ class CurrentUserProfileViewModel @Inject constructor(
                 .collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e))
+        }
+    }
+
+    fun changeUserAuthEmail(userAuth: UserAuth, newEmail: String) = liveData(Dispatchers.IO) {
+        emit(FbResponse.Loading())
+        try {
+            changeUserAuthEmailUseCase.execute(userAuth = userAuth, newEmail = newEmail)
+                .collect { emit(it) }
+        } catch (e: Exception) {
+            emit(FbResponse.Fail(e = e))
+        }
+    }
+
+    fun changeUserDetailsEmail(newEmail: String) = liveData(Dispatchers.IO) {
+        emit(FbResponse.Loading())
+        try {
+            changeUserDetailsEmailUseCase.execute(newEmail = newEmail).collect { emit(it) }
+        } catch (e: Exception) {
+            emit(FbResponse.Fail(e = e))
+        }
+    }
+
+    fun changeUserAuthPassword(userAuth: UserAuth, newPassword: String) = liveData(Dispatchers.IO) {
+        emit(FbResponse.Loading())
+        try {
+            changeUserAuthPasswordUseCase.execute(userAuth = userAuth, newPassword = newPassword)
+                .collect { emit(it) }
+        } catch (e: Exception) {
+            emit(FbResponse.Fail(e = e))
+        }
+    }
+
+    fun changeUserDetailsPassword(newPassword: String) = liveData(Dispatchers.IO) {
+        emit(FbResponse.Loading())
+        try {
+            changeUserDetailsPasswordUseCase.execute(newPassword = newPassword).collect { emit(it) }
+        } catch (e: Exception) {
+            emit(FbResponse.Fail(e = e))
+        }
+    }
+
+    fun changeUserDetailsFullname(newFullname: String) = liveData(Dispatchers.IO) {
+        emit(FbResponse.Loading())
+        try {
+            changeUserDetailsFullnameUseCase.execute(newFullname = newFullname).collect { emit(it) }
+        } catch (e: Exception) {
+            emit(FbResponse.Fail(e = e))
+        }
+    }
+
+    fun changeUserDetailsDateBirth(newDateBirth: String) = liveData(Dispatchers.IO) {
+        emit(FbResponse.Loading())
+        try {
+            changeUserDetailsDateBirthUseCase.execute(newDateBirth = newDateBirth)
+                .collect { emit(it) }
+        } catch (e: Exception) {
+            emit(FbResponse.Fail(e = e))
         }
     }
 

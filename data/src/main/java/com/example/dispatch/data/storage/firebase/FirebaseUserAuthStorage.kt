@@ -94,14 +94,10 @@ class FirebaseUserAuthStorage : UserAuthStorage {
         newEmail: String
     ): Flow<FbResponse<Boolean>> = callbackFlow {
         fAuth.signInWithEmailAndPassword(userAuth.email, userAuth.password)
-            .addOnSuccessListener {
-                fAuth.currentUser?.updateEmail(newEmail)
-                    ?.addOnSuccessListener {
-                        trySend(FbResponse.Success(data = true))
-                    }?.addOnFailureListener { e ->
-                        trySend(FbResponse.Fail(e = e))
-                    }
-            }.addOnFailureListener { e ->
+        fAuth.currentUser?.updateEmail(newEmail)
+            ?.addOnSuccessListener {
+                trySend(FbResponse.Success(data = true))
+            }?.addOnFailureListener { e ->
                 trySend(FbResponse.Fail(e = e))
             }
 
@@ -113,14 +109,10 @@ class FirebaseUserAuthStorage : UserAuthStorage {
         newPassword: String
     ): Flow<FbResponse<Boolean>> = callbackFlow {
         fAuth.signInWithEmailAndPassword(userAuth.email, userAuth.password)
-            .addOnSuccessListener {
-                fAuth.currentUser?.updatePassword(newPassword)
-                    ?.addOnSuccessListener {
-                        trySend(FbResponse.Success(data = true))
-                    }?.addOnFailureListener { e ->
-                        trySend(FbResponse.Fail(e = e))
-                    }
-            }.addOnFailureListener { e ->
+        fAuth.currentUser?.updatePassword(newPassword)
+            ?.addOnSuccessListener {
+                trySend(FbResponse.Success(data = true))
+            }?.addOnFailureListener { e ->
                 trySend(FbResponse.Fail(e = e))
             }
 

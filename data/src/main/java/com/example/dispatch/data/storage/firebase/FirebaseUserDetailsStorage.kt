@@ -129,8 +129,18 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
             awaitClose { this.cancel() }
         }
 
-    override suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>> {
-        TODO("Not yet implemented")
+    override suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>> = callbackFlow {
+        val uid = fAuth.currentUser?.uid.toString()
+        val refCurrentUser = fDatabase.getReference("/users/$uid")
+
+        refCurrentUser.child("password").setValue(newPassword)
+            .addOnSuccessListener {
+                trySend(FbResponse.Success(data = true))
+            }.addOnFailureListener { e ->
+                trySend(FbResponse.Fail(e = e))
+            }
+
+        awaitClose { this.cancel() }
     }
 
     override suspend fun saveImageProfile(newImageUrlStr: String): Flow<FbResponse<String>> =
