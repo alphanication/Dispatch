@@ -1,7 +1,6 @@
 package com.example.dispatch.data.storage.firebase
 
 import android.net.Uri
-import android.util.Log
 import com.example.dispatch.data.storage.UserDetailsStorage
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserDetails
@@ -45,21 +44,16 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         val uid = fAuth.currentUser?.uid.toString()
         val refCurrentUser = fDatabase.getReference("/users/$uid")
 
-        refCurrentUser.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val user: UserDetails? = snapshot.getValue(UserDetails::class.java)
-                if (user != null) {
-                    trySend(FbResponse.Success(data = user))
-                } else {
-                    trySend(FbResponse.Fail(e = Exception("user null")))
-                }
+        refCurrentUser.get().addOnSuccessListener { result ->
+            val user: UserDetails? = result.getValue(UserDetails::class.java)
+            if (user != null) {
+                trySend(FbResponse.Success(data = user))
+            } else {
+                trySend(FbResponse.Fail(e = Exception("user null")))
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                trySend(FbResponse.Fail(e = error.toException()))
-                Log.d("userGET", "exception: ${error.toException()}")
-            }
-        })
+        }.addOnFailureListener { e ->
+            trySend(FbResponse.Fail(e = e))
+        }
 
         awaitClose { this.cancel() }
     }
