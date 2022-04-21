@@ -17,7 +17,7 @@ class RestorePasswordViewModel @Inject constructor(
     fun restoreUserPasswordByEmail(email: String) = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
-            restoreUserByEmailUseCase.execute(email).collect { emit(it) }
+            restoreUserByEmailUseCase.execute(email = email).collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e = e))
         }
