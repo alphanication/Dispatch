@@ -89,26 +89,38 @@ class FirebaseUserAuthStorage : UserAuthStorage {
             awaitClose { this.cancel() }
         }
 
-    override suspend fun changeEmail(newEmail: String): Flow<FbResponse<Boolean>> = callbackFlow {
-        val user = fAuth.currentUser
-
-        user?.updateEmail(newEmail)
-            ?.addOnSuccessListener {
-                trySend(FbResponse.Success(data = true))
-            }?.addOnFailureListener { e ->
+    override suspend fun changeEmail(
+        userAuth: UserAuth,
+        newEmail: String
+    ): Flow<FbResponse<Boolean>> = callbackFlow {
+        fAuth.signInWithEmailAndPassword(userAuth.email, userAuth.password)
+            .addOnSuccessListener {
+                fAuth.currentUser?.updateEmail(newEmail)
+                    ?.addOnSuccessListener {
+                        trySend(FbResponse.Success(data = true))
+                    }?.addOnFailureListener { e ->
+                        trySend(FbResponse.Fail(e = e))
+                    }
+            }.addOnFailureListener { e ->
                 trySend(FbResponse.Fail(e = e))
             }
 
         awaitClose { this.cancel() }
     }
 
-    override suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>> = callbackFlow {
-        val user = fAuth.currentUser
-
-        user?.updatePassword(newPassword)
-            ?.addOnSuccessListener {
-                trySend(FbResponse.Success(data = true))
-            }?.addOnFailureListener { e ->
+    override suspend fun changePassword(
+        userAuth: UserAuth,
+        newPassword: String
+    ): Flow<FbResponse<Boolean>> = callbackFlow {
+        fAuth.signInWithEmailAndPassword(userAuth.email, userAuth.password)
+            .addOnSuccessListener {
+                fAuth.currentUser?.updatePassword(newPassword)
+                    ?.addOnSuccessListener {
+                        trySend(FbResponse.Success(data = true))
+                    }?.addOnFailureListener { e ->
+                        trySend(FbResponse.Fail(e = e))
+                    }
+            }.addOnFailureListener { e ->
                 trySend(FbResponse.Fail(e = e))
             }
 
