@@ -73,7 +73,7 @@ class CurrentUserProfileViewModel @Inject constructor(
     fun saveUserProfileImage(imageUriCache: String) = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
-            saveUserImageProfileUseCase.execute(imageUriStr = imageUriCache).collect { emit(it) }
+            saveUserImageProfileUseCase.execute(newImageUrlStr = imageUriCache).collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e))
         }
@@ -82,7 +82,7 @@ class CurrentUserProfileViewModel @Inject constructor(
     fun changeUserDetailsPhotoProfile(photoProfileUrl: String) = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
-            changeUserDetailsPhotoProfileUrlUseCase.execute(photoUrl = photoProfileUrl)
+            changeUserDetailsPhotoProfileUrlUseCase.execute(newPhotoUrl = photoProfileUrl)
                 .collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e))
