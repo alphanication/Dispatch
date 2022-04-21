@@ -1,6 +1,7 @@
 package com.example.dispatch.domain.repository
 
 import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.models.UserDetails
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -24,4 +25,6 @@ interface UserDetailsRepository {
     suspend fun changePhotoProfileUrl(photoUrl: String): Flow<FbResponse<Boolean>>
 
     suspend fun changeEmailAddress(email: String): Flow<FbResponse<Boolean>>
+
+    suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>>
 }
