@@ -22,24 +22,28 @@ class UserDetailsRepositoryImpl(private val userDetailsStorage: UserDetailsStora
         return userDetailsStorage.deleteCurrentUser()
     }
 
-    override suspend fun changeFullname(fullname: String): Flow<FbResponse<Boolean>> {
-        return userDetailsStorage.changeFullname(fullname = fullname)
+    override suspend fun changeFullname(newFullname: String): Flow<FbResponse<Boolean>> {
+        return userDetailsStorage.changeFullname(newFullname = newFullname)
     }
 
-    override suspend fun changeDateBirth(dateBirth: String): Flow<FbResponse<Boolean>> {
-        return userDetailsStorage.changeDateBirth(dateBirth = dateBirth)
+    override suspend fun changeDateBirth(newDateBirth: String): Flow<FbResponse<Boolean>> {
+        return userDetailsStorage.changeDateBirth(newDateBirth = newDateBirth)
     }
 
-    override suspend fun changePhotoProfileUrl(photoUrl: String): Flow<FbResponse<Boolean>> {
-        return userDetailsStorage.changePhotoProfileUrl(photoUrl = photoUrl)
+    override suspend fun changePhotoProfileUrl(newPhotoUrl: String): Flow<FbResponse<Boolean>> {
+        return userDetailsStorage.changePhotoProfileUrl(newPhotoUrl = newPhotoUrl)
     }
 
-    override suspend fun changeEmailAddress(email: String): Flow<FbResponse<Boolean>> {
-        return userDetailsStorage.changeEmailAddress(email = email)
+    override suspend fun changeEmailAddress(newEmail: String): Flow<FbResponse<Boolean>> {
+        return userDetailsStorage.changeEmailAddress(newEmail = newEmail)
     }
 
-    override suspend fun saveImageProfile(imageUriStr: String): Flow<FbResponse<String>> {
-        return userDetailsStorage.saveImageProfile(imageUriStr = imageUriStr)
+    override suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>> {
+        return userDetailsStorage.changePassword(newPassword = newPassword)
+    }
+
+    override suspend fun saveImageProfile(newImageUrlStr: String): Flow<FbResponse<String>> {
+        return userDetailsStorage.saveImageProfile(newImageUrlStr = newImageUrlStr)
     }
 
     override suspend fun deleteImageProfile(): Flow<FbResponse<Boolean>> {

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 interface UserDetailsStorage {
-    suspend fun saveImageProfile(imageUriStr: String): Flow<FbResponse<String>>
+    suspend fun saveImageProfile(newImageUrlStr: String): Flow<FbResponse<String>>
 
     suspend fun deleteImageProfile(): Flow<FbResponse<Boolean>>
 
@@ -17,11 +17,13 @@ interface UserDetailsStorage {
 
     suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>>
 
-    suspend fun changeFullname(fullname: String): Flow<FbResponse<Boolean>>
+    suspend fun changeFullname(newFullname: String): Flow<FbResponse<Boolean>>
 
-    suspend fun changeDateBirth(dateBirth: String): Flow<FbResponse<Boolean>>
+    suspend fun changeDateBirth(newDateBirth: String): Flow<FbResponse<Boolean>>
 
-    suspend fun changePhotoProfileUrl(photoUrl: String): Flow<FbResponse<Boolean>>
+    suspend fun changePhotoProfileUrl(newPhotoUrl: String): Flow<FbResponse<Boolean>>
 
-    suspend fun changeEmailAddress(email: String): Flow<FbResponse<Boolean>>
+    suspend fun changeEmailAddress(newEmail: String): Flow<FbResponse<Boolean>>
+
+    suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>>
 }

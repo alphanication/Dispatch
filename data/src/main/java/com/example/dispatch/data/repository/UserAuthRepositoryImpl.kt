@@ -33,12 +33,12 @@ class UserAuthRepositoryImpl(private val userAuthStorage: UserAuthStorage) : Use
         return userAuthStorage.restorePasswordByEmail(email = email)
     }
 
-    override suspend fun changeEmail(email: String): Flow<FbResponse<Boolean>> {
-        return userAuthStorage.changeEmail(email = email)
+    override suspend fun changeEmail(newEmail: String): Flow<FbResponse<Boolean>> {
+        return userAuthStorage.changeEmail(newEmail = newEmail)
     }
 
-    override suspend fun changePassword(password: String): Flow<FbResponse<Boolean>> {
-        return userAuthStorage.changePassword(passw = password)
+    override suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>> {
+        return userAuthStorage.changePassword(newPassword = newPassword)
     }
 
     override suspend fun signOut(): Flow<FbResponse<Boolean>> {
