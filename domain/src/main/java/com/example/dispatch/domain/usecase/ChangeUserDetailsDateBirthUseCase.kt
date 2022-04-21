@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class ChangeUserDetailsDateBirthUseCase(private val userDetailsRepository: UserDetailsRepository) {
-    suspend fun execute(dateBirth: String): Flow<FbResponse<Boolean>> {
-        return userDetailsRepository.changeDateBirth(dateBirth = dateBirth)
+    suspend fun execute(newDateBirth: String): Flow<FbResponse<Boolean>> {
+        return userDetailsRepository.changeDateBirth(newDateBirth = newDateBirth)
     }
 }

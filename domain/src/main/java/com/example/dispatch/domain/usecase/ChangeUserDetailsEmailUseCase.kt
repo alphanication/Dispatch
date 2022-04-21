@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class ChangeUserDetailsEmailUseCase(private val userDetailsRepository: UserDetailsRepository) {
-    suspend fun execute(email: String): Flow<FbResponse<Boolean>> {
-        return userDetailsRepository.changeEmailAddress(email = email)
+    suspend fun execute(newEmail: String): Flow<FbResponse<Boolean>> {
+        return userDetailsRepository.changeEmailAddress(newEmail = newEmail)
     }
 }

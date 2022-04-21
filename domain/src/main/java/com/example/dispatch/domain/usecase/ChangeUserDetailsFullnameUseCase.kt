@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class ChangeUserDetailsFullnameUseCase(private val userDetailsRepository: UserDetailsRepository) {
-    suspend fun execute(fullname: String): Flow<FbResponse<Boolean>> {
-        return userDetailsRepository.changeFullname(fullname = fullname)
+    suspend fun execute(newFullname: String): Flow<FbResponse<Boolean>> {
+        return userDetailsRepository.changeFullname(newFullname = newFullname)
     }
 }
