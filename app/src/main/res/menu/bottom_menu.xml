@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:title="@string/bottomMenu_messages"
+        android:id="@+id/latestMessagesFragment"
         android:icon="@drawable/ic_mail" />
 
     <item
