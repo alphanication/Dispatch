@@ -12,7 +12,7 @@
         <entry key="app/src/main/res/drawable/background_view_toolbar_circle_bottom.xml" value="0.1655" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19157608695652173" />
         <entry key="app/src/main/res/layout/fragment_current_user_profile.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_latest_messages.xml" value="0.2574074074074074" />
+        <entry key="app/src/main/res/layout/fragment_latest_messages.xml" value="0.30743243243243246" />
         <entry key="app/src/main/res/layout/fragment_restore_password.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_sign_up.xml" value="0.1" />

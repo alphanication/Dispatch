@@ -1,12 +1,25 @@
 package com.example.dispatch.presentation.messages
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.usecase.GetCurrentUserDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
 @HiltViewModel
+@ExperimentalCoroutinesApi
 class LatestMessagesViewModel @Inject constructor(
-
+    private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase
 ) : ViewModel() {
-
+    fun getCurrentUserDetails() = liveData(Dispatchers.IO) {
+        emit(FbResponse.Loading())
+        try {
+            getCurrentUserDetailsUseCase.execute().collect { emit(it) }
+        } catch (e: Exception) {
+            emit(FbResponse.Fail(e = e))
+        }
+    }
 }
