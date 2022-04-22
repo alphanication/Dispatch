@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.currentUserProfileFragment -> showBottomNav()
+                R.id.latestMessagesFragment -> showBottomNav()
                 else -> hideBottomNav()
             }
         }
