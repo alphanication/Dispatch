@@ -56,7 +56,7 @@
         android:id="@+id/latestMessagesFragment"
         android:name="com.example.dispatch.presentation.messages.LatestMessagesFragment"
         android:label="fragment_latest_messages"
-        tools:layout="@layout/fragment_latest_messages" >
+        tools:layout="@layout/fragment_latest_messages">
         <action
             android:id="@+id/action_latestMessagesFragment_to_currentUserProfileFragment"
             app:destination="@id/currentUserProfileFragment" />

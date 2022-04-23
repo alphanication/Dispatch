@@ -17,11 +17,11 @@ interface UserDetailsStorage {
 
     suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>>
 
+    suspend fun changePhotoProfileUrl(newPhotoUrl: String): Flow<FbResponse<Boolean>>
+
     suspend fun changeFullname(newFullname: String): Flow<FbResponse<Boolean>>
 
     suspend fun changeDateBirth(newDateBirth: String): Flow<FbResponse<Boolean>>
-
-    suspend fun changePhotoProfileUrl(newPhotoUrl: String): Flow<FbResponse<Boolean>>
 
     suspend fun changeEmailAddress(newEmail: String): Flow<FbResponse<Boolean>>
 

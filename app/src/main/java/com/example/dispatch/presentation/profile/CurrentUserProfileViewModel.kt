@@ -153,9 +153,9 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun saveUserImageLiveData(textUri: String) {
-        if (textUri.isNotEmpty()) {
-            _cropImageView.value = textUri
+    fun saveUserImageLiveData(imageUriStr: String) {
+        if (imageUriStr.isNotEmpty()) {
+            _cropImageView.value = imageUriStr
         }
     }
 

@@ -42,8 +42,8 @@ class CurrentUserProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getCurrentUserDetailsObserve()
         setOnClickListeners()
+        getCurrentUserDetailsObserve()
         cropImageViewObserver()
     }
 
@@ -52,8 +52,8 @@ class CurrentUserProfileFragment : Fragment() {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
             if (resultCode == RESULT_OK) {
-                val resultUri = result.uri
-                viewModel.saveUserImageLiveData(textUri = resultUri.toString())
+                val resultUriStr = result.uri.toString()
+                viewModel.saveUserImageLiveData(imageUriStr = resultUriStr)
             }
         }
     }
@@ -85,6 +85,8 @@ class CurrentUserProfileFragment : Fragment() {
             if (cropImageUri.isNotEmpty()) {
                 binding.shapeableimagePhotoUser.setImageResource(0)
                 saveNewPhotoUserProfileObserve(imageUriCache = cropImageUri)
+            } else {
+                binding.shapeableimagePhotoUser.setImageResource(0)
             }
         }
     }
@@ -92,18 +94,20 @@ class CurrentUserProfileFragment : Fragment() {
     private fun updateProfile() {
         val validEditTextUserDetails: ValidEditTextUserDetails = validEditTextUserDetails()
 
-        if (validEditTextUserDetails.fullname) {
-            val newFullname = binding.edittextFullname.text.toString()
-            changeUserDetailsFullnameObserve(newFullname = newFullname)
-        }
-        if (validEditTextUserDetails.dateBirth) {
-            val newDateBirth = binding.edittextDateBirth.text.toString()
-            changeUserDetailsDateBirthObserve(newDateBirth = newDateBirth)
-        }
-        if (validEditTextUserDetails.email) {
-            val userAuth = UserAuth(email = userDetails.email, password = userDetails.password)
-            val newEmail = binding.edittextEmail.text.toString()
-            changeUserAuthEmailObserve(userAuth = userAuth, newEmail = newEmail)
+        when {
+            validEditTextUserDetails.fullname -> {
+                val newFullname = binding.edittextFullname.text.toString()
+                changeUserDetailsFullnameObserve(newFullname = newFullname)
+            }
+            validEditTextUserDetails.dateBirth -> {
+                val newDateBirth = binding.edittextDateBirth.text.toString()
+                changeUserDetailsDateBirthObserve(newDateBirth = newDateBirth)
+            }
+            validEditTextUserDetails.email -> {
+                val userAuth = UserAuth(email = userDetails.email, password = userDetails.password)
+                val newEmail = binding.edittextEmail.text.toString()
+                changeUserAuthEmailObserve(userAuth = userAuth, newEmail = newEmail)
+            }
         }
     }
 
@@ -120,12 +124,12 @@ class CurrentUserProfileFragment : Fragment() {
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is FbResponse.Loading -> {
-                        showProgressChangePassword(showOrNo = true)
+                        showProgressBarChangePassword(showOrNo = true)
                     }
                     is FbResponse.Fail -> {
-                        showProgressChangePassword(showOrNo = false)
                         Toast.makeText(activity, "Change password false :( ", Toast.LENGTH_SHORT)
                             .show()
+                        showProgressBarChangePassword(showOrNo = false)
                     }
                     is FbResponse.Success -> {
                         changeUserDetailsPasswordObserve(newPassword = newPassword)
@@ -139,15 +143,15 @@ class CurrentUserProfileFragment : Fragment() {
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is FbResponse.Loading -> {
-                        showProgressChangePassword(showOrNo = true)
+                        showProgressBarChangePassword(showOrNo = true)
                     }
                     is FbResponse.Fail -> {
-                        showProgressChangePassword(showOrNo = false)
+                        showProgressBarChangePassword(showOrNo = false)
                     }
                     is FbResponse.Success -> {
                         getCurrentUserDetailsObserve()
-                        showProgressChangePassword(showOrNo = false)
                         binding.edittextPassword.text = null
+                        showProgressBarChangePassword(showOrNo = false)
                     }
                 }
             }
@@ -296,10 +300,11 @@ class CurrentUserProfileFragment : Fragment() {
                 is FbResponse.Loading -> {}
                 is FbResponse.Fail -> {
                     Toast.makeText(activity, "User sign out error :( ", Toast.LENGTH_SHORT).show()
+                    showProgressBarDeleteUser(showOrNo = false)
                 }
                 is FbResponse.Success -> {
-                    showProgressBarDeleteUser(showOrNo = false)
                     findNavController().navigate(R.id.action_currentUserProfileFragment_to_signInFragment)
+                    showProgressBarDeleteUser(showOrNo = false)
                 }
             }
         }
@@ -468,7 +473,7 @@ class CurrentUserProfileFragment : Fragment() {
         }
     }
 
-    private fun showProgressChangePassword(showOrNo: Boolean) {
+    private fun showProgressBarChangePassword(showOrNo: Boolean) {
         if (showOrNo) {
             binding.buttonChangePassword.visibility = View.INVISIBLE
             binding.progressbarChangePassword.visibility = View.VISIBLE

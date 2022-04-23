@@ -49,7 +49,7 @@ class DomainModule {
     }
 
     @Provides
-    fun providesCheckUserAuthSignedInUseCase(userAuthRepository: UserAuthRepository) : CheckUserAuthSignedInUseCase {
+    fun providesCheckUserAuthSignedInUseCase(userAuthRepository: UserAuthRepository): CheckUserAuthSignedInUseCase {
         return CheckUserAuthSignedInUseCase(userAuthRepository = userAuthRepository)
     }
 
@@ -59,7 +59,7 @@ class DomainModule {
     }
 
     @Provides
-    fun providesUserImageProfileUseCase(userDetailsRepository: UserDetailsRepository): SaveUserImageProfileUseCase {
+    fun providesSaveUserImageProfileUseCase(userDetailsRepository: UserDetailsRepository): SaveUserImageProfileUseCase {
         return SaveUserImageProfileUseCase(userDetailsRepository = userDetailsRepository)
     }
 
@@ -99,7 +99,7 @@ class DomainModule {
     }
 
     @Provides
-    fun providesChangeUserDetailsPasswordUseCase(userDetailsRepository: UserDetailsRepository) : ChangeUserDetailsPasswordUseCase {
+    fun providesChangeUserDetailsPasswordUseCase(userDetailsRepository: UserDetailsRepository): ChangeUserDetailsPasswordUseCase {
         return ChangeUserDetailsPasswordUseCase(userDetailsRepository = userDetailsRepository)
     }
 

@@ -21,7 +21,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class SignInFragment : Fragment() {
     private lateinit var binding: FragmentSignInBinding
     private val viewModel: SignInViewModel by viewModels()
-    private val userAuth = UserAuth(email = "", password = "")
+    private val userAuth: UserAuth = UserAuth()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,12 +61,12 @@ class SignInFragment : Fragment() {
                     showProgressBar(showOrNo = true)
                 }
                 is FbResponse.Fail -> {
-                    showProgressBar(showOrNo = false)
                     Toast.makeText(activity, "User auth fail :(", Toast.LENGTH_SHORT).show()
+                    showProgressBar(showOrNo = false)
                 }
                 is FbResponse.Success -> {
-                    showProgressBar(showOrNo = false)
                     findNavController().navigate(R.id.action_signInFragment_to_currentUserProfileFragment)
+                    showProgressBar(showOrNo = false)
                 }
             }
         }
@@ -78,17 +78,22 @@ class SignInFragment : Fragment() {
 
         var valid = false
 
-        if (email.isEmpty()) {
-            binding.edittextEmail.setError("Enter email address.", null)
-            binding.edittextEmail.requestFocus()
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.edittextEmail.setError("Enter valid email address.", null)
-            binding.edittextEmail.requestFocus()
-        } else if (password.isEmpty()) {
-            binding.edittextPassword.setError("Enter password.", null)
-            binding.edittextPassword.requestFocus()
-        } else {
-            valid = true
+        when {
+            email.isEmpty() -> {
+                binding.edittextEmail.setError("Enter email address.", null)
+                binding.edittextEmail.requestFocus()
+            }
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                binding.edittextEmail.setError("Enter valid email address.", null)
+                binding.edittextEmail.requestFocus()
+            }
+            password.isEmpty() -> {
+                binding.edittextPassword.setError("Enter password.", null)
+                binding.edittextPassword.requestFocus()
+            }
+            else -> {
+                valid = true
+            }
         }
 
         return valid
