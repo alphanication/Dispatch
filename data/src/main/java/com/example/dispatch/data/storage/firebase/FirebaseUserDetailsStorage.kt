@@ -96,12 +96,12 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
             awaitClose { this.cancel() }
         }
 
-    override suspend fun changePhotoProfileUri(newPhotoUri: String): Flow<FbResponse<Boolean>> =
+    override suspend fun changeImageProfileUri(newImageUriStr: String): Flow<FbResponse<Boolean>> =
         callbackFlow {
             val uidCurrentUser = fAuth.currentUser?.uid.toString()
             val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
 
-            refCurrentUser.child("photoProfileUrl").setValue(newPhotoUri)
+            refCurrentUser.child("photoProfileUrl").setValue(newImageUriStr)
                 .addOnSuccessListener {
                     trySend(FbResponse.Success(data = true))
                 }.addOnFailureListener { e ->

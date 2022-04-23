@@ -80,16 +80,16 @@ class CurrentUserProfileViewModel @Inject constructor(
     fun saveUserProfileImage(imageUriCache: String) = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
-            saveUserImageProfileUseCase.execute(newImageUrlStr = imageUriCache).collect { emit(it) }
+            saveUserImageProfileUseCase.execute(newImageUriStr = imageUriCache).collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e))
         }
     }
 
-    fun changeUserDetailsPhotoProfile(photoProfileUri: String) = liveData(Dispatchers.IO) {
+    fun changeUserDetailsPhotoProfile(imageUriStr: String) = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
-            changeUserDetailsPhotoProfileUrlUseCase.execute(newPhotoUri = photoProfileUri)
+            changeUserDetailsPhotoProfileUrlUseCase.execute(newImageUriStr = imageUriStr)
                 .collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e))

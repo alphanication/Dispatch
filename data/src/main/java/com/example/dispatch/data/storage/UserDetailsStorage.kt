@@ -13,7 +13,7 @@ interface UserDetailsStorage {
 
     suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>>
 
-    suspend fun changePhotoProfileUri(newPhotoUri: String): Flow<FbResponse<Boolean>>
+    suspend fun changeImageProfileUri(newImageUriStr: String): Flow<FbResponse<Boolean>>
 
     suspend fun changeFullname(newFullname: String): Flow<FbResponse<Boolean>>
 

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 interface UserImagesStorage {
-    suspend fun saveImageProfile(newImageUrlStr: String): Flow<FbResponse<String>>
+    suspend fun saveImageProfile(newImageUriStr: String): Flow<FbResponse<String>>
 
     suspend fun deleteImageProfile(): Flow<FbResponse<Boolean>>
 }
