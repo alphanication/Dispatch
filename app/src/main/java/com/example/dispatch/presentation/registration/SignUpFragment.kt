@@ -124,7 +124,7 @@ class SignUpFragment : Fragment() {
 
                     val imageUriCache = viewModel.cropImageView.value.toString()
                     if (imageUriCache.isNotEmpty()) {
-                        saveUserImageObserver(imageUriCache = imageUriCache)
+                        saveUserImageObserver(imageUriStr = imageUriCache)
                     } else {
                         saveUserObserver(userDetails = userDetails)
                     }
@@ -133,8 +133,8 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun saveUserImageObserver(imageUriCache: String) {
-        viewModel.saveUserProfileImage(imageUriCache = imageUriCache)
+    private fun saveUserImageObserver(imageUriStr: String) {
+        viewModel.saveUserProfileImage(imageUriStr = imageUriStr)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is FbResponse.Loading -> {}

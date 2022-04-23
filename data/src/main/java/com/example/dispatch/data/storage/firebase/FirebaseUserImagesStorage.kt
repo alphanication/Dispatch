@@ -18,10 +18,10 @@ class FirebaseUserImagesStorage : UserImagesStorage {
         private val fStorage = FirebaseStorage.getInstance()
     }
 
-    override suspend fun saveImageProfile(newImageUrlStr: String): Flow<FbResponse<String>> = callbackFlow {
+    override suspend fun saveImageProfile(newImageUriStr: String): Flow<FbResponse<String>> = callbackFlow {
         val uidCurrentUser = fAuth.currentUser?.uid.toString()
         val refImage = fStorage.getReference("/$uidCurrentUser/profile.jpg")
-        val imageProfileUri: Uri = Uri.parse(newImageUrlStr)
+        val imageProfileUri: Uri = Uri.parse(newImageUriStr)
 
         refImage.putFile(imageProfileUri).addOnCompleteListener {
             refImage.downloadUrl.addOnSuccessListener { uri ->

@@ -30,8 +30,8 @@ class UserDetailsRepositoryImpl(private val userDetailsStorage: UserDetailsStora
         return userDetailsStorage.changeDateBirth(newDateBirth = newDateBirth)
     }
 
-    override suspend fun changePhotoProfileUrl(newPhotoUri: String): Flow<FbResponse<Boolean>> {
-        return userDetailsStorage.changePhotoProfileUri(newPhotoUri = newPhotoUri)
+    override suspend fun changeImageProfileUri(newImageUriStr: String): Flow<FbResponse<Boolean>> {
+        return userDetailsStorage.changeImageProfileUri(newImageUriStr = newImageUriStr)
     }
 
     override suspend fun changeEmailAddress(newEmail: String): Flow<FbResponse<Boolean>> {

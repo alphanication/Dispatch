@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class UserImagesRepositoryImpl(private val userImagesStorage: UserImagesStorage) : UserImagesRepository {
-    override suspend fun saveImageProfile(newImageUrlStr: String): Flow<FbResponse<String>> {
-        return userImagesStorage.saveImageProfile(newImageUrlStr = newImageUrlStr)
+    override suspend fun saveImageProfile(newImageUriStr: String): Flow<FbResponse<String>> {
+        return userImagesStorage.saveImageProfile(newImageUriStr = newImageUriStr)
     }
 
     override suspend fun deleteImageProfile(): Flow<FbResponse<Boolean>> {

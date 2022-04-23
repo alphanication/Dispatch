@@ -62,10 +62,10 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun saveUserProfileImage(imageUriCache: String) = liveData(Dispatchers.IO) {
+    fun saveUserProfileImage(imageUriStr: String) = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
-            saveUserImageProfileUseCase.execute(newImageUrlStr = imageUriCache).collect { emit(it) }
+            saveUserImageProfileUseCase.execute(newImageUriStr = imageUriStr).collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e = e))
         }
