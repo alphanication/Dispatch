@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class ChangeUserDetailsPhotoProfileUrlUseCase(private val userDetailsRepository: UserDetailsRepository) {
-    suspend fun execute(newPhotoUrl: String): Flow<FbResponse<Boolean>> {
-        return userDetailsRepository.changePhotoProfileUrl(newPhotoUrl = newPhotoUrl)
+    suspend fun execute(newPhotoUri: String): Flow<FbResponse<Boolean>> {
+        return userDetailsRepository.changePhotoProfileUrl(newPhotoUri = newPhotoUri)
     }
 }
