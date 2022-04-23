@@ -51,16 +51,16 @@ class RestorePasswordFragment : Fragment() {
         viewModel.restoreUserPasswordByEmail(email).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is FbResponse.Loading -> {
-                    showProgressBar(showOrNo = true)
+                    showProgressBarRestore(showOrNo = true)
                 }
                 is FbResponse.Fail -> {
-                    showProgressBar(showOrNo = false)
                     Toast.makeText(activity, "Restore password fail :(", Toast.LENGTH_SHORT).show()
+                    showProgressBarRestore(showOrNo = false)
                 }
                 is FbResponse.Success -> {
-                    showProgressBar(showOrNo = false)
                     Toast.makeText(activity, "Check your email! :)", Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
+                    showProgressBarRestore(showOrNo = false)
                 }
             }
         }
@@ -71,20 +71,24 @@ class RestorePasswordFragment : Fragment() {
 
         var valid = false
 
-        if (email.isEmpty()) {
-            binding.edittextEmail.setError("Enter email address.", null)
-            binding.edittextEmail.requestFocus()
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.edittextEmail.setError("Enter valid email address.", null)
-            binding.edittextEmail.requestFocus()
-        } else {
-            valid = true
+        when {
+            email.isEmpty() -> {
+                binding.edittextEmail.setError("Enter email address.", null)
+                binding.edittextEmail.requestFocus()
+            }
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                binding.edittextEmail.setError("Enter valid email address.", null)
+                binding.edittextEmail.requestFocus()
+            }
+            else -> {
+                valid = true
+            }
         }
 
         return valid
     }
 
-    private fun showProgressBar(showOrNo: Boolean) {
+    private fun showProgressBarRestore(showOrNo: Boolean) {
         if (showOrNo) {
             binding.progressbarRestore.visibility = View.VISIBLE
             binding.buttonRestore.visibility = View.INVISIBLE

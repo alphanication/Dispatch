@@ -28,15 +28,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class SignUpFragment : Fragment() {
     private lateinit var binding: FragmentSignUpBinding
     private val viewModel: SignUpViewModel by viewModels()
-    private val userDetails = UserDetails(
-        uid = "",
-        fullname = "",
-        dateBirth = "",
-        email = "",
-        password = "",
-        photoProfileUrl = ""
-    )
-    private val userAuth = UserAuth("", "")
+    private val userDetails = UserDetails()
+    private val userAuth = UserAuth()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,8 +51,8 @@ class SignUpFragment : Fragment() {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
             if (resultCode == Activity.RESULT_OK) {
-                val resultUri = result.uri
-                viewModel.saveUserImageLiveData(textUri = resultUri.toString())
+                val resultUriStr = result.uri.toString()
+                viewModel.saveUserImageLiveData(imageUriStr = resultUriStr)
             }
         }
     }
@@ -103,12 +96,12 @@ class SignUpFragment : Fragment() {
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is FbResponse.Loading -> {
-                        showProgressBar(showOrNo = true)
+                        showProgressBarSignUp(showOrNo = true)
                     }
                     is FbResponse.Fail -> {
                         Toast.makeText(activity, "User register false :(", Toast.LENGTH_SHORT)
                             .show()
-                        showProgressBar(showOrNo = false)
+                        showProgressBarSignUp(showOrNo = false)
                     }
                     is FbResponse.Success -> {
                         getUserUidObserver()
@@ -124,10 +117,11 @@ class SignUpFragment : Fragment() {
                 is FbResponse.Fail -> {
                     Toast.makeText(activity, "Get user uid false :(", Toast.LENGTH_SHORT).show()
                     deleteCurrentUserAuthObserve()
-                    showProgressBar(showOrNo = false)
+                    showProgressBarSignUp(showOrNo = false)
                 }
                 is FbResponse.Success -> {
                     userDetails.uid = result.data
+
                     val imageUriCache = viewModel.cropImageView.value.toString()
                     if (imageUriCache.isNotEmpty()) {
                         saveUserImageObserver(imageUriCache = imageUriCache)
@@ -166,36 +160,22 @@ class SignUpFragment : Fragment() {
                             .show()
                         deleteCurrentUserAuthObserve()
                         deleteUserProfileImageObserve()
-                        showProgressBar(showOrNo = false)
+                        showProgressBarSignUp(showOrNo = false)
                     }
                     is FbResponse.Success -> {
-                        showProgressBar(showOrNo = false)
                         findNavController().navigate(R.id.action_signUpFragment_to_currentUserProfileFragment)
+                        showProgressBarSignUp(showOrNo = false)
                     }
                 }
             }
     }
 
     private fun deleteCurrentUserAuthObserve() {
-        viewModel.deleteCurrentUser().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is FbResponse.Loading -> {}
-                is FbResponse.Fail -> {}
-                is FbResponse.Success -> {
-                    Toast.makeText(activity, "Try to register again...", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+        viewModel.deleteCurrentUser().observe(viewLifecycleOwner) {}
     }
 
     private fun deleteUserProfileImageObserve() {
-        viewModel.deleteUserProfileImage().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is FbResponse.Loading -> {}
-                is FbResponse.Fail -> {}
-                is FbResponse.Success -> {}
-            }
-        }
+        viewModel.deleteUserProfileImage().observe(viewLifecycleOwner) {}
     }
 
     private fun cropImageActivityStart() {
@@ -209,17 +189,17 @@ class SignUpFragment : Fragment() {
             .start(requireContext(), this)
     }
 
+    private fun userAuthEditTextInit() {
+        userAuth.email = binding.edittextEmail.text.toString()
+        userAuth.password = binding.edittextPassword.text.toString()
+    }
+
     private fun userDetailsEditTextInit() {
         userDetails.fullname = binding.edittextFullname.text.toString()
         userDetails.dateBirth = binding.edittextDateBirth.text.toString()
         userDetails.email = binding.edittextEmail.text.toString()
         userDetails.password = binding.edittextPassword.text.toString()
         userDetails.photoProfileUrl = viewModel.cropImageView.value.toString()
-    }
-
-    private fun userAuthEditTextInit() {
-        userAuth.email = binding.edittextEmail.text.toString()
-        userAuth.password = binding.edittextPassword.text.toString()
     }
 
     private fun validEditTextShowError(): Boolean {
@@ -231,29 +211,38 @@ class SignUpFragment : Fragment() {
 
         var valid = false
 
-        if (fullname.isEmpty()) {
-            binding.edittextFullname.setError("Enter name!", null)
-            binding.edittextFullname.requestFocus()
-        } else if (!date.isDone) {
-            binding.edittextDateBirth.setError("Enter correct date!", null)
-            binding.edittextDateBirth.requestFocus()
-        } else if (email.isEmpty()) {
-            binding.edittextEmail.setError("Enter email address.", null)
-            binding.edittextEmail.requestFocus()
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.edittextEmail.setError("Enter valid email address.", null)
-            binding.edittextEmail.requestFocus()
-        } else if (password.isEmpty()) {
-            binding.edittextPassword.setError("Enter password.", null)
-            binding.edittextPassword.requestFocus()
-        } else if (password.length <= 6) {
-            binding.edittextPassword.setError("Password length must be > 6 characters.", null)
-            binding.edittextPassword.requestFocus()
-        } else if (confirmPassword != password) {
-            binding.edittextConfirmPassword.setError("Passwords must match.", null)
-            binding.edittextConfirmPassword.requestFocus()
-        } else {
-            valid = true
+        when {
+            fullname.isEmpty() -> {
+                binding.edittextFullname.setError("Enter name!", null)
+                binding.edittextFullname.requestFocus()
+            }
+            !date.isDone -> {
+                binding.edittextDateBirth.setError("Enter correct date!", null)
+                binding.edittextDateBirth.requestFocus()
+            }
+            email.isEmpty() -> {
+                binding.edittextEmail.setError("Enter email address.", null)
+                binding.edittextEmail.requestFocus()
+            }
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                binding.edittextEmail.setError("Enter valid email address.", null)
+                binding.edittextEmail.requestFocus()
+            }
+            password.isEmpty() -> {
+                binding.edittextPassword.setError("Enter password.", null)
+                binding.edittextPassword.requestFocus()
+            }
+            password.length <= 6 -> {
+                binding.edittextPassword.setError("Password length must be > 6 characters.", null)
+                binding.edittextPassword.requestFocus()
+            }
+            confirmPassword != password -> {
+                binding.edittextConfirmPassword.setError("Passwords must match.", null)
+                binding.edittextConfirmPassword.requestFocus()
+            }
+            else -> {
+                valid = true
+            }
         }
 
         return valid
@@ -261,39 +250,23 @@ class SignUpFragment : Fragment() {
 
     private fun setUserImage(imageUri: Uri) {
         binding.shapeableimagePhotoUser.setImageURI(imageUri)
-        showAddImageTextView(showOrNo = false)
-        showDeleteImageUserShapeable(showOrNo = true)
+        binding.textviewAddImage.visibility = View.INVISIBLE
+        binding.shapeableimageDeletePhotoUser.visibility = View.VISIBLE
     }
 
     private fun deleteUserImageView() {
         viewModel.deleteUserImageLiveData()
-        showDeleteImageUserShapeable(showOrNo = false)
-        showAddImageTextView(showOrNo = true)
+        binding.shapeableimageDeletePhotoUser.visibility = View.INVISIBLE
+        binding.textviewAddImage.visibility = View.VISIBLE
     }
 
-    private fun showProgressBar(showOrNo: Boolean) {
+    private fun showProgressBarSignUp(showOrNo: Boolean) {
         if (showOrNo) {
             binding.progressbarSignUp.visibility = View.VISIBLE
             binding.buttonSignUp.visibility = View.INVISIBLE
         } else {
             binding.progressbarSignUp.visibility = View.INVISIBLE
             binding.buttonSignUp.visibility = View.VISIBLE
-        }
-    }
-
-    private fun showAddImageTextView(showOrNo: Boolean) {
-        if (showOrNo) {
-            binding.textviewAddImage.visibility = View.VISIBLE
-        } else {
-            binding.textviewAddImage.visibility = View.INVISIBLE
-        }
-    }
-
-    private fun showDeleteImageUserShapeable(showOrNo: Boolean) {
-        if (showOrNo) {
-            binding.shapeableimageDeletePhotoUser.visibility = View.VISIBLE
-        } else {
-            binding.shapeableimageDeletePhotoUser.visibility = View.INVISIBLE
         }
     }
 }

@@ -40,9 +40,9 @@ class FirebaseUserAuthStorage : UserAuthStorage {
         }
 
     override suspend fun checkSignedIn(): Flow<FbResponse<Boolean>> = callbackFlow {
-        val user = fAuth.currentUser
+        val currentUser = fAuth.currentUser
 
-        if (user != null) {
+        if (currentUser != null) {
             trySend(FbResponse.Success(data = true))
         } else {
             trySend(FbResponse.Fail(Exception("current user = null")))
@@ -53,8 +53,8 @@ class FirebaseUserAuthStorage : UserAuthStorage {
 
     override suspend fun getCurrentUserUid(): Flow<FbResponse<String>> = callbackFlow {
         try {
-            val uid = fAuth.currentUser?.uid.toString()
-            trySend(FbResponse.Success(data = uid))
+            val uidCurrentUser = fAuth.currentUser?.uid.toString()
+            trySend(FbResponse.Success(data = uidCurrentUser))
         } catch (e: Exception) {
             trySend(FbResponse.Fail(e = e))
         }

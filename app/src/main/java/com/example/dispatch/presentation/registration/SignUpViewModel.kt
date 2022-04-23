@@ -31,7 +31,7 @@ class SignUpViewModel @Inject constructor(
         try {
             getCurrentUserUidUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e))
+            emit(FbResponse.Fail(e = e))
         }
     }
 
@@ -40,7 +40,7 @@ class SignUpViewModel @Inject constructor(
         try {
             deleteCurrentUserAuthUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e))
+            emit(FbResponse.Fail(e = e))
         }
     }
 
@@ -49,7 +49,7 @@ class SignUpViewModel @Inject constructor(
         try {
             signUpUserAuthUseCase.execute(userAuth = userAuth).collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e))
+            emit(FbResponse.Fail(e = e))
         }
     }
 
@@ -58,7 +58,7 @@ class SignUpViewModel @Inject constructor(
         try {
             saveUserDetailsUseCase.execute(userDetails = userDetails).collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e))
+            emit(FbResponse.Fail(e = e))
         }
     }
 
@@ -67,7 +67,7 @@ class SignUpViewModel @Inject constructor(
         try {
             saveUserImageProfileUseCase.execute(newImageUrlStr = imageUriCache).collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e))
+            emit(FbResponse.Fail(e = e))
         }
     }
 
@@ -76,13 +76,13 @@ class SignUpViewModel @Inject constructor(
         try {
             deleteUserImageProfileUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e))
+            emit(FbResponse.Fail(e = e))
         }
     }
 
-    fun saveUserImageLiveData(textUri: String) {
-        if (textUri.isNotEmpty()) {
-            _cropImageView.value = textUri
+    fun saveUserImageLiveData(imageUriStr: String) {
+        if (imageUriStr.isNotEmpty()) {
+            _cropImageView.value = imageUriStr
         }
     }
 

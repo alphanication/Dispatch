@@ -1,7 +1,6 @@
 package com.example.dispatch.presentation.messages
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,8 +48,6 @@ class LatestMessagesFragment : Fragment() {
                 }
                 is FbResponse.Success -> {
                     userDetails = result.data
-                    Log.d("userDetailsInfo", userDetails.fullname)
-                    Log.d("userDetailsInfo", userDetails.photoProfileUrl)
 
                     binding.textViewProfileFullname.text = userDetails.fullname
                     Glide.with(this)
