@@ -251,14 +251,14 @@ class CurrentUserProfileFragment : Fragment() {
                         viewModel.deleteUserImageLiveData()
 
                         val photoProfileUrl = result.data
-                        changeUserPhotoProfileObserve(photoProfileUrl = photoProfileUrl)
+                        changeUserPhotoProfileObserve(photoProfileUri = photoProfileUrl)
                     }
                 }
             }
     }
 
-    private fun changeUserPhotoProfileObserve(photoProfileUrl: String) {
-        viewModel.changeUserDetailsPhotoProfile(photoProfileUrl = photoProfileUrl)
+    private fun changeUserPhotoProfileObserve(photoProfileUri: String) {
+        viewModel.changeUserDetailsPhotoProfile(photoProfileUri = photoProfileUri)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is FbResponse.Loading -> {

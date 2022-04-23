@@ -2,6 +2,7 @@ package com.example.dispatch.di
 
 import com.example.dispatch.domain.repository.UserAuthRepository
 import com.example.dispatch.domain.repository.UserDetailsRepository
+import com.example.dispatch.domain.repository.UserImagesRepository
 import com.example.dispatch.domain.usecase.*
 import dagger.Module
 import dagger.Provides
@@ -59,13 +60,13 @@ class DomainModule {
     }
 
     @Provides
-    fun providesSaveUserImageProfileUseCase(userDetailsRepository: UserDetailsRepository): SaveUserImageProfileUseCase {
-        return SaveUserImageProfileUseCase(userDetailsRepository = userDetailsRepository)
+    fun providesSaveUserImageProfileUseCase(userImagesRepository: UserImagesRepository): SaveUserImageProfileUseCase {
+        return SaveUserImageProfileUseCase(userImagesRepository = userImagesRepository)
     }
 
     @Provides
-    fun providesDeleteUserImageProfileUseCase(userDetailsRepository: UserDetailsRepository): DeleteUserImageProfileUseCase {
-        return DeleteUserImageProfileUseCase(userDetailsRepository = userDetailsRepository)
+    fun providesDeleteUserImageProfileUseCase(userImagesRepository: UserImagesRepository): DeleteUserImageProfileUseCase {
+        return DeleteUserImageProfileUseCase(userImagesRepository = userImagesRepository)
     }
 
     @Provides
