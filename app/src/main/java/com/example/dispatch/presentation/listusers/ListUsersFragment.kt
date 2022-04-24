@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.dispatch.R
+import com.example.dispatch.databinding.FragmentListUsersBinding
 
 class ListUsersFragment : Fragment() {
+    private lateinit var binding: FragmentListUsersBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_list_users, container, false)
+    ): View {
+        binding = FragmentListUsersBinding.inflate(inflater, container, false)
+        return binding.root
     }
 }
