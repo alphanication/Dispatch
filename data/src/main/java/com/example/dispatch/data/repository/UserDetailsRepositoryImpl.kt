@@ -3,6 +3,7 @@ package com.example.dispatch.data.repository
 import com.example.dispatch.data.storage.UserDetailsStorage
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserDetails
+import com.example.dispatch.domain.models.UserDetailsPublic
 import com.example.dispatch.domain.repository.UserDetailsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -42,7 +43,7 @@ class UserDetailsRepositoryImpl(private val userDetailsStorage: UserDetailsStora
         return userDetailsStorage.changePassword(newPassword = newPassword)
     }
 
-    override suspend fun getUsersList(): Flow<FbResponse<UserDetails>> {
+    override suspend fun getUsersList(): Flow<FbResponse<UserDetailsPublic>> {
         return userDetailsStorage.getUsersList()
     }
 }
