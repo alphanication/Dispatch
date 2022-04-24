@@ -12,15 +12,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentCurrentUserProfileBinding
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.models.UserDetails
+import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
@@ -359,9 +360,7 @@ class CurrentUserProfileFragment : Fragment() {
                     binding.edittextFullname.setText(userDetails.fullname)
                     binding.edittextDateBirth.setText(userDetails.dateBirth)
                     binding.edittextEmail.setText(userDetails.email)
-                    Glide.with(this)
-                        .load(userDetails.photoProfileUrl)
-                        .fitCenter()
+                    Picasso.get().load(userDetails.photoProfileUrl).transform(CropCircleTransformation())
                         .into(binding.shapeableimagePhotoUser)
 
                     showProgressBarLoadInfoUser(showOrNo = false)

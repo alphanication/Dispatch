@@ -8,12 +8,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentLatestMessagesBinding
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserDetails
+import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
@@ -59,9 +60,7 @@ class LatestMessagesFragment : Fragment() {
                     userDetails = result.data
 
                     binding.textViewProfileFullname.text = userDetails.fullname
-                    Glide.with(this)
-                        .load(userDetails.photoProfileUrl)
-                        .fitCenter()
+                    Picasso.get().load(userDetails.photoProfileUrl).transform(CropCircleTransformation())
                         .into(binding.shapeableImageViewProfileImage)
                     showProgressBarLoadUserDetails(showOrNo = false)
                 }

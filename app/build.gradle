@@ -74,11 +74,11 @@ dependencies {
     // crop image  view
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
-    // glide
-    implementation 'com.github.bumptech.glide:glide:4.13.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
+    // picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'jp.wasabeef:picasso-transformations:2.4.0'
 
-    // Groupie RecyclerView
+    // groupie RecyclerView
     implementation 'com.github.lisawray.groupie:groupie:2.9.0'
     implementation 'com.github.lisawray.groupie:groupie-viewbinding:2.9.0'
 
