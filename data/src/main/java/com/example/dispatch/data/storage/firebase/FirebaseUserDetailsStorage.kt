@@ -3,6 +3,7 @@ package com.example.dispatch.data.storage.firebase
 import com.example.dispatch.data.storage.UserDetailsStorage
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserDetails
+import com.example.dispatch.domain.models.UserDetailsPublic
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -144,7 +145,7 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
             awaitClose { this.cancel() }
         }
 
-    override suspend fun getUsersList(): Flow<FbResponse<UserDetails>> = callbackFlow {
+    override suspend fun getUsersList(): Flow<FbResponse<UserDetailsPublic>> = callbackFlow {
         val refUsers = fDatabase.getReference("/users/")
 
         refUsers.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -152,7 +153,14 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
                 snapshot.children.forEach {
                     val user = it.getValue(UserDetails::class.java)
                     if (user != null) {
-                        trySend(FbResponse.Success(user))
+                        val userPublic = UserDetailsPublic(
+                            uid = user.uid,
+                            fullname = user.fullname,
+                            dateBirth = user.dateBirth,
+                            email = user.email,
+                            photoProfileUrl = user.photoProfileUrl
+                        )
+                        trySend(FbResponse.Success(userPublic))
                     } else {
                         trySend(FbResponse.Fail(e = Exception("user null")))
                     }

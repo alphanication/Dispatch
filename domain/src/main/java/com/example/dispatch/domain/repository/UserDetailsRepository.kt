@@ -2,6 +2,7 @@ package com.example.dispatch.domain.repository
 
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserDetails
+import com.example.dispatch.domain.models.UserDetailsPublic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
@@ -56,5 +57,5 @@ interface UserDetailsRepository {
      */
     suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>>
 
-    suspend fun getUsersList() : Flow<FbResponse<UserDetails>>
+    suspend fun getUsersList() : Flow<FbResponse<UserDetailsPublic>>
 }
