@@ -108,4 +108,9 @@ class DomainModule {
     fun providesChangeUserDetailsPhotoProfileUrlUseCase(userDetailsRepository: UserDetailsRepository): ChangeUserDetailsPhotoProfileUrlUseCase {
         return ChangeUserDetailsPhotoProfileUrlUseCase(userDetailsRepository = userDetailsRepository)
     }
+
+    @Provides
+    fun providesGetUsersListUseCase(userDetailsRepository: UserDetailsRepository) : GetUsersListUseCase {
+        return GetUsersListUseCase(userDetailsRepository = userDetailsRepository)
+    }
 }
