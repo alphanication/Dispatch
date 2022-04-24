@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/signInFragment">
+    app:startDestination="@id/splashScreenFragment">
 
     <fragment
         android:id="@+id/signInFragment"
@@ -69,4 +69,15 @@
         android:name="com.example.dispatch.presentation.listusers.ListUsersFragment"
         android:label="fragment_list_users"
         tools:layout="@layout/fragment_list_users" />
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.example.dispatch.presentation.splash.SplashScreenFragment"
+        android:label="fragment_splash_screen"
+        tools:layout="@layout/fragment_splash_screen" >
+        <action
+            android:id="@+id/action_splashScreenFragment_to_signInFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"
+            app:destination="@id/signInFragment" />
+    </fragment>
 </navigation>
