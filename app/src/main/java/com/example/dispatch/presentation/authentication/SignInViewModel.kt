@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserAuth
+import com.example.dispatch.domain.usecase.CheckUserAuthSignedInUseCase
 import com.example.dispatch.domain.usecase.SignInUserAuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -13,12 +14,22 @@ import javax.inject.Inject
 @HiltViewModel
 @ExperimentalCoroutinesApi
 class SignInViewModel @Inject constructor(
-    private val signInUserAuthUseCase: SignInUserAuthUseCase
+    private val signInUserAuthUseCase: SignInUserAuthUseCase,
+    private val checkUserAuthSignedInUseCase: CheckUserAuthSignedInUseCase
 ) : ViewModel() {
     fun loginUserAuth(userAuth: UserAuth) = liveData(Dispatchers.IO) {
         emit(FbResponse.Loading())
         try {
             signInUserAuthUseCase.execute(userAuth = userAuth).collect { emit(it) }
+        } catch (e: Exception) {
+            emit(FbResponse.Fail(e = e))
+        }
+    }
+
+    fun checkSignIn() = liveData {
+        emit(FbResponse.Loading())
+        try {
+            checkUserAuthSignedInUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
             emit(FbResponse.Fail(e = e))
         }
