@@ -41,4 +41,8 @@ class UserDetailsRepositoryImpl(private val userDetailsStorage: UserDetailsStora
     override suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>> {
         return userDetailsStorage.changePassword(newPassword = newPassword)
     }
+
+    override suspend fun getUsersList(): Flow<FbResponse<UserDetails>> {
+        return userDetailsStorage.getUsersList()
+    }
 }

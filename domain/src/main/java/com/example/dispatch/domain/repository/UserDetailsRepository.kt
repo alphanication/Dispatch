@@ -55,4 +55,6 @@ interface UserDetailsRepository {
      * @param newPassword - new user password
      */
     suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>>
+
+    suspend fun getUsersList() : Flow<FbResponse<UserDetails>>
 }
