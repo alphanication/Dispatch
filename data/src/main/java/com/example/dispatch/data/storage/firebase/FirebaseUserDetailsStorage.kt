@@ -4,7 +4,10 @@ import com.example.dispatch.data.storage.UserDetailsStorage
 import com.example.dispatch.domain.models.FbResponse
 import com.example.dispatch.domain.models.UserDetails
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -140,4 +143,27 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
 
             awaitClose { this.cancel() }
         }
+
+    override suspend fun getUsersList(): Flow<FbResponse<UserDetails>> = callbackFlow {
+        val refUsers = fDatabase.getReference("/users/")
+
+        refUsers.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {
+                    val user = it.getValue(UserDetails::class.java)
+                    if (user != null) {
+                        trySend(FbResponse.Success(user))
+                    } else {
+                        trySend(FbResponse.Fail(e = Exception("user null")))
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                trySend(FbResponse.Fail(e = error.toException()))
+            }
+        })
+
+        awaitClose { this.cancel() }
+    }
 }

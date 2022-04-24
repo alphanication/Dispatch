@@ -22,4 +22,6 @@ interface UserDetailsStorage {
     suspend fun changeEmailAddress(newEmail: String): Flow<FbResponse<Boolean>>
 
     suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>>
+
+    suspend fun getUsersList() : Flow<FbResponse<UserDetails>>
 }
