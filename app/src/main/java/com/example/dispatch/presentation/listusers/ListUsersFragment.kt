@@ -9,8 +9,11 @@ import androidx.fragment.app.viewModels
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentListUsersBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+
 
 @AndroidEntryPoint
+@ExperimentalCoroutinesApi
 class ListUsersFragment : Fragment() {
     private lateinit var binding: FragmentListUsersBinding
     private val viewModel: ListUsersViewModel by viewModels()
