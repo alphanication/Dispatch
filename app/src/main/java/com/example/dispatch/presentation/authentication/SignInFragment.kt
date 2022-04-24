@@ -35,6 +35,7 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setOnClickListeners()
+        checkSignInObserve()
     }
 
     private fun setOnClickListeners() {
@@ -67,6 +68,16 @@ class SignInFragment : Fragment() {
                 is FbResponse.Success -> {
                     findNavController().navigate(R.id.action_signInFragment_to_currentUserProfileFragment)
                     showProgressBar(showOrNo = false)
+                }
+            }
+        }
+    }
+
+    private fun checkSignInObserve() {
+        viewModel.checkSignIn().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is FbResponse.Success -> {
+                    findNavController().navigate(R.id.action_signInFragment_to_currentUserProfileFragment)
                 }
             }
         }
