@@ -34,4 +34,5 @@
     <string name="fragmentCurrentUserProfile_update_profile">UPDATE PROFILE</string>
     <string name="fragmentCurrentUserProfile_change_password">UPDATE PASSWORD</string>
     <string name="fragmentListUsers_select_user">SELECT USER</string>
+    <string name="fragmentDetailsMessages_type_message">Type a message</string>
 </resources>

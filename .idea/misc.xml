@@ -6,6 +6,8 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1645" />
         <entry key="app/src/main/res/drawable/background_circle.xml" value="0.1685" />
         <entry key="app/src/main/res/drawable/background_content_bottom.xml" value="0.1625" />
+        <entry key="app/src/main/res/drawable/background_content_top.xml" value="0.1655" />
+        <entry key="app/src/main/res/drawable/background_details_messages_input.xml" value="0.1415" />
         <entry key="app/src/main/res/drawable/background_shapeableimageview.xml" value="0.2265" />
         <entry key="app/src/main/res/drawable/background_view_circle.xml" value="0.1685" />
         <entry key="app/src/main/res/drawable/background_view_circle_bottom.xml" value="0.188" />
@@ -14,8 +16,9 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1745" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19157608695652173" />
         <entry key="app/src/main/res/layout/fragment_current_user_profile.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_details_messages.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_latest_messages.xml" value="0.30743243243243246" />
-        <entry key="app/src/main/res/layout/fragment_list_users.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_list_users.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_message_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_restore_password.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.1" />
