@@ -9,6 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SplashScreenFragment : Fragment() {
     override fun onCreateView(
@@ -17,9 +21,10 @@ class SplashScreenFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_splash_screen, container, false)
 
-        Handler(Looper.myLooper()!!).postDelayed({
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(800)
             findNavController().navigate(R.id.action_splashScreenFragment_to_signInFragment)
-        }, 800)
+        }
 
         return view
     }
