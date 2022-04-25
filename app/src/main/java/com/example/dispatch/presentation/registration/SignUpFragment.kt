@@ -163,7 +163,7 @@ class SignUpFragment : Fragment() {
                         showProgressBarSignUp(showOrNo = false)
                     }
                     is FbResponse.Success -> {
-                        findNavController().navigate(R.id.action_signUpFragment_to_currentUserProfileFragment)
+                        findNavController().popBackStack()
                         showProgressBarSignUp(showOrNo = false)
                     }
                 }

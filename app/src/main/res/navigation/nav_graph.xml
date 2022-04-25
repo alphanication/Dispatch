@@ -17,22 +17,14 @@
             android:id="@+id/action_signInFragment_to_restorePasswordFragment"
             app:destination="@id/restorePasswordFragment" />
         <action
-            android:id="@+id/action_signInFragment_to_currentUserProfileFragment"
-            app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true"
-            app:destination="@id/currentUserProfileFragment" />
+            android:id="@+id/action_signInFragment_to_latestMessagesFragment"
+            app:destination="@id/latestMessagesFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.example.dispatch.presentation.registration.SignUpFragment"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up">
-        <action
-            android:id="@+id/action_signUpFragment_to_currentUserProfileFragment"
-            app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true"
-            app:destination="@id/currentUserProfileFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_sign_up"/>
     <fragment
         android:id="@+id/restorePasswordFragment"
         android:name="com.example.dispatch.presentation.restore.RestorePasswordFragment"
@@ -48,9 +40,6 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true"
             app:destination="@id/signInFragment" />
-        <action
-            android:id="@+id/action_currentUserProfileFragment_to_latestMessagesFragment"
-            app:destination="@id/latestMessagesFragment" />
     </fragment>
     <fragment
         android:id="@+id/latestMessagesFragment"
@@ -71,6 +60,8 @@
         tools:layout="@layout/fragment_list_users" >
         <action
             android:id="@+id/action_listUsersFragment_to_detailsMessagesFragment"
+            app:popUpTo="@id/latestMessagesFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/detailsMessagesFragment" />
     </fragment>
     <fragment
