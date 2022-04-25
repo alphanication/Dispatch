@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.dispatch.R
+import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
 
 class DetailsMessagesFragment : Fragment() {
+    private lateinit var binding: FragmentDetailsMessagesBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_details_messages, container, false)
+    ): View {
+        binding = FragmentDetailsMessagesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 }
