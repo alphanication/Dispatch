@@ -1,10 +1,10 @@
 package com.example.dispatch.presentation.listusers
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
@@ -28,6 +28,10 @@ class ListUsersFragment : Fragment() {
     private val viewModel: ListUsersViewModel by viewModels()
     private val adapter = GroupAdapter<GroupieViewHolder<ItemContainerUserBinding>>()
 
+    companion object {
+        const val PARTNER_UID = "PARTNER_UID"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +50,17 @@ class ListUsersFragment : Fragment() {
     private fun setOnClickListeners() {
         binding.imageViewBack.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        adapter.setOnItemClickListener { item, _ ->
+            val userItem = item as UserItem
+            val partnerUserUid = userItem.user.uid
+
+            findNavController().navigate(
+                R.id.action_listUsersFragment_to_detailsMessagesFragment,
+                Bundle().apply {
+                    putString(PARTNER_UID, partnerUserUid)
+                })
         }
     }
 
