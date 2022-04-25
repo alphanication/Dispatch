@@ -68,7 +68,11 @@
         android:id="@+id/listUsersFragment"
         android:name="com.example.dispatch.presentation.listusers.ListUsersFragment"
         android:label="fragment_list_users"
-        tools:layout="@layout/fragment_list_users" />
+        tools:layout="@layout/fragment_list_users" >
+        <action
+            android:id="@+id/action_listUsersFragment_to_detailsMessagesFragment"
+            app:destination="@id/detailsMessagesFragment" />
+    </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
         android:name="com.example.dispatch.presentation.splash.SplashScreenFragment"
@@ -80,4 +84,9 @@
             app:popUpToInclusive="true"
             app:destination="@id/signInFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/detailsMessagesFragment"
+        android:name="com.example.dispatch.presentation.messages.DetailsMessagesFragment"
+        android:label="fragment_details_messages"
+        tools:layout="@layout/fragment_details_messages" />
 </navigation>
