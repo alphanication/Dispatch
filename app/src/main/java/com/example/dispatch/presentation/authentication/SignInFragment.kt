@@ -66,7 +66,7 @@ class SignInFragment : Fragment() {
                     showProgressBar(showOrNo = false)
                 }
                 is FbResponse.Success -> {
-                    findNavController().navigate(R.id.action_signInFragment_to_currentUserProfileFragment)
+                    findNavController().navigate(R.id.action_signInFragment_to_latestMessagesFragment)
                     showProgressBar(showOrNo = false)
                 }
             }
@@ -77,7 +77,7 @@ class SignInFragment : Fragment() {
         viewModel.checkSignIn().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is FbResponse.Success -> {
-                    findNavController().navigate(R.id.action_signInFragment_to_currentUserProfileFragment)
+                    findNavController().navigate(R.id.action_signInFragment_to_latestMessagesFragment)
                 }
             }
         }
