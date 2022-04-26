@@ -113,4 +113,9 @@ class DomainModule {
     fun providesGetUsersListUseCase(userDetailsRepository: UserDetailsRepository) : GetUsersListUseCase {
         return GetUsersListUseCase(userDetailsRepository = userDetailsRepository)
     }
+
+    @Provides
+    fun providesGetUserDetailsPublicOnUid(userDetailsRepository: UserDetailsRepository) : GetUserDetailsPublicOnUidUseCase {
+        return GetUserDetailsPublicOnUidUseCase(userDetailsRepository = userDetailsRepository)
+    }
 }
