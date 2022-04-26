@@ -25,4 +25,6 @@ interface UserDetailsStorage {
     suspend fun changePassword(newPassword: String): Flow<FbResponse<Boolean>>
 
     suspend fun getUsersList() : Flow<FbResponse<UserDetailsPublic>>
+
+    suspend fun getUserDetailsPublicOnUid(uid: String) : Flow<FbResponse<UserDetailsPublic>>
 }

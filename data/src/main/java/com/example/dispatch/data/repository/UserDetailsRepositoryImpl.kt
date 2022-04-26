@@ -46,4 +46,8 @@ class UserDetailsRepositoryImpl(private val userDetailsStorage: UserDetailsStora
     override suspend fun getUsersList(): Flow<FbResponse<UserDetailsPublic>> {
         return userDetailsStorage.getUsersList()
     }
+
+    override suspend fun getUserDetailsPublicOnUid(uid: String): Flow<FbResponse<UserDetailsPublic>> {
+        return userDetailsStorage.getUserDetailsPublicOnUid(uid = uid)
+    }
 }
