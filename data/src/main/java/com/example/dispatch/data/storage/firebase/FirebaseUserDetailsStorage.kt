@@ -174,4 +174,28 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
 
         awaitClose { this.cancel() }
     }
+
+    override suspend fun getUserDetailsPublicOnUid(uid: String): Flow<FbResponse<UserDetailsPublic>> = callbackFlow {
+        val refUserUid = fDatabase.getReference("/users/$uid")
+
+        refUserUid.get().addOnSuccessListener { result ->
+            val user: UserDetails? = result.getValue(UserDetails::class.java)
+            if (user != null) {
+                val userPublic = UserDetailsPublic(
+                    uid = user.uid,
+                    fullname = user.fullname,
+                    dateBirth = user.dateBirth,
+                    email = user.email,
+                    photoProfileUrl = user.photoProfileUrl
+                )
+                trySend(FbResponse.Success(data = userPublic))
+            } else {
+                trySend(FbResponse.Fail(e = Exception("user null")))
+            }
+        }.addOnFailureListener { e ->
+            trySend(FbResponse.Fail(e = e))
+        }
+
+        awaitClose { this.cancel() }
+    }
 }
