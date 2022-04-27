@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.dispatch.databinding.FragmentRestorePasswordBinding
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -50,14 +50,14 @@ class RestorePasswordFragment : Fragment() {
     private fun restoreUserPasswordObserve(email: String) {
         viewModel.restoreUserPasswordByEmail(email).observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Loading -> {
+                is Response.Loading -> {
                     showProgressBarRestore(showOrNo = true)
                 }
-                is FbResponse.Fail -> {
+                is Response.Fail -> {
                     Toast.makeText(activity, "Restore password fail :(", Toast.LENGTH_SHORT).show()
                     showProgressBarRestore(showOrNo = false)
                 }
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     Toast.makeText(activity, "Check your email! :)", Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                     showProgressBarRestore(showOrNo = false)

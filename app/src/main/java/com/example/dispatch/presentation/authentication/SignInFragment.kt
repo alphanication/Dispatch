@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentSignInBinding
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -58,14 +58,14 @@ class SignInFragment : Fragment() {
     private fun loginUserAuthObserve(userAuth: UserAuth) {
         viewModel.loginUserAuth(userAuth = userAuth).observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Loading -> {
+                is Response.Loading -> {
                     showProgressBar(showOrNo = true)
                 }
-                is FbResponse.Fail -> {
+                is Response.Fail -> {
                     Toast.makeText(activity, "User auth fail :(", Toast.LENGTH_SHORT).show()
                     showProgressBar(showOrNo = false)
                 }
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     findNavController().navigate(R.id.action_signInFragment_to_latestMessagesFragment)
                     showProgressBar(showOrNo = false)
                 }
@@ -76,7 +76,7 @@ class SignInFragment : Fragment() {
     private fun checkSignInObserve() {
         viewModel.checkSignIn().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     findNavController().navigate(R.id.action_signInFragment_to_latestMessagesFragment)
                 }
             }

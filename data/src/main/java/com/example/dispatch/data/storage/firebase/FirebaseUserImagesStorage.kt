@@ -2,7 +2,7 @@ package com.example.dispatch.data.storage.firebase
 
 import android.net.Uri
 import com.example.dispatch.data.storage.UserImagesStorage
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,7 +18,7 @@ class FirebaseUserImagesStorage : UserImagesStorage {
         private val fStorage = FirebaseStorage.getInstance()
     }
 
-    override suspend fun saveImageProfile(newImageUriStr: String): Flow<FbResponse<String>> = callbackFlow {
+    override suspend fun saveImageProfile(newImageUriStr: String): Flow<Response<String>> = callbackFlow {
         val uidCurrentUser = fAuth.currentUser?.uid.toString()
         val refImage = fStorage.getReference("/$uidCurrentUser/profile.jpg")
         val imageProfileUri: Uri = Uri.parse(newImageUriStr)
@@ -26,26 +26,26 @@ class FirebaseUserImagesStorage : UserImagesStorage {
         refImage.putFile(imageProfileUri).addOnCompleteListener {
             refImage.downloadUrl.addOnSuccessListener { uri ->
                 val uriStr = uri.toString()
-                trySend(FbResponse.Success(data = uriStr))
+                trySend(Response.Success(data = uriStr))
             }.addOnFailureListener { e ->
-                trySend(FbResponse.Fail(e = e))
+                trySend(Response.Fail(e = e))
             }
         }.addOnFailureListener { e ->
-            trySend(FbResponse.Fail(e = e))
+            trySend(Response.Fail(e = e))
         }
 
         awaitClose { this.cancel() }
     }
 
-    override suspend fun deleteImageProfile(): Flow<FbResponse<Boolean>> = callbackFlow {
+    override suspend fun deleteImageProfile(): Flow<Response<Boolean>> = callbackFlow {
         val uidCurrentUser = fAuth.currentUser?.uid.toString()
         val refImage = fStorage.getReference("/$uidCurrentUser/profile.jpg")
 
         refImage.delete()
             .addOnSuccessListener {
-                trySend(FbResponse.Success(data = true))
+                trySend(Response.Success(data = true))
             }.addOnFailureListener { e ->
-                trySend(FbResponse.Fail(e = e))
+                trySend(Response.Fail(e = e))
             }
 
         awaitClose { this.cancel() }

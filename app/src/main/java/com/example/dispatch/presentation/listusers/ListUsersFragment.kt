@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentListUsersBinding
 import com.example.dispatch.databinding.ItemContainerUserBinding
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetailsPublic
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
@@ -67,10 +67,10 @@ class ListUsersFragment : Fragment() {
     private fun getUsersListObserve() {
         viewModel.getUsersList().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Loading -> {}
-                is FbResponse.Fail -> {
+                is Response.Loading -> {}
+                is Response.Fail -> {
                 }
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     adapter.add(UserItem(user = result.data))
                     binding.recyclerViewListUsers.adapter = adapter
                 }

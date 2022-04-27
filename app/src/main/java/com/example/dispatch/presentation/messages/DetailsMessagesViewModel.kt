@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetailsPublic
 import com.example.dispatch.domain.usecase.GetUserDetailsPublicOnUidUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,11 +23,11 @@ class DetailsMessagesViewModel @Inject constructor(
     val companionDetails: LiveData<UserDetailsPublic> = _companionDetails
 
     fun getUserDetailsPublicOnUid(uid: String) = liveData(Dispatchers.IO) {
-        emit(FbResponse.Loading())
+        emit(Response.Loading())
         try {
             getUserDetailsPublicOnUidUseCase.execute(uid = uid).collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e = e))
+            emit(Response.Fail(e = e))
         }
     }
 }

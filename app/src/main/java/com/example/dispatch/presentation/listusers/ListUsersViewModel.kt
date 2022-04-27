@@ -2,7 +2,7 @@ package com.example.dispatch.presentation.listusers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.usecase.GetUsersListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,11 +15,11 @@ class ListUsersViewModel @Inject constructor(
     private val getUsersListUseCase: GetUsersListUseCase
 ) : ViewModel() {
     fun getUsersList() = liveData(Dispatchers.IO) {
-        emit(FbResponse.Loading())
+        emit(Response.Loading())
         try {
             getUsersListUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e))
+            emit(Response.Fail(e))
         }
     }
 }
