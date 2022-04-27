@@ -2,7 +2,7 @@ package com.example.dispatch.presentation.authentication
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.usecase.CheckUserAuthSignedInUseCase
 import com.example.dispatch.domain.usecase.SignInUserAuthUseCase
@@ -18,20 +18,20 @@ class SignInViewModel @Inject constructor(
     private val checkUserAuthSignedInUseCase: CheckUserAuthSignedInUseCase
 ) : ViewModel() {
     fun loginUserAuth(userAuth: UserAuth) = liveData(Dispatchers.IO) {
-        emit(FbResponse.Loading())
+        emit(Response.Loading())
         try {
             signInUserAuthUseCase.execute(userAuth = userAuth).collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e = e))
+            emit(Response.Fail(e = e))
         }
     }
 
     fun checkSignIn() = liveData {
-        emit(FbResponse.Loading())
+        emit(Response.Loading())
         try {
             checkUserAuthSignedInUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e = e))
+            emit(Response.Fail(e = e))
         }
     }
 }

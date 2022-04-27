@@ -1,7 +1,7 @@
 package com.example.dispatch.data.storage.firebase
 
 import com.example.dispatch.data.storage.UserAuthStorage
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,74 +16,74 @@ class FirebaseUserAuthStorage : UserAuthStorage {
         private val fAuth = FirebaseAuth.getInstance()
     }
 
-    override suspend fun login(userAuth: UserAuth): Flow<FbResponse<Boolean>> = callbackFlow {
+    override suspend fun login(userAuth: UserAuth): Flow<Response<Boolean>> = callbackFlow {
         fAuth.signInWithEmailAndPassword(userAuth.email, userAuth.password)
             .addOnSuccessListener {
-                trySend(FbResponse.Success(data = true))
+                trySend(Response.Success(data = true))
             }.addOnFailureListener { e ->
-                trySend(FbResponse.Fail(e = e))
+                trySend(Response.Fail(e = e))
             }
 
         awaitClose { this.cancel() }
     }
 
-    override suspend fun register(userAuth: UserAuth): Flow<FbResponse<Boolean>> =
+    override suspend fun register(userAuth: UserAuth): Flow<Response<Boolean>> =
         callbackFlow {
             fAuth.createUserWithEmailAndPassword(userAuth.email, userAuth.password)
                 .addOnSuccessListener {
-                    trySend(FbResponse.Success(data = true))
+                    trySend(Response.Success(data = true))
                 }.addOnFailureListener { e ->
-                    trySend(FbResponse.Fail(e = e))
+                    trySend(Response.Fail(e = e))
                 }
 
             awaitClose { this.cancel() }
         }
 
-    override suspend fun checkSignedIn(): Flow<FbResponse<Boolean>> = callbackFlow {
+    override suspend fun checkSignedIn(): Flow<Response<Boolean>> = callbackFlow {
         val currentUser = fAuth.currentUser
 
         if (currentUser != null) {
-            trySend(FbResponse.Success(data = true))
+            trySend(Response.Success(data = true))
         } else {
-            trySend(FbResponse.Fail(Exception("current user = null")))
+            trySend(Response.Fail(Exception("current user = null")))
         }
 
         awaitClose { this.cancel() }
     }
 
-    override suspend fun getCurrentUserUid(): Flow<FbResponse<String>> = callbackFlow {
+    override suspend fun getCurrentUserUid(): Flow<Response<String>> = callbackFlow {
         try {
             val uidCurrentUser = fAuth.currentUser?.uid.toString()
-            trySend(FbResponse.Success(data = uidCurrentUser))
+            trySend(Response.Success(data = uidCurrentUser))
         } catch (e: Exception) {
-            trySend(FbResponse.Fail(e = e))
+            trySend(Response.Fail(e = e))
         }
 
         awaitClose { this.cancel() }
     }
 
-    override suspend fun deleteCurrentUser(): Flow<FbResponse<Boolean>> = callbackFlow {
+    override suspend fun deleteCurrentUser(): Flow<Response<Boolean>> = callbackFlow {
         try {
             fAuth.currentUser?.delete()
                 ?.addOnSuccessListener {
-                    trySend(FbResponse.Success(data = true))
+                    trySend(Response.Success(data = true))
                 }?.addOnFailureListener { e ->
-                    trySend(FbResponse.Fail(e = e))
+                    trySend(Response.Fail(e = e))
                 }
         } catch (e: Exception) {
-            trySend(FbResponse.Fail(e = e))
+            trySend(Response.Fail(e = e))
         }
 
         awaitClose { this.cancel() }
     }
 
-    override suspend fun restorePasswordByEmail(email: String): Flow<FbResponse<Boolean>> =
+    override suspend fun restorePasswordByEmail(email: String): Flow<Response<Boolean>> =
         callbackFlow {
             fAuth.sendPasswordResetEmail(email)
                 .addOnSuccessListener {
-                    trySend(FbResponse.Success(data = true))
+                    trySend(Response.Success(data = true))
                 }.addOnFailureListener { e ->
-                    trySend(FbResponse.Fail(e = e))
+                    trySend(Response.Fail(e = e))
                 }
 
             awaitClose { this.cancel() }
@@ -92,13 +92,13 @@ class FirebaseUserAuthStorage : UserAuthStorage {
     override suspend fun changeEmail(
         userAuth: UserAuth,
         newEmail: String
-    ): Flow<FbResponse<Boolean>> = callbackFlow {
+    ): Flow<Response<Boolean>> = callbackFlow {
         fAuth.signInWithEmailAndPassword(userAuth.email, userAuth.password)
         fAuth.currentUser?.updateEmail(newEmail)
             ?.addOnSuccessListener {
-                trySend(FbResponse.Success(data = true))
+                trySend(Response.Success(data = true))
             }?.addOnFailureListener { e ->
-                trySend(FbResponse.Fail(e = e))
+                trySend(Response.Fail(e = e))
             }
 
         awaitClose { this.cancel() }
@@ -107,21 +107,21 @@ class FirebaseUserAuthStorage : UserAuthStorage {
     override suspend fun changePassword(
         userAuth: UserAuth,
         newPassword: String
-    ): Flow<FbResponse<Boolean>> = callbackFlow {
+    ): Flow<Response<Boolean>> = callbackFlow {
         fAuth.signInWithEmailAndPassword(userAuth.email, userAuth.password)
         fAuth.currentUser?.updatePassword(newPassword)
             ?.addOnSuccessListener {
-                trySend(FbResponse.Success(data = true))
+                trySend(Response.Success(data = true))
             }?.addOnFailureListener { e ->
-                trySend(FbResponse.Fail(e = e))
+                trySend(Response.Fail(e = e))
             }
 
         awaitClose { this.cancel() }
     }
 
-    override suspend fun signOut(): Flow<FbResponse<Boolean>> = callbackFlow {
+    override suspend fun signOut(): Flow<Response<Boolean>> = callbackFlow {
         fAuth.signOut()
-        trySend(FbResponse.Success(data = true))
+        trySend(Response.Success(data = true))
 
         awaitClose { this.cancel() }
     }

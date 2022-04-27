@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentLatestMessagesBinding
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetails
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,14 +49,14 @@ class LatestMessagesFragment : Fragment() {
     private fun getCurrentUserDetailsObserve() {
         viewModel.getCurrentUserDetails().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Loading -> {
+                is Response.Loading -> {
                     showProgressBarLoadUserDetails(showOrNo = true)
                 }
-                is FbResponse.Fail -> {
+                is Response.Fail -> {
                     Toast.makeText(activity, "Load user info false :( ", Toast.LENGTH_SHORT).show()
                     showProgressBarLoadUserDetails(showOrNo = false)
                 }
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     userDetails = result.data
 
                     binding.textViewProfileFullname.text = userDetails.fullname

@@ -13,9 +13,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentSignUpBinding
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.models.UserDetails
 import com.theartofdev.edmodo.cropper.CropImage
@@ -95,15 +94,15 @@ class SignUpFragment : Fragment() {
         viewModel.signUpUser(userAuth = userAuth)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FbResponse.Loading -> {
+                    is Response.Loading -> {
                         showProgressBarSignUp(showOrNo = true)
                     }
-                    is FbResponse.Fail -> {
+                    is Response.Fail -> {
                         Toast.makeText(activity, "User register false :(", Toast.LENGTH_SHORT)
                             .show()
                         showProgressBarSignUp(showOrNo = false)
                     }
-                    is FbResponse.Success -> {
+                    is Response.Success -> {
                         getUserUidObserver()
                     }
                 }
@@ -113,13 +112,13 @@ class SignUpFragment : Fragment() {
     private fun getUserUidObserver() {
         viewModel.getCurrentUserUid().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Loading -> {}
-                is FbResponse.Fail -> {
+                is Response.Loading -> {}
+                is Response.Fail -> {
                     Toast.makeText(activity, "Get user uid false :(", Toast.LENGTH_SHORT).show()
                     deleteCurrentUserAuthObserve()
                     showProgressBarSignUp(showOrNo = false)
                 }
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     userDetails.uid = result.data
 
                     val imageUriCache = viewModel.cropImageView.value.toString()
@@ -137,12 +136,12 @@ class SignUpFragment : Fragment() {
         viewModel.saveUserProfileImage(imageUriStr = imageUriStr)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FbResponse.Loading -> {}
-                    is FbResponse.Fail -> {
+                    is Response.Loading -> {}
+                    is Response.Fail -> {
                         Toast.makeText(activity, "Save image false :(", Toast.LENGTH_SHORT).show()
                         saveUserObserver(userDetails = userDetails)
                     }
-                    is FbResponse.Success -> {
+                    is Response.Success -> {
                         userDetails.photoProfileUrl = result.data
                         saveUserObserver(userDetails = userDetails)
                     }
@@ -154,15 +153,15 @@ class SignUpFragment : Fragment() {
         viewModel.saveUser(userDetails = userDetails)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FbResponse.Loading -> {}
-                    is FbResponse.Fail -> {
+                    is Response.Loading -> {}
+                    is Response.Fail -> {
                         Toast.makeText(activity, "Save user to DB false :(", Toast.LENGTH_SHORT)
                             .show()
                         deleteCurrentUserAuthObserve()
                         deleteUserProfileImageObserve()
                         showProgressBarSignUp(showOrNo = false)
                     }
-                    is FbResponse.Success -> {
+                    is Response.Success -> {
                         findNavController().popBackStack()
                         showProgressBarSignUp(showOrNo = false)
                     }

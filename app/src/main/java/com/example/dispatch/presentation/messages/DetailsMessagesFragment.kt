@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.example.dispatch.presentation.listusers.ListUsersFragment
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,10 +57,10 @@ class DetailsMessagesFragment : Fragment() {
     private fun getUserDetailsPublicOnUidObserve(uid: String) {
         viewModel.getUserDetailsPublicOnUid(uid = uid).observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Fail -> {
+                is Response.Fail -> {
                     Toast.makeText(activity, "Load user info false :( ", Toast.LENGTH_SHORT).show()
                 }
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     viewModel._companionDetails.value = result.data
                 }
             }

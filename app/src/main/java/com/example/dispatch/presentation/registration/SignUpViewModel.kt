@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.models.UserDetails
 import com.example.dispatch.domain.usecase.*
@@ -27,56 +27,56 @@ class SignUpViewModel @Inject constructor(
     val cropImageView: LiveData<String> = _cropImageView
 
     fun getCurrentUserUid() = liveData(Dispatchers.IO) {
-        emit(FbResponse.Loading())
+        emit(Response.Loading())
         try {
             getCurrentUserUidUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e = e))
+            emit(Response.Fail(e = e))
         }
     }
 
     fun deleteCurrentUser() = liveData(Dispatchers.IO) {
-        emit(FbResponse.Loading())
+        emit(Response.Loading())
         try {
             deleteCurrentUserAuthUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e = e))
+            emit(Response.Fail(e = e))
         }
     }
 
     fun signUpUser(userAuth: UserAuth) = liveData(Dispatchers.IO) {
-        emit(FbResponse.Loading())
+        emit(Response.Loading())
         try {
             signUpUserAuthUseCase.execute(userAuth = userAuth).collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e = e))
+            emit(Response.Fail(e = e))
         }
     }
 
     fun saveUser(userDetails: UserDetails) = liveData(Dispatchers.IO) {
-        emit(FbResponse.Loading())
+        emit(Response.Loading())
         try {
             saveUserDetailsUseCase.execute(userDetails = userDetails).collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e = e))
+            emit(Response.Fail(e = e))
         }
     }
 
     fun saveUserProfileImage(imageUriStr: String) = liveData(Dispatchers.IO) {
-        emit(FbResponse.Loading())
+        emit(Response.Loading())
         try {
             saveUserImageProfileUseCase.execute(newImageUriStr = imageUriStr).collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e = e))
+            emit(Response.Fail(e = e))
         }
     }
 
     fun deleteUserProfileImage() = liveData(Dispatchers.IO) {
-        emit(FbResponse.Loading())
+        emit(Response.Loading())
         try {
             deleteUserImageProfileUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
-            emit(FbResponse.Fail(e = e))
+            emit(Response.Fail(e = e))
         }
     }
 

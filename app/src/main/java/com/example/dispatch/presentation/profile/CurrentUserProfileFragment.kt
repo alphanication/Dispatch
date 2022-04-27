@@ -14,7 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentCurrentUserProfileBinding
-import com.example.dispatch.domain.models.FbResponse
+import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.models.UserDetails
 import com.squareup.picasso.Picasso
@@ -124,15 +124,15 @@ class CurrentUserProfileFragment : Fragment() {
         viewModel.changeUserAuthPassword(userAuth = userAuth, newPassword = newPassword)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FbResponse.Loading -> {
+                    is Response.Loading -> {
                         showProgressBarChangePassword(showOrNo = true)
                     }
-                    is FbResponse.Fail -> {
+                    is Response.Fail -> {
                         Toast.makeText(activity, "Change password false :( ", Toast.LENGTH_SHORT)
                             .show()
                         showProgressBarChangePassword(showOrNo = false)
                     }
-                    is FbResponse.Success -> {
+                    is Response.Success -> {
                         changeUserDetailsPasswordObserve(newPassword = newPassword)
                     }
                 }
@@ -143,13 +143,13 @@ class CurrentUserProfileFragment : Fragment() {
         viewModel.changeUserDetailsPassword(newPassword = newPassword)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FbResponse.Loading -> {
+                    is Response.Loading -> {
                         showProgressBarChangePassword(showOrNo = true)
                     }
-                    is FbResponse.Fail -> {
+                    is Response.Fail -> {
                         showProgressBarChangePassword(showOrNo = false)
                     }
-                    is FbResponse.Success -> {
+                    is Response.Success -> {
                         getCurrentUserDetailsObserve()
                         binding.edittextPassword.text = null
                         showProgressBarChangePassword(showOrNo = false)
@@ -162,15 +162,15 @@ class CurrentUserProfileFragment : Fragment() {
         viewModel.changeUserDetailsFullname(newFullname = newFullname)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FbResponse.Loading -> {
+                    is Response.Loading -> {
                         showProgressBarUpdateProfile(showOrNo = true)
                     }
-                    is FbResponse.Fail -> {
+                    is Response.Fail -> {
                         Toast.makeText(activity, "Update fullname false :( ", Toast.LENGTH_SHORT)
                             .show()
                         showProgressBarUpdateProfile(showOrNo = false)
                     }
-                    is FbResponse.Success -> {
+                    is Response.Success -> {
                         getCurrentUserDetailsObserve()
                         showProgressBarUpdateProfile(showOrNo = false)
                     }
@@ -182,15 +182,15 @@ class CurrentUserProfileFragment : Fragment() {
         viewModel.changeUserDetailsDateBirth(newDateBirth = newDateBirth)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FbResponse.Loading -> {
+                    is Response.Loading -> {
                         showProgressBarUpdateProfile(showOrNo = true)
                     }
-                    is FbResponse.Fail -> {
+                    is Response.Fail -> {
                         Toast.makeText(activity, "Update date birth false :( ", Toast.LENGTH_SHORT)
                             .show()
                         showProgressBarUpdateProfile(showOrNo = false)
                     }
-                    is FbResponse.Success -> {
+                    is Response.Success -> {
                         getCurrentUserDetailsObserve()
                         showProgressBarUpdateProfile(showOrNo = false)
                     }
@@ -202,13 +202,13 @@ class CurrentUserProfileFragment : Fragment() {
         viewModel.changeUserAuthEmail(userAuth = userAuth, newEmail = newEmail)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FbResponse.Loading -> {}
-                    is FbResponse.Fail -> {
+                    is Response.Loading -> {}
+                    is Response.Fail -> {
                         Toast.makeText(activity, "Update email false :( ", Toast.LENGTH_SHORT)
                             .show()
                         showProgressBarUpdateProfile(showOrNo = false)
                     }
-                    is FbResponse.Success -> {
+                    is Response.Success -> {
                         changeUserDetailsEmailObserve(newEmail = newEmail)
                     }
                 }
@@ -219,13 +219,13 @@ class CurrentUserProfileFragment : Fragment() {
         viewModel.changeUserDetailsEmail(newEmail = newEmail)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FbResponse.Loading -> {
+                    is Response.Loading -> {
                         showProgressBarUpdateProfile(showOrNo = true)
                     }
-                    is FbResponse.Fail -> {
+                    is Response.Fail -> {
                         showProgressBarUpdateProfile(showOrNo = false)
                     }
-                    is FbResponse.Success -> {
+                    is Response.Success -> {
                         getCurrentUserDetailsObserve()
                         showProgressBarUpdateProfile(showOrNo = false)
                     }
@@ -237,10 +237,10 @@ class CurrentUserProfileFragment : Fragment() {
         viewModel.saveUserProfileImage(imageUriCache = imageUriCache)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FbResponse.Loading -> {
+                    is Response.Loading -> {
                         showProgressBarLoadInfoUser(showOrNo = true)
                     }
-                    is FbResponse.Fail -> {
+                    is Response.Fail -> {
                         Toast.makeText(
                             activity,
                             "Save photo profile user false :( ",
@@ -248,7 +248,7 @@ class CurrentUserProfileFragment : Fragment() {
                         ).show()
                         getCurrentUserDetailsObserve()
                     }
-                    is FbResponse.Success -> {
+                    is Response.Success -> {
                         viewModel.deleteUserImageLiveData()
 
                         val photoProfileUrl = result.data
@@ -262,15 +262,15 @@ class CurrentUserProfileFragment : Fragment() {
         viewModel.changeUserDetailsPhotoProfile(imageUriStr = imageUriStr)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FbResponse.Loading -> {
+                    is Response.Loading -> {
                         showProgressBarLoadInfoUser(showOrNo = true)
                     }
-                    is FbResponse.Fail -> {
+                    is Response.Fail -> {
                         Toast.makeText(activity, "Save user photo false :(", Toast.LENGTH_SHORT)
                             .show()
                         showProgressBarLoadInfoUser(showOrNo = false)
                     }
-                    is FbResponse.Success -> {
+                    is Response.Success -> {
                         getCurrentUserDetailsObserve()
                     }
                 }
@@ -280,14 +280,14 @@ class CurrentUserProfileFragment : Fragment() {
     private fun deleteCurrentUserAuthObserve() {
         viewModel.deleteCurrentUserAuth().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Loading -> {
+                is Response.Loading -> {
                     showProgressBarDeleteUser(showOrNo = true)
                 }
-                is FbResponse.Fail -> {
+                is Response.Fail -> {
                     Toast.makeText(activity, "Delete user false :(", Toast.LENGTH_SHORT).show()
                     showProgressBarDeleteUser(showOrNo = false)
                 }
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     Toast.makeText(activity, "Delete user success!", Toast.LENGTH_SHORT).show()
                     userSignOutObserve()
                 }
@@ -298,12 +298,12 @@ class CurrentUserProfileFragment : Fragment() {
     private fun userSignOutObserve() {
         viewModel.userSignOut().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Loading -> {}
-                is FbResponse.Fail -> {
+                is Response.Loading -> {}
+                is Response.Fail -> {
                     Toast.makeText(activity, "User sign out error :( ", Toast.LENGTH_SHORT).show()
                     showProgressBarDeleteUser(showOrNo = false)
                 }
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     findNavController().navigate(R.id.action_currentUserProfileFragment_to_signInFragment)
                     showProgressBarDeleteUser(showOrNo = false)
                 }
@@ -314,13 +314,13 @@ class CurrentUserProfileFragment : Fragment() {
     private fun deleteCurrentUserDetailsObserve() {
         viewModel.deleteCurrentUserDetails().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Loading -> {
+                is Response.Loading -> {
                     showProgressBarDeleteUser(showOrNo = true)
                 }
-                is FbResponse.Fail -> {
+                is Response.Fail -> {
                     deleteCurrentUserAuthObserve()
                 }
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     deleteCurrentUserAuthObserve()
                 }
             }
@@ -330,13 +330,13 @@ class CurrentUserProfileFragment : Fragment() {
     private fun deleteCurrentUserProfileImageObserve() {
         viewModel.deleteCurrentUserProfileImage().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Loading -> {
+                is Response.Loading -> {
                     showProgressBarDeleteUser(showOrNo = true)
                 }
-                is FbResponse.Fail -> {
+                is Response.Fail -> {
                     deleteCurrentUserDetailsObserve()
                 }
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     deleteCurrentUserDetailsObserve()
                 }
             }
@@ -346,14 +346,14 @@ class CurrentUserProfileFragment : Fragment() {
     private fun getCurrentUserDetailsObserve() {
         viewModel.getCurrentUserDetails().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FbResponse.Loading -> {
+                is Response.Loading -> {
                     showProgressBarLoadInfoUser(showOrNo = true)
                 }
-                is FbResponse.Fail -> {
+                is Response.Fail -> {
                     Toast.makeText(activity, "Load user info false :( ", Toast.LENGTH_SHORT).show()
                     showProgressBarLoadInfoUser(showOrNo = false)
                 }
-                is FbResponse.Success -> {
+                is Response.Success -> {
                     userDetails = result.data
 
                     binding.textviewCurrentUserName.text = userDetails.fullname
