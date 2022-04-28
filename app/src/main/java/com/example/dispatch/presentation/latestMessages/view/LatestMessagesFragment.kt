@@ -68,7 +68,7 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
                 }
                 is Response.Success -> {
                     hideProgressBarLoadUserDetails()
-                    viewModel.saveUserDetailsLiveData(userDetails = result.data)
+                    viewModel._userDetails.value = result.data
                 }
             }
         }

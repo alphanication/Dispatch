@@ -18,7 +18,7 @@ import javax.inject.Inject
 class LatestMessagesViewModel @Inject constructor(
     private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase
 ) : ViewModel(), LatestMessagesContract.LatestMessagesViewModel {
-    private val _userDetails = MutableLiveData<UserDetails>()
+    val _userDetails = MutableLiveData<UserDetails>()
     val userDetails: LiveData<UserDetails> = _userDetails
 
     override fun getCurrentUserDetails(): LiveData<Response<UserDetails>> = liveData(Dispatchers.IO) {
@@ -28,9 +28,5 @@ class LatestMessagesViewModel @Inject constructor(
         } catch (e: Exception) {
             emit(Response.Fail(e = e))
         }
-    }
-
-    override fun saveUserDetailsLiveData(userDetails: UserDetails) {
-        _userDetails.value = userDetails
     }
 }

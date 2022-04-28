@@ -21,7 +21,5 @@ interface LatestMessagesContract {
 
     interface LatestMessagesViewModel {
         fun getCurrentUserDetails(): LiveData<Response<UserDetails>>
-
-        fun saveUserDetailsLiveData(userDetails: UserDetails)
     }
 }
