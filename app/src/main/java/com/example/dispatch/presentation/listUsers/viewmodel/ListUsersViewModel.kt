@@ -18,6 +18,9 @@ import javax.inject.Inject
 class ListUsersViewModel @Inject constructor(
     private val getUsersListUseCase: GetUsersListUseCase
 ) : ViewModel(), ListUsersContract.ListUsersViewModel {
+    private val _userDetailsPublic = MutableLiveData<UserDetailsPublic>()
+    val userDetailsPublic: LiveData<UserDetailsPublic> = _userDetailsPublic
+
     override fun getUsersList(): LiveData<Response<UserDetailsPublic>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
@@ -25,5 +28,9 @@ class ListUsersViewModel @Inject constructor(
         } catch (e: Exception) {
             emit(Response.Fail(e))
         }
+    }
+
+    override fun saveUserDetailsPublicLiveData(userDetailsPublic: UserDetailsPublic) {
+        _userDetailsPublic.value = userDetailsPublic
     }
 }
