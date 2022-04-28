@@ -8,6 +8,8 @@
         <entry key="app/src/main/res/drawable/background_content_bottom.xml" value="0.1625" />
         <entry key="app/src/main/res/drawable/background_content_top.xml" value="0.1655" />
         <entry key="app/src/main/res/drawable/background_details_messages_input.xml" value="0.1415" />
+        <entry key="app/src/main/res/drawable/background_recipient_message.xml" value="0.147" />
+        <entry key="app/src/main/res/drawable/background_sender_message.xml" value="0.147" />
         <entry key="app/src/main/res/drawable/background_shapeableimageview.xml" value="0.2265" />
         <entry key="app/src/main/res/drawable/background_view_circle.xml" value="0.1685" />
         <entry key="app/src/main/res/drawable/background_view_circle_bottom.xml" value="0.188" />
@@ -23,6 +25,8 @@
         <entry key="app/src/main/res/layout/fragment_restore_password.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_sign_up.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_container_recipient_message.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/item_container_sender_message.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_container_user.xml" value="0.22" />
         <entry key="app/src/main/res/menu/bottom_menu.xml" value="0.21979166666666666" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.159" />
