@@ -76,7 +76,7 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
                     hideProgressBarListUsers()
                 }
                 is Response.Success -> {
-                    viewModel.saveUserDetailsPublicLiveData(userDetailsPublic = result.data)
+                    viewModel._userDetailsPublic.value = result.data
                     hideProgressBarListUsers()
                 }
             }

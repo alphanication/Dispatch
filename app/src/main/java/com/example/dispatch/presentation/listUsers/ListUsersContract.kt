@@ -23,7 +23,5 @@ interface ListUsersContract {
 
     interface ListUsersViewModel {
         fun getUsersList(): LiveData<Response<UserDetailsPublic>>
-
-        fun saveUserDetailsPublicLiveData(userDetailsPublic: UserDetailsPublic)
     }
 }
