@@ -43,6 +43,7 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
 
         setOnClickListeners()
         getUsersListObserve()
+        userDetailsPublicObserver()
     }
 
     override fun setOnClickListeners() {
@@ -58,19 +59,36 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
         }
     }
 
+    override fun userDetailsPublicObserver() {
+        viewModel.userDetailsPublic.observe(viewLifecycleOwner) { userDetailsPublic ->
+            adapter.add(UserItem(user = userDetailsPublic))
+            binding.recyclerViewListUsers.adapter = adapter
+        }
+    }
+
     override fun getUsersListObserve() {
         viewModel.getUsersList().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Loading -> {}
-                is Response.Fail -> {}
+                is Response.Loading -> {
+                    showProgressBarListUsers()
+                }
+                is Response.Fail -> {
+                    hideProgressBarListUsers()
+                }
                 is Response.Success -> {
-                    val user = result.data
-
-                    adapter.add(UserItem(user = user))
-                    binding.recyclerViewListUsers.adapter = adapter
+                    viewModel.saveUserDetailsPublicLiveData(userDetailsPublic = result.data)
+                    hideProgressBarListUsers()
                 }
             }
         }
+    }
+
+    override fun showProgressBarListUsers() {
+        binding.progressBarListUsers.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBarListUsers() {
+        binding.progressBarListUsers.visibility = View.INVISIBLE
     }
 
     override fun navigateToPopBackStack() {
