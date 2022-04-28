@@ -1,4 +1,4 @@
-package com.example.dispatch.presentation.restore
+package com.example.dispatch.presentation.restorePassword.view
 
 import android.os.Bundle
 import android.util.Patterns
@@ -11,12 +11,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.dispatch.databinding.FragmentRestorePasswordBinding
 import com.example.dispatch.domain.models.Response
+import com.example.dispatch.presentation.restorePassword.RestorePasswordContract
+import com.example.dispatch.presentation.restorePassword.viewmodel.RestorePasswordViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class RestorePasswordFragment : Fragment() {
+class RestorePasswordFragment : Fragment(), RestorePasswordContract.RestorePasswordFragment {
     private lateinit var binding: FragmentRestorePasswordBinding
     private val viewModel: RestorePasswordViewModel by viewModels()
 
@@ -34,39 +36,43 @@ class RestorePasswordFragment : Fragment() {
         setOnClickListeners()
     }
 
-    private fun setOnClickListeners() {
+    override fun setOnClickListeners() {
         binding.buttonBack.setOnClickListener {
             findNavController().popBackStack()
         }
 
         binding.buttonRestore.setOnClickListener {
             if (validEditTextShowError()) {
-                val email = binding.edittextEmail.text.toString()
+                val email = editTextEmailInit()
                 restoreUserPasswordObserve(email = email)
             }
         }
     }
 
-    private fun restoreUserPasswordObserve(email: String) {
-        viewModel.restoreUserPasswordByEmail(email).observe(viewLifecycleOwner) { result ->
+    override fun restoreUserPasswordObserve(email: String) {
+        viewModel.restoreUserByEmail(email).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Loading -> {
-                    showProgressBarRestore(showOrNo = true)
+                    showProgressBarRestore()
                 }
                 is Response.Fail -> {
+                    hideProgressBarRestore()
                     Toast.makeText(activity, "Restore password fail :(", Toast.LENGTH_SHORT).show()
-                    showProgressBarRestore(showOrNo = false)
                 }
                 is Response.Success -> {
+                    hideProgressBarRestore()
                     Toast.makeText(activity, "Check your email! :)", Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
-                    showProgressBarRestore(showOrNo = false)
                 }
             }
         }
     }
 
-    private fun validEditTextShowError(): Boolean {
+    override fun editTextEmailInit() : String {
+        return binding.edittextEmail.text.toString()
+    }
+
+    override fun validEditTextShowError(): Boolean {
         val email = binding.edittextEmail.text.toString()
 
         var valid = false
@@ -88,13 +94,13 @@ class RestorePasswordFragment : Fragment() {
         return valid
     }
 
-    private fun showProgressBarRestore(showOrNo: Boolean) {
-        if (showOrNo) {
+    override fun showProgressBarRestore() {
             binding.progressbarRestore.visibility = View.VISIBLE
             binding.buttonRestore.visibility = View.INVISIBLE
-        } else {
-            binding.progressbarRestore.visibility = View.INVISIBLE
-            binding.buttonRestore.visibility = View.VISIBLE
-        }
+    }
+
+    override fun hideProgressBarRestore() {
+        binding.progressbarRestore.visibility = View.INVISIBLE
+        binding.buttonRestore.visibility = View.VISIBLE
     }
 }

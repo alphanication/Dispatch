@@ -27,7 +27,7 @@
         tools:layout="@layout/fragment_sign_up"/>
     <fragment
         android:id="@+id/restorePasswordFragment"
-        android:name="com.example.dispatch.presentation.restore.RestorePasswordFragment"
+        android:name="com.example.dispatch.presentation.restorePassword.view.RestorePasswordFragment"
         android:label="fragment_restore_password"
         tools:layout="@layout/fragment_restore_password" />
     <fragment
