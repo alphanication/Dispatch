@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/primary"
-    tools:context=".presentation.messages.LatestMessagesFragment">
+    tools:context=".presentation.latestMessages.view.LatestMessagesFragment">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/shapeableImageView_profile_image"
