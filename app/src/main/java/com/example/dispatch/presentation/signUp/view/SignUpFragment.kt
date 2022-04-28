@@ -1,4 +1,4 @@
-package com.example.dispatch.presentation.registration
+package com.example.dispatch.presentation.signUp.view
 
 import android.app.Activity
 import android.content.Intent
@@ -17,6 +17,8 @@ import com.example.dispatch.databinding.FragmentSignUpBinding
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.models.UserDetails
+import com.example.dispatch.presentation.signUp.SignUpContract
+import com.example.dispatch.presentation.signUp.viewmodel.SignUpViewModel
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +26,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class SignUpFragment : Fragment() {
+class SignUpFragment : Fragment(), SignUpContract.SignUpFragment {
     private lateinit var binding: FragmentSignUpBinding
     private val viewModel: SignUpViewModel by viewModels()
     private val userDetails = UserDetails()
@@ -56,16 +58,16 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun setOnClickListeners() {
+    override fun setOnClickListeners() {
         binding.buttonBack.setOnClickListener {
-            findNavController().popBackStack()
+            navigateToPopBackStack()
         }
 
         binding.buttonSignUp.setOnClickListener {
             if (validEditTextShowError()) {
                 userDetailsEditTextInit()
                 userAuthEditTextInit()
-                registerUserAuthObserver(userAuth = userAuth)
+                signUpUserAuthObserver(userAuth = userAuth)
             }
         }
 
@@ -78,7 +80,7 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun cropImageViewObserver() {
+    override fun cropImageViewObserver() {
         viewModel.cropImageView.observe(viewLifecycleOwner) { cropImageUri ->
             val imageUri: Uri = Uri.parse(cropImageUri)
 
@@ -90,94 +92,95 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun registerUserAuthObserver(userAuth: UserAuth) {
-        viewModel.signUpUser(userAuth = userAuth)
+    override fun signUpUserAuthObserver(userAuth: UserAuth) {
+        viewModel.signUpUserAuth(userAuth = userAuth)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Response.Loading -> {
-                        showProgressBarSignUp(showOrNo = true)
+                        showProgressBarSignUp()
                     }
                     is Response.Fail -> {
+                        hideProgressBarSignUp()
                         Toast.makeText(activity, "User register false :(", Toast.LENGTH_SHORT)
                             .show()
-                        showProgressBarSignUp(showOrNo = false)
                     }
                     is Response.Success -> {
-                        getUserUidObserver()
+                        getCurrentUserUidObserver()
                     }
                 }
             }
     }
 
-    private fun getUserUidObserver() {
+    override fun getCurrentUserUidObserver() {
         viewModel.getCurrentUserUid().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Loading -> {}
                 is Response.Fail -> {
-                    Toast.makeText(activity, "Get user uid false :(", Toast.LENGTH_SHORT).show()
+                    hideProgressBarSignUp()
                     deleteCurrentUserAuthObserve()
-                    showProgressBarSignUp(showOrNo = false)
+                    Toast.makeText(activity, "Get user uid false :(", Toast.LENGTH_SHORT).show()
                 }
                 is Response.Success -> {
                     userDetails.uid = result.data
 
                     val imageUriCache = viewModel.cropImageView.value.toString()
                     if (imageUriCache.isNotEmpty()) {
-                        saveUserImageObserver(imageUriStr = imageUriCache)
+                        saveUserProfileImageObserver(imageUriStr = imageUriCache)
                     } else {
-                        saveUserObserver(userDetails = userDetails)
+                        saveUserDetailsObserver(userDetails = userDetails)
                     }
                 }
             }
         }
     }
 
-    private fun saveUserImageObserver(imageUriStr: String) {
+    override fun saveUserProfileImageObserver(imageUriStr: String) {
         viewModel.saveUserProfileImage(imageUriStr = imageUriStr)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Response.Loading -> {}
                     is Response.Fail -> {
+                        hideProgressBarSignUp()
+                        deleteCurrentUserAuthObserve()
                         Toast.makeText(activity, "Save image false :(", Toast.LENGTH_SHORT).show()
-                        saveUserObserver(userDetails = userDetails)
                     }
                     is Response.Success -> {
                         userDetails.photoProfileUrl = result.data
-                        saveUserObserver(userDetails = userDetails)
+                        saveUserDetailsObserver(userDetails = userDetails)
                     }
                 }
             }
     }
 
-    private fun saveUserObserver(userDetails: UserDetails) {
-        viewModel.saveUser(userDetails = userDetails)
+    override fun saveUserDetailsObserver(userDetails: UserDetails) {
+        viewModel.saveUserDetails(userDetails = userDetails)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Response.Loading -> {}
                     is Response.Fail -> {
+                        hideProgressBarSignUp()
                         Toast.makeText(activity, "Save user to DB false :(", Toast.LENGTH_SHORT)
                             .show()
                         deleteCurrentUserAuthObserve()
-                        deleteUserProfileImageObserve()
-                        showProgressBarSignUp(showOrNo = false)
+                        deleteUserImageProfileObserve()
                     }
                     is Response.Success -> {
-                        findNavController().popBackStack()
-                        showProgressBarSignUp(showOrNo = false)
+                        hideProgressBarSignUp()
+                        navigateToPopBackStack()
                     }
                 }
             }
     }
 
-    private fun deleteCurrentUserAuthObserve() {
-        viewModel.deleteCurrentUser().observe(viewLifecycleOwner) {}
+    override fun deleteCurrentUserAuthObserve() {
+        viewModel.deleteCurrentUserAuth().observe(viewLifecycleOwner) {}
     }
 
-    private fun deleteUserProfileImageObserve() {
-        viewModel.deleteUserProfileImage().observe(viewLifecycleOwner) {}
+    override fun deleteUserImageProfileObserve() {
+        viewModel.deleteUserImageProfile().observe(viewLifecycleOwner) {}
     }
 
-    private fun cropImageActivityStart() {
+    override fun cropImageActivityStart() {
         CropImage.activity()
             .setGuidelines(CropImageView.Guidelines.ON)
             .setCropShape(CropImageView.CropShape.OVAL)
@@ -188,12 +191,12 @@ class SignUpFragment : Fragment() {
             .start(requireContext(), this)
     }
 
-    private fun userAuthEditTextInit() {
+    override fun userAuthEditTextInit() {
         userAuth.email = binding.edittextEmail.text.toString()
         userAuth.password = binding.edittextPassword.text.toString()
     }
 
-    private fun userDetailsEditTextInit() {
+    override fun userDetailsEditTextInit() {
         userDetails.fullname = binding.edittextFullname.text.toString()
         userDetails.dateBirth = binding.edittextDateBirth.text.toString()
         userDetails.email = binding.edittextEmail.text.toString()
@@ -201,7 +204,7 @@ class SignUpFragment : Fragment() {
         userDetails.photoProfileUrl = viewModel.cropImageView.value.toString()
     }
 
-    private fun validEditTextShowError(): Boolean {
+    override fun validEditTextShowError(): Boolean {
         val fullname = binding.edittextFullname.text.toString()
         val email = binding.edittextEmail.text.toString()
         val password = binding.edittextPassword.text.toString()
@@ -247,25 +250,29 @@ class SignUpFragment : Fragment() {
         return valid
     }
 
-    private fun setUserImage(imageUri: Uri) {
+    override fun setUserImage(imageUri: Uri) {
         binding.shapeableimagePhotoUser.setImageURI(imageUri)
         binding.textviewAddImage.visibility = View.INVISIBLE
         binding.shapeableimageDeletePhotoUser.visibility = View.VISIBLE
     }
 
-    private fun deleteUserImageView() {
+    override fun deleteUserImageView() {
         viewModel.deleteUserImageLiveData()
         binding.shapeableimageDeletePhotoUser.visibility = View.INVISIBLE
         binding.textviewAddImage.visibility = View.VISIBLE
     }
 
-    private fun showProgressBarSignUp(showOrNo: Boolean) {
-        if (showOrNo) {
-            binding.progressbarSignUp.visibility = View.VISIBLE
-            binding.buttonSignUp.visibility = View.INVISIBLE
-        } else {
-            binding.progressbarSignUp.visibility = View.INVISIBLE
-            binding.buttonSignUp.visibility = View.VISIBLE
-        }
+    override fun showProgressBarSignUp() {
+        binding.progressbarSignUp.visibility = View.VISIBLE
+        binding.buttonSignUp.visibility = View.INVISIBLE
+    }
+
+    override fun hideProgressBarSignUp() {
+        binding.progressbarSignUp.visibility = View.INVISIBLE
+        binding.buttonSignUp.visibility = View.VISIBLE
+    }
+
+    override fun navigateToPopBackStack() {
+        findNavController().popBackStack()
     }
 }

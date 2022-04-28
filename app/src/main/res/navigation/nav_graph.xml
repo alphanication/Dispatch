@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.dispatch.presentation.registration.SignUpFragment"
+        android:name="com.example.dispatch.presentation.signUp.view.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up"/>
     <fragment

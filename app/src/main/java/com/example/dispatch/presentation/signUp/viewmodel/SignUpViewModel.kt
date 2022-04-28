@@ -1,4 +1,4 @@
-package com.example.dispatch.presentation.registration
+package com.example.dispatch.presentation.signUp.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +8,7 @@ import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.models.UserDetails
 import com.example.dispatch.domain.usecase.*
+import com.example.dispatch.presentation.signUp.SignUpContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,11 +23,11 @@ class SignUpViewModel @Inject constructor(
     private val saveUserDetailsUseCase: SaveUserDetailsUseCase,
     private val saveUserImageProfileUseCase: SaveUserImageProfileUseCase,
     private val deleteUserImageProfileUseCase: DeleteUserImageProfileUseCase
-) : ViewModel() {
+) : ViewModel(), SignUpContract.SignUpViewModel {
     private val _cropImageView = MutableLiveData("")
     val cropImageView: LiveData<String> = _cropImageView
 
-    fun getCurrentUserUid() = liveData(Dispatchers.IO) {
+    override fun getCurrentUserUid(): LiveData<Response<String>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             getCurrentUserUidUseCase.execute().collect { emit(it) }
@@ -35,16 +36,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun deleteCurrentUser() = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
-        try {
-            deleteCurrentUserAuthUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
-        }
-    }
-
-    fun signUpUser(userAuth: UserAuth) = liveData(Dispatchers.IO) {
+    override fun signUpUserAuth(userAuth: UserAuth): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             signUpUserAuthUseCase.execute(userAuth = userAuth).collect { emit(it) }
@@ -53,7 +45,16 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun saveUser(userDetails: UserDetails) = liveData(Dispatchers.IO) {
+    override fun deleteCurrentUserAuth(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
+        emit(Response.Loading())
+        try {
+            deleteCurrentUserAuthUseCase.execute().collect { emit(it) }
+        } catch (e: Exception) {
+            emit(Response.Fail(e = e))
+        }
+    }
+
+    override fun saveUserDetails(userDetails: UserDetails): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             saveUserDetailsUseCase.execute(userDetails = userDetails).collect { emit(it) }
@@ -62,7 +63,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun saveUserProfileImage(imageUriStr: String) = liveData(Dispatchers.IO) {
+    override fun saveUserProfileImage(imageUriStr: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             saveUserImageProfileUseCase.execute(newImageUriStr = imageUriStr).collect { emit(it) }
@@ -71,7 +72,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun deleteUserProfileImage() = liveData(Dispatchers.IO) {
+    override fun deleteUserImageProfile(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             deleteUserImageProfileUseCase.execute().collect { emit(it) }
@@ -80,13 +81,13 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun saveUserImageLiveData(imageUriStr: String) {
+    override fun saveUserImageLiveData(imageUriStr: String) {
         if (imageUriStr.isNotEmpty()) {
             _cropImageView.value = imageUriStr
         }
     }
 
-    fun deleteUserImageLiveData() {
+    override fun deleteUserImageLiveData() {
         _cropImageView.value = ""
     }
 }
