@@ -77,7 +77,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailsMessagesFragment"
-        android:name="com.example.dispatch.presentation.messages.DetailsMessagesFragment"
+        android:name="com.example.dispatch.presentation.detailsMessages.view.DetailsMessagesFragment"
         android:label="fragment_details_messages"
         tools:layout="@layout/fragment_details_messages" />
 </navigation>

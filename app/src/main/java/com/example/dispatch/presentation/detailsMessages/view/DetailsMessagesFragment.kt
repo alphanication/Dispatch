@@ -1,4 +1,4 @@
-package com.example.dispatch.presentation.messages
+package com.example.dispatch.presentation.detailsMessages.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
 import com.example.dispatch.domain.models.Response
+import com.example.dispatch.presentation.detailsMessages.DetailsMessagesContract
+import com.example.dispatch.presentation.detailsMessages.viewmodel.DetailsMessagesViewModel
 import com.example.dispatch.presentation.listUsers.view.ListUsersFragment
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,7 +19,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class DetailsMessagesFragment : Fragment() {
+class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessagesFragment {
     private lateinit var binding: FragmentDetailsMessagesBinding
     private val viewModel: DetailsMessagesViewModel by viewModels()
 
@@ -31,30 +33,24 @@ class DetailsMessagesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel._companionUid.value =
-            requireArguments().getString(ListUsersFragment.PARTNER_UID).toString()
-        partnerUidObserve()
-        partnerDetailsObserve()
+        getCompanionUidFromListUsersFragment()
+        companionUidObserver()
+        companionDetailsObserver()
     }
 
-    private fun partnerDetailsObserve() {
-        viewModel.companionDetails.observe(viewLifecycleOwner) { partnerDetails ->
-            binding.textViewCompanionFullname.text = partnerDetails.fullname
-            Picasso.get().load(partnerDetails?.photoProfileUrl.toString()).transform(CropCircleTransformation())
-                .into(binding.imageViewCompanionProfileImage)
-        }
+    override fun getCompanionUidFromListUsersFragment() {
+        viewModel._companionUid.value = requireArguments().getString(ListUsersFragment.PARTNER_UID).toString()
     }
 
-    private fun partnerUidObserve() {
-        viewModel.companionUid.observe(viewLifecycleOwner) { user ->
-            if (user.isNotEmpty()) {
-                val uid = viewModel.companionUid.value.toString()
-                getUserDetailsPublicOnUidObserve(uid = uid)
+    override fun companionUidObserver() {
+        viewModel.companionUid.observe(viewLifecycleOwner) { companionUid ->
+            if (companionUid.isNotEmpty()) {
+                getUserDetailsPublicOnUidObserver(uid = companionUid)
             }
         }
     }
 
-    private fun getUserDetailsPublicOnUidObserve(uid: String) {
+    override fun getUserDetailsPublicOnUidObserver(uid: String) {
         viewModel.getUserDetailsPublicOnUid(uid = uid).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Fail -> {
@@ -64,6 +60,15 @@ class DetailsMessagesFragment : Fragment() {
                     viewModel._companionDetails.value = result.data
                 }
             }
+        }
+    }
+
+    override fun companionDetailsObserver() {
+        viewModel.companionDetails.observe(viewLifecycleOwner) { companionDetails ->
+            binding.textViewCompanionFullname.text = companionDetails.fullname
+            Picasso.get().load(companionDetails?.photoProfileUrl)
+                .transform(CropCircleTransformation())
+                .into(binding.imageViewCompanionProfileImage)
         }
     }
 }

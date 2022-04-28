@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/primary"
-    tools:context=".presentation.messages.DetailsMessagesFragment">
+    tools:context=".presentation.detailsMessages.view.DetailsMessagesFragment">
 
     <View
         android:id="@+id/viewBackground"
