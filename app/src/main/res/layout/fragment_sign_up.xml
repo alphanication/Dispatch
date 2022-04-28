@@ -8,7 +8,7 @@
     android:overScrollMode="never"
     android:padding="@dimen/_24sdp"
     android:scrollbars="none"
-    tools:context=".presentation.registration.SignUpFragment">
+    tools:context=".presentation.signUp.view.SignUpFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
