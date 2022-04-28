@@ -1,4 +1,4 @@
-package com.example.dispatch.presentation.profile
+package com.example.dispatch.presentation.currentUserProfile.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
+import com.example.dispatch.domain.models.UserDetails
 import com.example.dispatch.domain.usecase.*
+import com.example.dispatch.presentation.currentUserProfile.CurrentUserProfileContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,11 +30,13 @@ class CurrentUserProfileViewModel @Inject constructor(
     private val changeUserDetailsPasswordUseCase: ChangeUserDetailsPasswordUseCase,
     private val changeUserDetailsFullnameUseCase: ChangeUserDetailsFullnameUseCase,
     private val changeUserDetailsDateBirthUseCase: ChangeUserDetailsDateBirthUseCase
-) : ViewModel() {
+) : ViewModel(), CurrentUserProfileContract.CurrentUserProfileViewModel {
     private val _cropImageView = MutableLiveData("")
     val cropImageView: LiveData<String> = _cropImageView
+    val _userDetailsGet = MutableLiveData<UserDetails>()
+    val userDetailsGet: LiveData<UserDetails> = _userDetailsGet
 
-    fun userSignOut() = liveData(Dispatchers.IO) {
+    override fun signOutUserAuth(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             signOutUserAuthUseCase.execute().collect { emit(it) }
@@ -41,7 +45,7 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun deleteCurrentUserProfileImage() = liveData(Dispatchers.IO) {
+    override fun deleteUserImageProfile(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             deleteUserImageProfileUseCase.execute().collect { emit(it) }
@@ -50,7 +54,7 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun deleteCurrentUserAuth() = liveData(Dispatchers.IO) {
+    override fun deleteCurrentUserAuth(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             deleteCurrentUserAuthUseCase.execute().collect { emit(it) }
@@ -59,7 +63,7 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun deleteCurrentUserDetails() = liveData(Dispatchers.IO) {
+    override fun deleteCurrentUserDetails(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             deleteCurrentUserDetailsUseCase.execute().collect { emit(it) }
@@ -68,7 +72,7 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentUserDetails() = liveData(Dispatchers.IO) {
+    override fun getCurrentUserDetails(): LiveData<Response<UserDetails>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             getCurrentUserDetailsUseCase.execute().collect { emit(it) }
@@ -77,7 +81,7 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun saveUserProfileImage(imageUriCache: String) = liveData(Dispatchers.IO) {
+    override fun saveUserImageProfile(imageUriCache: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             saveUserImageProfileUseCase.execute(newImageUriStr = imageUriCache).collect { emit(it) }
@@ -86,27 +90,29 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun changeUserDetailsPhotoProfile(imageUriStr: String) = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
-        try {
-            changeUserDetailsPhotoProfileUrlUseCase.execute(newImageUriStr = imageUriStr)
-                .collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e))
+    override fun changeUserDetailsPhotoProfileUrl(imageUriStr: String): LiveData<Response<Boolean>> =
+        liveData(Dispatchers.IO) {
+            emit(Response.Loading())
+            try {
+                changeUserDetailsPhotoProfileUrlUseCase.execute(newImageUriStr = imageUriStr)
+                    .collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e))
+            }
         }
-    }
 
-    fun changeUserAuthEmail(userAuth: UserAuth, newEmail: String) = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
-        try {
-            changeUserAuthEmailUseCase.execute(userAuth = userAuth, newEmail = newEmail)
-                .collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun changeUserAuthEmail(userAuth: UserAuth, newEmail: String): LiveData<Response<Boolean>> =
+        liveData(Dispatchers.IO) {
+            emit(Response.Loading())
+            try {
+                changeUserAuthEmailUseCase.execute(userAuth = userAuth, newEmail = newEmail)
+                    .collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
         }
-    }
 
-    fun changeUserDetailsEmail(newEmail: String) = liveData(Dispatchers.IO) {
+    override fun changeUserDetailsEmail(newEmail: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             changeUserDetailsEmailUseCase.execute(newEmail = newEmail).collect { emit(it) }
@@ -115,17 +121,18 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun changeUserAuthPassword(userAuth: UserAuth, newPassword: String) = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
-        try {
-            changeUserAuthPasswordUseCase.execute(userAuth = userAuth, newPassword = newPassword)
-                .collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun changeUserAuthPassword(userAuth: UserAuth, newPassword: String): LiveData<Response<Boolean>> =
+        liveData(Dispatchers.IO) {
+            emit(Response.Loading())
+            try {
+                changeUserAuthPasswordUseCase.execute(userAuth = userAuth, newPassword = newPassword)
+                    .collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
         }
-    }
 
-    fun changeUserDetailsPassword(newPassword: String) = liveData(Dispatchers.IO) {
+    override fun changeUserDetailsPassword(newPassword: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             changeUserDetailsPasswordUseCase.execute(newPassword = newPassword).collect { emit(it) }
@@ -134,7 +141,7 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun changeUserDetailsFullname(newFullname: String) = liveData(Dispatchers.IO) {
+    override fun changeUserDetailsFullname(newFullname: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             changeUserDetailsFullnameUseCase.execute(newFullname = newFullname).collect { emit(it) }
@@ -143,7 +150,7 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun changeUserDetailsDateBirth(newDateBirth: String) = liveData(Dispatchers.IO) {
+    override fun changeUserDetailsDateBirth(newDateBirth: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             changeUserDetailsDateBirthUseCase.execute(newDateBirth = newDateBirth)
@@ -153,13 +160,13 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    fun saveUserImageLiveData(imageUriStr: String) {
+    override fun saveUserImageLiveData(imageUriStr: String) {
         if (imageUriStr.isNotEmpty()) {
             _cropImageView.value = imageUriStr
         }
     }
 
-    fun deleteUserImageLiveData() {
+    override fun deleteUserImageLiveData() {
         _cropImageView.value = ""
     }
 }

@@ -1,4 +1,4 @@
-package com.example.dispatch.presentation.profile
+package com.example.dispatch.presentation.currentUserProfile.view
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -17,6 +17,8 @@ import com.example.dispatch.databinding.FragmentCurrentUserProfileBinding
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.models.UserDetails
+import com.example.dispatch.presentation.currentUserProfile.CurrentUserProfileContract
+import com.example.dispatch.presentation.currentUserProfile.viewmodel.CurrentUserProfileViewModel
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
@@ -27,7 +29,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class CurrentUserProfileFragment : Fragment() {
+class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.CurrentUserProfileFragment {
     private lateinit var binding: FragmentCurrentUserProfileBinding
     private val viewModel: CurrentUserProfileViewModel by viewModels()
     private var userDetails: UserDetails = UserDetails()
@@ -44,7 +46,8 @@ class CurrentUserProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setOnClickListeners()
-        getCurrentUserDetailsObserve()
+        getCurrentUserDetailsObserver()
+        userDetailsGetObserver()
         cropImageViewObserver()
     }
 
@@ -59,13 +62,13 @@ class CurrentUserProfileFragment : Fragment() {
         }
     }
 
-    private fun setOnClickListeners() {
+    override fun setOnClickListeners() {
         binding.imageviewUserLogout.setOnClickListener {
-            userSignOutObserve()
+            signOutUserAuthObserver()
         }
 
         binding.imageviewDeleteCurrentUser.setOnClickListener {
-            deleteCurrentUserProfileImageObserve()
+            deleteUserImageProfileObserver()
         }
 
         binding.shapeableimagePhotoUser.setOnClickListener {
@@ -77,299 +80,301 @@ class CurrentUserProfileFragment : Fragment() {
         }
 
         binding.buttonChangePassword.setOnClickListener {
-            changePassword()
+            changeUserAuthPassword()
         }
     }
 
-    private fun cropImageViewObserver() {
+    override fun userDetailsGetObserver() {
+        viewModel.userDetailsGet.observe(viewLifecycleOwner) { userDetailsGet ->
+            userDetails = userDetailsGet
+
+            binding.textviewCurrentUserName.text = userDetailsGet.fullname
+            binding.edittextFullname.setText(userDetailsGet.fullname)
+            binding.edittextDateBirth.setText(userDetailsGet.dateBirth)
+            binding.edittextEmail.setText(userDetailsGet.email)
+            Picasso.get().load(userDetailsGet.photoProfileUrl).transform(CropCircleTransformation())
+                .into(binding.shapeableimagePhotoUser)
+        }
+    }
+
+    override fun cropImageViewObserver() {
         viewModel.cropImageView.observe(viewLifecycleOwner) { cropImageUri ->
             if (cropImageUri.isNotEmpty()) {
                 binding.shapeableimagePhotoUser.setImageResource(0)
-                saveNewPhotoUserProfileObserve(imageUriCache = cropImageUri)
+                saveUserImageProfileObserver(imageUriCache = cropImageUri)
             } else {
                 binding.shapeableimagePhotoUser.setImageResource(0)
             }
         }
     }
 
-    private fun updateProfile() {
+    override fun updateProfile() {
         val validEditTextUserDetails: ValidEditTextUserDetails = validEditTextUserDetails()
 
         when {
             validEditTextUserDetails.fullname -> {
                 val newFullname = binding.edittextFullname.text.toString()
-                changeUserDetailsFullnameObserve(newFullname = newFullname)
+                changeUserDetailsFullnameObserver(newFullname = newFullname)
             }
             validEditTextUserDetails.dateBirth -> {
                 val newDateBirth = binding.edittextDateBirth.text.toString()
-                changeUserDetailsDateBirthObserve(newDateBirth = newDateBirth)
+                changeUserDetailsDateBirthObserver(newDateBirth = newDateBirth)
             }
             validEditTextUserDetails.email -> {
                 val userAuth = UserAuth(email = userDetails.email, password = userDetails.password)
                 val newEmail = binding.edittextEmail.text.toString()
-                changeUserAuthEmailObserve(userAuth = userAuth, newEmail = newEmail)
+                changeUserAuthEmailObserver(userAuth = userAuth, newEmail = newEmail)
             }
         }
     }
 
-    private fun changePassword() {
+    override fun changeUserAuthPassword() {
         if (validEditTextPassword()) {
             val userAuth = UserAuth(email = userDetails.email, password = userDetails.password)
             val newPassword = binding.edittextPassword.text.toString()
-            changeUserAuthPasswordObserve(userAuth = userAuth, newPassword = newPassword)
+            changeUserAuthPasswordObserver(userAuth = userAuth, newPassword = newPassword)
         }
     }
 
-    private fun changeUserAuthPasswordObserve(userAuth: UserAuth, newPassword: String) {
+    override fun changeUserAuthPasswordObserver(userAuth: UserAuth, newPassword: String) {
         viewModel.changeUserAuthPassword(userAuth = userAuth, newPassword = newPassword)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Response.Loading -> {
-                        showProgressBarChangePassword(showOrNo = true)
+                        showProgressBarChangePassword()
                     }
                     is Response.Fail -> {
+                        hideProgressBarChangePassword()
                         Toast.makeText(activity, "Change password false :( ", Toast.LENGTH_SHORT)
                             .show()
-                        showProgressBarChangePassword(showOrNo = false)
                     }
                     is Response.Success -> {
-                        changeUserDetailsPasswordObserve(newPassword = newPassword)
+                        changeUserDetailsPasswordObserver(newPassword = newPassword)
                     }
                 }
             }
     }
 
-    private fun changeUserDetailsPasswordObserve(newPassword: String) {
+    override fun changeUserDetailsPasswordObserver(newPassword: String) {
         viewModel.changeUserDetailsPassword(newPassword = newPassword)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Response.Loading -> {
-                        showProgressBarChangePassword(showOrNo = true)
+                        showProgressBarChangePassword()
                     }
                     is Response.Fail -> {
-                        showProgressBarChangePassword(showOrNo = false)
+                        hideProgressBarChangePassword()
                     }
                     is Response.Success -> {
-                        getCurrentUserDetailsObserve()
+                        hideProgressBarChangePassword()
+                        getCurrentUserDetailsObserver()
                         binding.edittextPassword.text = null
-                        showProgressBarChangePassword(showOrNo = false)
                     }
                 }
             }
     }
 
-    private fun changeUserDetailsFullnameObserve(newFullname: String) {
+    override fun changeUserDetailsFullnameObserver(newFullname: String) {
         viewModel.changeUserDetailsFullname(newFullname = newFullname)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Response.Loading -> {
-                        showProgressBarUpdateProfile(showOrNo = true)
+                        showProgressBarUpdateProfile()
                     }
                     is Response.Fail -> {
+                        hideProgressBarUpdateProfile()
                         Toast.makeText(activity, "Update fullname false :( ", Toast.LENGTH_SHORT)
                             .show()
-                        showProgressBarUpdateProfile(showOrNo = false)
                     }
                     is Response.Success -> {
-                        getCurrentUserDetailsObserve()
-                        showProgressBarUpdateProfile(showOrNo = false)
+                        hideProgressBarUpdateProfile()
+                        getCurrentUserDetailsObserver()
                     }
                 }
             }
     }
 
-    private fun changeUserDetailsDateBirthObserve(newDateBirth: String) {
+    override fun changeUserDetailsDateBirthObserver(newDateBirth: String) {
         viewModel.changeUserDetailsDateBirth(newDateBirth = newDateBirth)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Response.Loading -> {
-                        showProgressBarUpdateProfile(showOrNo = true)
+                        showProgressBarUpdateProfile()
                     }
                     is Response.Fail -> {
+                        hideProgressBarUpdateProfile()
                         Toast.makeText(activity, "Update date birth false :( ", Toast.LENGTH_SHORT)
                             .show()
-                        showProgressBarUpdateProfile(showOrNo = false)
                     }
                     is Response.Success -> {
-                        getCurrentUserDetailsObserve()
-                        showProgressBarUpdateProfile(showOrNo = false)
+                        hideProgressBarUpdateProfile()
+                        getCurrentUserDetailsObserver()
                     }
                 }
             }
     }
 
-    private fun changeUserAuthEmailObserve(userAuth: UserAuth, newEmail: String) {
+    override fun changeUserAuthEmailObserver(userAuth: UserAuth, newEmail: String) {
         viewModel.changeUserAuthEmail(userAuth = userAuth, newEmail = newEmail)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Response.Loading -> {}
                     is Response.Fail -> {
+                        hideProgressBarUpdateProfile()
                         Toast.makeText(activity, "Update email false :( ", Toast.LENGTH_SHORT)
                             .show()
-                        showProgressBarUpdateProfile(showOrNo = false)
                     }
                     is Response.Success -> {
-                        changeUserDetailsEmailObserve(newEmail = newEmail)
+                        changeUserDetailsEmailObserver(newEmail = newEmail)
                     }
                 }
             }
     }
 
-    private fun changeUserDetailsEmailObserve(newEmail: String) {
+    override fun changeUserDetailsEmailObserver(newEmail: String) {
         viewModel.changeUserDetailsEmail(newEmail = newEmail)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Response.Loading -> {
-                        showProgressBarUpdateProfile(showOrNo = true)
+                        showProgressBarUpdateProfile()
                     }
                     is Response.Fail -> {
-                        showProgressBarUpdateProfile(showOrNo = false)
+                        hideProgressBarUpdateProfile()
                     }
                     is Response.Success -> {
-                        getCurrentUserDetailsObserve()
-                        showProgressBarUpdateProfile(showOrNo = false)
+                        hideProgressBarUpdateProfile()
+                        getCurrentUserDetailsObserver()
                     }
                 }
             }
     }
 
-    private fun saveNewPhotoUserProfileObserve(imageUriCache: String) {
-        viewModel.saveUserProfileImage(imageUriCache = imageUriCache)
+    override fun saveUserImageProfileObserver(imageUriCache: String) {
+        viewModel.saveUserImageProfile(imageUriCache = imageUriCache)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Response.Loading -> {
-                        showProgressBarLoadInfoUser(showOrNo = true)
+                        showProgressBarLoadInfoUser()
                     }
                     is Response.Fail -> {
-                        Toast.makeText(
-                            activity,
-                            "Save photo profile user false :( ",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        getCurrentUserDetailsObserve()
+                        Toast.makeText(activity, "Save photo profile user false :( ", Toast.LENGTH_SHORT)
+                            .show()
+                        getCurrentUserDetailsObserver()
                     }
                     is Response.Success -> {
                         viewModel.deleteUserImageLiveData()
 
                         val photoProfileUrl = result.data
-                        changeUserPhotoProfileObserve(imageUriStr = photoProfileUrl)
+                        changeUserPhotoProfileUrlObserver(imageUriStr = photoProfileUrl)
                     }
                 }
             }
     }
 
-    private fun changeUserPhotoProfileObserve(imageUriStr: String) {
-        viewModel.changeUserDetailsPhotoProfile(imageUriStr = imageUriStr)
+    override fun changeUserPhotoProfileUrlObserver(imageUriStr: String) {
+        viewModel.changeUserDetailsPhotoProfileUrl(imageUriStr = imageUriStr)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Response.Loading -> {
-                        showProgressBarLoadInfoUser(showOrNo = true)
+                        showProgressBarLoadInfoUser()
                     }
                     is Response.Fail -> {
+                        hideProgressBarLoadInfoUser()
                         Toast.makeText(activity, "Save user photo false :(", Toast.LENGTH_SHORT)
                             .show()
-                        showProgressBarLoadInfoUser(showOrNo = false)
                     }
                     is Response.Success -> {
-                        getCurrentUserDetailsObserve()
+                        getCurrentUserDetailsObserver()
                     }
                 }
             }
     }
 
-    private fun deleteCurrentUserAuthObserve() {
+    override fun deleteCurrentUserAuthObserver() {
         viewModel.deleteCurrentUserAuth().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Loading -> {
-                    showProgressBarDeleteUser(showOrNo = true)
+                    showProgressBarDeleteUser()
                 }
                 is Response.Fail -> {
+                    hideProgressBarDeleteUser()
                     Toast.makeText(activity, "Delete user false :(", Toast.LENGTH_SHORT).show()
-                    showProgressBarDeleteUser(showOrNo = false)
                 }
                 is Response.Success -> {
                     Toast.makeText(activity, "Delete user success!", Toast.LENGTH_SHORT).show()
-                    userSignOutObserve()
+                    signOutUserAuthObserver()
                 }
             }
         }
     }
 
-    private fun userSignOutObserve() {
-        viewModel.userSignOut().observe(viewLifecycleOwner) { result ->
+    override fun signOutUserAuthObserver() {
+        viewModel.signOutUserAuth().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Loading -> {}
                 is Response.Fail -> {
+                    hideProgressBarDeleteUser()
                     Toast.makeText(activity, "User sign out error :( ", Toast.LENGTH_SHORT).show()
-                    showProgressBarDeleteUser(showOrNo = false)
                 }
                 is Response.Success -> {
-                    findNavController().navigate(R.id.action_currentUserProfileFragment_to_signInFragment)
-                    showProgressBarDeleteUser(showOrNo = false)
+                    hideProgressBarDeleteUser()
+                    navigateToSignInFragment()
                 }
             }
         }
     }
 
-    private fun deleteCurrentUserDetailsObserve() {
+    override fun deleteCurrentUserDetailsObserver() {
         viewModel.deleteCurrentUserDetails().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Loading -> {
-                    showProgressBarDeleteUser(showOrNo = true)
+                    showProgressBarDeleteUser()
                 }
                 is Response.Fail -> {
-                    deleteCurrentUserAuthObserve()
+                    deleteCurrentUserAuthObserver()
                 }
                 is Response.Success -> {
-                    deleteCurrentUserAuthObserve()
+                    deleteCurrentUserAuthObserver()
                 }
             }
         }
     }
 
-    private fun deleteCurrentUserProfileImageObserve() {
-        viewModel.deleteCurrentUserProfileImage().observe(viewLifecycleOwner) { result ->
+    override fun deleteUserImageProfileObserver() {
+        viewModel.deleteUserImageProfile().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Loading -> {
-                    showProgressBarDeleteUser(showOrNo = true)
+                    showProgressBarDeleteUser()
                 }
                 is Response.Fail -> {
-                    deleteCurrentUserDetailsObserve()
+                    deleteCurrentUserDetailsObserver()
                 }
                 is Response.Success -> {
-                    deleteCurrentUserDetailsObserve()
+                    deleteCurrentUserDetailsObserver()
                 }
             }
         }
     }
 
-    private fun getCurrentUserDetailsObserve() {
+    override fun getCurrentUserDetailsObserver() {
         viewModel.getCurrentUserDetails().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Loading -> {
-                    showProgressBarLoadInfoUser(showOrNo = true)
+                    showProgressBarLoadInfoUser()
                 }
                 is Response.Fail -> {
+                    hideProgressBarLoadInfoUser()
                     Toast.makeText(activity, "Load user info false :( ", Toast.LENGTH_SHORT).show()
-                    showProgressBarLoadInfoUser(showOrNo = false)
                 }
                 is Response.Success -> {
-                    userDetails = result.data
-
-                    binding.textviewCurrentUserName.text = userDetails.fullname
-                    binding.edittextFullname.setText(userDetails.fullname)
-                    binding.edittextDateBirth.setText(userDetails.dateBirth)
-                    binding.edittextEmail.setText(userDetails.email)
-                    Picasso.get().load(userDetails.photoProfileUrl).transform(CropCircleTransformation())
-                        .into(binding.shapeableimagePhotoUser)
-
-                    showProgressBarLoadInfoUser(showOrNo = false)
+                    hideProgressBarLoadInfoUser()
+                    viewModel._userDetailsGet.value = result.data
                 }
             }
         }
     }
 
-    private fun validEditTextPassword(): Boolean {
+    override fun validEditTextPassword(): Boolean {
         var valid = false
 
         val passwordStr = binding.edittextPassword.text.toString()
@@ -391,7 +396,7 @@ class CurrentUserProfileFragment : Fragment() {
         return valid
     }
 
-    private fun validEditTextUserDetails(): ValidEditTextUserDetails {
+    override fun validEditTextUserDetails(): ValidEditTextUserDetails {
         val valid = ValidEditTextUserDetails()
 
         val fullnameStr = binding.edittextFullname.text.toString()
@@ -431,7 +436,7 @@ class CurrentUserProfileFragment : Fragment() {
         return valid
     }
 
-    private fun cropImageActivityStart() {
+    override fun cropImageActivityStart() {
         CropImage.activity()
             .setGuidelines(CropImageView.Guidelines.ON)
             .setCropShape(CropImageView.CropShape.OVAL)
@@ -442,49 +447,47 @@ class CurrentUserProfileFragment : Fragment() {
             .start(requireContext(), this)
     }
 
-    private fun showProgressBarUpdateProfile(showOrNo: Boolean) {
-        if (showOrNo) {
-            binding.buttonUpdateProfile.visibility = View.INVISIBLE
-            binding.progressbarUpdateProfile.visibility = View.VISIBLE
-        } else {
-            binding.buttonUpdateProfile.visibility = View.VISIBLE
-            binding.progressbarUpdateProfile.visibility = View.INVISIBLE
-        }
+    override fun showProgressBarUpdateProfile() {
+        binding.buttonUpdateProfile.visibility = View.INVISIBLE
+        binding.progressbarUpdateProfile.visibility = View.VISIBLE
     }
 
-    private fun showProgressBarLoadInfoUser(showOrNo: Boolean) {
-        if (showOrNo) {
-            binding.textviewCurrentUserName.visibility = View.INVISIBLE
-            binding.progressbarUserInfoLoad.visibility = View.VISIBLE
-        } else {
-            binding.progressbarUserInfoLoad.visibility = View.INVISIBLE
-            binding.textviewCurrentUserName.visibility = View.VISIBLE
-        }
+    override fun hideProgressBarUpdateProfile() {
+        binding.buttonUpdateProfile.visibility = View.VISIBLE
+        binding.progressbarUpdateProfile.visibility = View.INVISIBLE
     }
 
-    private fun showProgressBarDeleteUser(showOrNo: Boolean) {
-        if (showOrNo) {
-            binding.imageviewDeleteCurrentUser.visibility = View.INVISIBLE
-            binding.progressbarUserDelete.visibility = View.VISIBLE
-        } else {
-            binding.progressbarUserDelete.visibility = View.INVISIBLE
-            binding.imageviewDeleteCurrentUser.visibility = View.VISIBLE
-        }
+    override fun showProgressBarLoadInfoUser() {
+        binding.textviewCurrentUserName.visibility = View.INVISIBLE
+        binding.progressbarUserInfoLoad.visibility = View.VISIBLE
     }
 
-    private fun showProgressBarChangePassword(showOrNo: Boolean) {
-        if (showOrNo) {
-            binding.buttonChangePassword.visibility = View.INVISIBLE
-            binding.progressbarChangePassword.visibility = View.VISIBLE
-        } else {
-            binding.progressbarChangePassword.visibility = View.INVISIBLE
-            binding.buttonChangePassword.visibility = View.VISIBLE
-        }
+    override fun hideProgressBarLoadInfoUser() {
+        binding.progressbarUserInfoLoad.visibility = View.INVISIBLE
+        binding.textviewCurrentUserName.visibility = View.VISIBLE
     }
 
-    private class ValidEditTextUserDetails(
-        var fullname: Boolean = false,
-        var dateBirth: Boolean = false,
-        var email: Boolean = false
-    )
+    override fun showProgressBarDeleteUser() {
+        binding.imageviewDeleteCurrentUser.visibility = View.INVISIBLE
+        binding.progressbarUserDelete.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBarDeleteUser() {
+        binding.progressbarUserDelete.visibility = View.INVISIBLE
+        binding.imageviewDeleteCurrentUser.visibility = View.VISIBLE
+    }
+
+    override fun showProgressBarChangePassword() {
+        binding.buttonChangePassword.visibility = View.INVISIBLE
+        binding.progressbarChangePassword.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBarChangePassword() {
+        binding.progressbarChangePassword.visibility = View.INVISIBLE
+        binding.buttonChangePassword.visibility = View.VISIBLE
+    }
+
+    override fun navigateToSignInFragment() {
+        findNavController().navigate(R.id.action_currentUserProfileFragment_to_signInFragment)
+    }
 }
