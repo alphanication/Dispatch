@@ -55,7 +55,7 @@
     </fragment>
     <fragment
         android:id="@+id/listUsersFragment"
-        android:name="com.example.dispatch.presentation.listusers.ListUsersFragment"
+        android:name="com.example.dispatch.presentation.listUsers.view.ListUsersFragment"
         android:label="fragment_list_users"
         tools:layout="@layout/fragment_list_users" >
         <action

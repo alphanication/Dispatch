@@ -1,4 +1,4 @@
-package com.example.dispatch.presentation.listusers
+package com.example.dispatch.presentation.listUsers.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,19 +11,17 @@ import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentListUsersBinding
 import com.example.dispatch.databinding.ItemContainerUserBinding
 import com.example.dispatch.domain.models.Response
-import com.example.dispatch.domain.models.UserDetailsPublic
-import com.squareup.picasso.Picasso
+import com.example.dispatch.presentation.listUsers.ListUsersContract
+import com.example.dispatch.presentation.listUsers.viewmodel.ListUsersViewModel
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.viewbinding.BindableItem
 import com.xwray.groupie.viewbinding.GroupieViewHolder
 import dagger.hilt.android.AndroidEntryPoint
-import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class ListUsersFragment : Fragment() {
+class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
     private lateinit var binding: FragmentListUsersBinding
     private val viewModel: ListUsersViewModel by viewModels()
     private val adapter = GroupAdapter<GroupieViewHolder<ItemContainerUserBinding>>()
@@ -47,54 +45,41 @@ class ListUsersFragment : Fragment() {
         getUsersListObserve()
     }
 
-    private fun setOnClickListeners() {
+    override fun setOnClickListeners() {
         binding.imageViewBack.setOnClickListener {
-            findNavController().popBackStack()
+            navigateToPopBackStack()
         }
 
         adapter.setOnItemClickListener { item, _ ->
             val userItem = item as UserItem
-            val partnerUserUid = userItem.user.uid
+            val selectedUserUid = userItem.user.uid
 
-            findNavController().navigate(
-                R.id.action_listUsersFragment_to_detailsMessagesFragment,
-                Bundle().apply {
-                    putString(PARTNER_UID, partnerUserUid)
-                })
+            navigateToDetailsMessagesFragmentTransferSelectedUser(userUid = selectedUserUid)
         }
     }
 
-    private fun getUsersListObserve() {
+    override fun getUsersListObserve() {
         viewModel.getUsersList().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Loading -> {}
-                is Response.Fail -> {
-                }
+                is Response.Fail -> {}
                 is Response.Success -> {
-                    adapter.add(UserItem(user = result.data))
+                    val user = result.data
+
+                    adapter.add(UserItem(user = user))
                     binding.recyclerViewListUsers.adapter = adapter
                 }
             }
         }
     }
 
-    private class UserItem(val user: UserDetailsPublic) : BindableItem<ItemContainerUserBinding>() {
-        override fun initializeViewBinding(view: View): ItemContainerUserBinding {
-            return ItemContainerUserBinding.bind(view)
-        }
+    override fun navigateToPopBackStack() {
+        findNavController().popBackStack()
+    }
 
-        override fun bind(viewBinding: ItemContainerUserBinding, position: Int) {
-            viewBinding.textViewFullname.text = user.fullname
-            viewBinding.textViewEmail.text = user.email
-
-            if (user.photoProfileUrl.isNotEmpty()) {
-                Picasso.get().load(user.photoProfileUrl).transform(CropCircleTransformation())
-                    .into(viewBinding.shapeableImageViewProfileImage)
-            }
-        }
-
-        override fun getLayout(): Int {
-            return R.layout.item_container_user
-        }
+    override fun navigateToDetailsMessagesFragmentTransferSelectedUser(userUid: String) {
+        findNavController().navigate(R.id.action_listUsersFragment_to_detailsMessagesFragment, Bundle().apply {
+            putString(PARTNER_UID, userUid)
+        })
     }
 }

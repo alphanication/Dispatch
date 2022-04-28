@@ -1,9 +1,13 @@
-package com.example.dispatch.presentation.listusers
+package com.example.dispatch.presentation.listUsers.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.example.dispatch.domain.models.Response
+import com.example.dispatch.domain.models.UserDetailsPublic
 import com.example.dispatch.domain.usecase.GetUsersListUseCase
+import com.example.dispatch.presentation.listUsers.ListUsersContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,8 +17,8 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class ListUsersViewModel @Inject constructor(
     private val getUsersListUseCase: GetUsersListUseCase
-) : ViewModel() {
-    fun getUsersList() = liveData(Dispatchers.IO) {
+) : ViewModel(), ListUsersContract.ListUsersViewModel {
+    override fun getUsersList(): LiveData<Response<UserDetailsPublic>> = liveData(Dispatchers.IO) {
         emit(Response.Loading())
         try {
             getUsersListUseCase.execute().collect { emit(it) }
