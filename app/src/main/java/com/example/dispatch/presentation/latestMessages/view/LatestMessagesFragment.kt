@@ -1,4 +1,4 @@
-package com.example.dispatch.presentation.messages
+package com.example.dispatch.presentation.latestMessages.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +12,8 @@ import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentLatestMessagesBinding
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetails
+import com.example.dispatch.presentation.latestMessages.LatestMessagesContract
+import com.example.dispatch.presentation.latestMessages.viewmodel.LatestMessagesViewModel
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
@@ -20,10 +22,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class LatestMessagesFragment : Fragment() {
+class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessagesFragment {
     private lateinit var binding: FragmentLatestMessagesBinding
     private val viewModel: LatestMessagesViewModel by viewModels()
-    private var userDetails: UserDetails = UserDetails()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,44 +38,53 @@ class LatestMessagesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setOnClickListeners()
-        getCurrentUserDetailsObserve()
+        getCurrentUserDetailsObserver()
+        userDetailsObserver()
     }
 
-    private fun setOnClickListeners() {
+    override fun setOnClickListeners() {
         binding.imageViewAddNewCompanion.setOnClickListener {
-            findNavController().navigate(R.id.action_latestMessagesFragment_to_listUsersFragment)
+            navigateToListUsersFragment()
         }
     }
 
-    private fun getCurrentUserDetailsObserve() {
+    override fun userDetailsObserver() {
+        viewModel.userDetails.observe(viewLifecycleOwner) { userDetails ->
+            binding.textViewProfileFullname.text = userDetails.fullname
+            Picasso.get().load(userDetails.photoProfileUrl).transform(CropCircleTransformation())
+                .into(binding.shapeableImageViewProfileImage)
+        }
+    }
+
+    override fun getCurrentUserDetailsObserver() {
         viewModel.getCurrentUserDetails().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Loading -> {
-                    showProgressBarLoadUserDetails(showOrNo = true)
+                    showProgressBarLoadUserDetails()
                 }
                 is Response.Fail -> {
+                    hideProgressBarLoadUserDetails()
                     Toast.makeText(activity, "Load user info false :( ", Toast.LENGTH_SHORT).show()
-                    showProgressBarLoadUserDetails(showOrNo = false)
                 }
                 is Response.Success -> {
-                    userDetails = result.data
-
-                    binding.textViewProfileFullname.text = userDetails.fullname
-                    Picasso.get().load(userDetails.photoProfileUrl).transform(CropCircleTransformation())
-                        .into(binding.shapeableImageViewProfileImage)
-                    showProgressBarLoadUserDetails(showOrNo = false)
+                    hideProgressBarLoadUserDetails()
+                    viewModel.saveUserDetailsLiveData(userDetails = result.data)
                 }
             }
         }
     }
 
-    private fun showProgressBarLoadUserDetails(showOrNo: Boolean) {
-        if (showOrNo) {
-            binding.textViewProfileFullname.visibility = View.INVISIBLE
-            binding.progressBarUserDetailsLoad.visibility = View.VISIBLE
-        } else {
-            binding.progressBarUserDetailsLoad.visibility = View.INVISIBLE
-            binding.textViewProfileFullname.visibility = View.VISIBLE
-        }
+    override fun showProgressBarLoadUserDetails() {
+        binding.textViewProfileFullname.visibility = View.INVISIBLE
+        binding.progressBarUserDetailsLoad.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBarLoadUserDetails() {
+        binding.progressBarUserDetailsLoad.visibility = View.INVISIBLE
+        binding.textViewProfileFullname.visibility = View.VISIBLE
+    }
+
+    override fun navigateToListUsersFragment() {
+        findNavController().navigate(R.id.action_latestMessagesFragment_to_listUsersFragment)
     }
 }

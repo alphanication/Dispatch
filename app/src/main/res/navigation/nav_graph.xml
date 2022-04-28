@@ -43,7 +43,7 @@
     </fragment>
     <fragment
         android:id="@+id/latestMessagesFragment"
-        android:name="com.example.dispatch.presentation.messages.LatestMessagesFragment"
+        android:name="com.example.dispatch.presentation.latestMessages.view.LatestMessagesFragment"
         android:label="fragment_latest_messages"
         tools:layout="@layout/fragment_latest_messages">
         <action
