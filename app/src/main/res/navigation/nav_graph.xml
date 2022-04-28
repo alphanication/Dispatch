@@ -32,7 +32,7 @@
         tools:layout="@layout/fragment_restore_password" />
     <fragment
         android:id="@+id/currentUserProfileFragment"
-        android:name="com.example.dispatch.presentation.profile.CurrentUserProfileFragment"
+        android:name="com.example.dispatch.presentation.currentUserProfile.view.CurrentUserProfileFragment"
         android:label="fragment_current_user_profile"
         tools:layout="@layout/fragment_current_user_profile">
         <action
