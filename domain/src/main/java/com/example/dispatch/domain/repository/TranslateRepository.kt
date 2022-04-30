@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 interface TranslateRepository {
-    suspend fun downloadLanguageRussianEnglishPack() : Flow<Response<Boolean>>
+    suspend fun downloadLangRussianEnglishPack() : Flow<Response<Boolean>>
 }
