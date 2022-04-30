@@ -1,5 +1,6 @@
 package com.example.dispatch.di
 
+import com.example.dispatch.domain.repository.TranslateRepository
 import com.example.dispatch.domain.repository.UserAuthRepository
 import com.example.dispatch.domain.repository.UserDetailsRepository
 import com.example.dispatch.domain.repository.UserImagesRepository
@@ -110,12 +111,17 @@ class DomainModule {
     }
 
     @Provides
-    fun providesGetUsersListUseCase(userDetailsRepository: UserDetailsRepository) : GetUsersListUseCase {
+    fun providesGetUsersListUseCase(userDetailsRepository: UserDetailsRepository): GetUsersListUseCase {
         return GetUsersListUseCase(userDetailsRepository = userDetailsRepository)
     }
 
     @Provides
-    fun providesGetUserDetailsPublicOnUid(userDetailsRepository: UserDetailsRepository) : GetUserDetailsPublicOnUidUseCase {
+    fun providesGetUserDetailsPublicOnUid(userDetailsRepository: UserDetailsRepository): GetUserDetailsPublicOnUidUseCase {
         return GetUserDetailsPublicOnUidUseCase(userDetailsRepository = userDetailsRepository)
+    }
+
+    @Provides
+    fun providesDownloadLandRussianEnglishPackUseCase(translateRepository: TranslateRepository): DownloadLangRussianEnglishPackUseCase {
+        return DownloadLangRussianEnglishPackUseCase(translateRepository = translateRepository)
     }
 }
