@@ -1,4 +1,4 @@
-package com.example.dispatch.data.storage.firebase.mlkit
+package com.example.dispatch.data.storage.mlkit
 
 import com.example.dispatch.data.storage.TranslateStorage
 import com.example.dispatch.domain.models.Response

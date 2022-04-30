@@ -11,7 +11,7 @@ import com.example.dispatch.data.storage.UserImagesStorage
 import com.example.dispatch.data.storage.firebase.FirebaseUserAuthStorage
 import com.example.dispatch.data.storage.firebase.FirebaseUserDetailsStorage
 import com.example.dispatch.data.storage.firebase.FirebaseUserImagesStorage
-import com.example.dispatch.data.storage.firebase.mlkit.MlKitTranslateStorage
+import com.example.dispatch.data.storage.mlkit.MlKitTranslateStorage
 import com.example.dispatch.domain.repository.TranslateRepository
 import com.example.dispatch.domain.repository.UserAuthRepository
 import com.example.dispatch.domain.repository.UserDetailsRepository
