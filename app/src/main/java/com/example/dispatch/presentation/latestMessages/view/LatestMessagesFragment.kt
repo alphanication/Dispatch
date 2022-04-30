@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentLatestMessagesBinding
 import com.example.dispatch.domain.models.Response
-import com.example.dispatch.domain.models.UserDetails
 import com.example.dispatch.presentation.latestMessages.LatestMessagesContract
 import com.example.dispatch.presentation.latestMessages.viewmodel.LatestMessagesViewModel
 import com.squareup.picasso.Picasso
@@ -40,6 +39,7 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
         setOnClickListeners()
         getCurrentUserDetailsObserver()
         userDetailsObserver()
+        downloadLangRussianEnglishPackObserver()
     }
 
     override fun setOnClickListeners() {
@@ -70,6 +70,18 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
                     hideProgressBarLoadUserDetails()
                     viewModel._userDetails.value = result.data
                 }
+            }
+        }
+    }
+
+    override fun downloadLangRussianEnglishPackObserver() {
+        viewModel.downloadLangRussianEnglishPack().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Response.Loading -> {}
+                is Response.Fail -> {
+                    Toast.makeText(activity, "Download pack language false :(", Toast.LENGTH_SHORT).show()
+                }
+                is Response.Success -> {}
             }
         }
     }

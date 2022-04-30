@@ -17,9 +17,13 @@ interface LatestMessagesContract {
         fun navigateToListUsersFragment()
 
         fun userDetailsObserver()
+
+        fun downloadLangRussianEnglishPackObserver()
     }
 
     interface LatestMessagesViewModel {
         fun getCurrentUserDetails(): LiveData<Response<UserDetails>>
+
+        fun downloadLangRussianEnglishPack() : LiveData<Response<Boolean>>
     }
 }
