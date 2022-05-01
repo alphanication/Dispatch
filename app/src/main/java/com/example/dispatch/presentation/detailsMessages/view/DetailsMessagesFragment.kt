@@ -1,7 +1,6 @@
 package com.example.dispatch.presentation.detailsMessages.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
+import com.example.dispatch.domain.models.Message
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.presentation.detailsMessages.DetailsMessagesContract
 import com.example.dispatch.presentation.detailsMessages.viewmodel.DetailsMessagesViewModel
@@ -17,11 +17,8 @@ import com.example.dispatch.presentation.listUsers.view.ListUsersFragment
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
@@ -41,9 +38,17 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setOnClickListeners()
         getCompanionUidFromListUsersFragment()
         companionUidObserver()
+        getCurrentUserUidObserver()
         companionDetailsObserver()
+    }
+
+    override fun setOnClickListeners() {
+        binding.layoutSend.setOnClickListener {
+            layoutSendClick()
+        }
     }
 
     override fun getCompanionUidFromListUsersFragment() {
@@ -103,6 +108,37 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                     emit(result.data)
                 }
             }
+        }
+    }
+
+    override fun getCurrentUserUidObserver() {
+        viewModel.getCurrentUserUid().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Response.Success -> {
+                    viewModel._currUserUid.value = result.data
+                }
+            }
+        }
+    }
+
+    override fun layoutSendClick() {
+        val inputMess = binding.editTextInputMessage.text.toString()
+        binding.editTextInputMessage.text.clear()
+
+        if (inputMess.isNotEmpty()) {
+
+            lifecycleScope.launch {
+                translateRussianEnglishTextObserver(text = inputMess).collect { messageTranslated ->
+                    val message = Message(
+                        message = messageTranslated,
+                        timestamp = System.currentTimeMillis(),
+                        fromUserUid = viewModel.currUserUid.value.toString(),
+                        toUserUid = viewModel.companionUid.value.toString()
+                    )
+                    viewModel.saveMessage(message = message)
+                }
+            }
+
         }
     }
 }
