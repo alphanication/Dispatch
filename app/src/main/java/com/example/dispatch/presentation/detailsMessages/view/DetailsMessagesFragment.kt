@@ -1,12 +1,14 @@
 package com.example.dispatch.presentation.detailsMessages.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.presentation.detailsMessages.DetailsMessagesContract
@@ -15,7 +17,13 @@ import com.example.dispatch.presentation.listUsers.view.ListUsersFragment
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
@@ -69,6 +77,32 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
             Picasso.get().load(companionDetails?.photoProfileUrl)
                 .transform(CropCircleTransformation())
                 .into(binding.imageViewCompanionProfileImage)
+        }
+    }
+
+    override fun translateRussianEnglishTextObserver(text: String): Flow<String> = flow {
+        viewModel.translateRussianEnglishText(text = text).collect { result ->
+            when (result) {
+                is Response.Fail -> {
+                    Toast.makeText(activity, "Translated russian-english false :( ", Toast.LENGTH_SHORT).show()
+                }
+                is Response.Success -> {
+                    emit(result.data)
+                }
+            }
+        }
+    }
+
+    override fun translateEnglishRussianTextObserver(text: String): Flow<String> = flow {
+        viewModel.translateEnglishRussianText(text = text).collect { result ->
+            when (result) {
+                is Response.Fail -> {
+                    Toast.makeText(activity, "Translated english-russian false :( ", Toast.LENGTH_SHORT).show()
+                }
+                is Response.Success -> {
+                    emit(result.data)
+                }
+            }
         }
     }
 }
