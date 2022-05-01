@@ -136,4 +136,9 @@ class DomainModule {
     fun providesSaveMessageUseCase(messageRepository: MessageRepository) : SaveMessageUseCase {
         return SaveMessageUseCase(messageRepository = messageRepository)
     }
+
+    @Provides
+    fun providesListenFromToUserMessages(messageRepository: MessageRepository) : ListenFromToUserMessagesUseCase {
+        return ListenFromToUserMessagesUseCase(messageRepository = messageRepository)
+    }
 }
