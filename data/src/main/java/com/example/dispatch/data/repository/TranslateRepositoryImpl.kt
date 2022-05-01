@@ -11,4 +11,12 @@ class TranslateRepositoryImpl(private val translateStorage: TranslateStorage) : 
     override suspend fun downloadLangRussianEnglishPack(): Flow<Response<Boolean>> {
         return translateStorage.downloadLangRussianEnglishPack()
     }
+
+    override suspend fun translateRussianEnglishText(text: String): Flow<Response<String>> {
+        return translateStorage.translateRussianEnglishText(text = text)
+    }
+
+    override suspend fun translateEnglishRussianText(text: String): Flow<Response<String>> {
+        return translateStorage.translateEnglishRussianText(text = text)
+    }
 }
