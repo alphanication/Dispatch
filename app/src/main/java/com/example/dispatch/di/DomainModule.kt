@@ -124,4 +124,14 @@ class DomainModule {
     fun providesDownloadLandRussianEnglishPackUseCase(translateRepository: TranslateRepository): DownloadLangRussianEnglishPackUseCase {
         return DownloadLangRussianEnglishPackUseCase(translateRepository = translateRepository)
     }
+
+    @Provides
+    fun providesTranslateEnglishRussianText(translateRepository: TranslateRepository) : TranslateEnglishRussianText {
+        return TranslateEnglishRussianText(translateRepository = translateRepository)
+    }
+
+    @Provides
+    fun providesTranslateRussianEnglishText(translateRepository: TranslateRepository) : TranslateRussianEnglishText {
+        return TranslateRussianEnglishText(translateRepository = translateRepository)
+    }
 }
