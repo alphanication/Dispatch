@@ -34,6 +34,8 @@ interface DetailsMessagesContract {
         fun hideProgressBarLoadMessages()
 
         fun currentUserUidObserver()
+
+        fun recyclerViewScrollPosition()
     }
 
     interface DetailsMessagesViewModel {
