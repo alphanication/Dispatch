@@ -1,6 +1,7 @@
 package com.example.dispatch.presentation.detailsMessages.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
+import com.example.dispatch.domain.models.FromToUser
 import com.example.dispatch.domain.models.Message
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.presentation.detailsMessages.DetailsMessagesContract
@@ -43,6 +45,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         companionUidObserver()
         getCurrentUserUidObserver()
         companionDetailsObserver()
+        currentUserUidObserver()
     }
 
     override fun setOnClickListeners() {
@@ -139,6 +142,38 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                 }
             }
 
+        }
+    }
+
+    override fun listenFromToUserMessagesObserver(fromToUser: FromToUser) {
+        viewModel.listenFromToUserMessages(fromToUser = fromToUser).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Response.Loading -> {
+                    showProgressBarLoadMessages()
+                }
+                is Response.Fail -> {
+                    Toast.makeText(activity, "Listen user messages false :( ", Toast.LENGTH_SHORT).show()
+                    hideProgressBarLoadMessages()
+                }
+                is Response.Success -> {
+                    hideProgressBarLoadMessages()
+                }
+            }
+        }
+    }
+
+    override fun showProgressBarLoadMessages() {
+        binding.progressBarLoadMessage.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBarLoadMessages() {
+        binding.progressBarLoadMessage.visibility = View.INVISIBLE
+    }
+
+    override fun currentUserUidObserver() {
+        viewModel.currUserUid.observe(viewLifecycleOwner) { currentUserUid ->
+            val fromToUser = FromToUser(currentUserUid, viewModel.companionUid.value.toString())
+            listenFromToUserMessagesObserver(fromToUser = fromToUser)
         }
     }
 }

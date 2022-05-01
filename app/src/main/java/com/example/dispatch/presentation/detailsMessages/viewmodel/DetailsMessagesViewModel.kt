@@ -1,6 +1,7 @@
 package com.example.dispatch.presentation.detailsMessages.viewmodel
 
 import androidx.lifecycle.*
+import com.example.dispatch.domain.models.FromToUser
 import com.example.dispatch.domain.models.Message
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetailsPublic
@@ -21,7 +22,8 @@ class DetailsMessagesViewModel @Inject constructor(
     private val translateEnglishRussianText: TranslateEnglishRussianText,
     private val translateRussianEnglishText: TranslateRussianEnglishText,
     private val getCurrentUserUidUseCase: GetCurrentUserUidUseCase,
-    private val saveMessageUseCase: SaveMessageUseCase
+    private val saveMessageUseCase: SaveMessageUseCase,
+    private val listenFromToUserMessagesUseCase: ListenFromToUserMessagesUseCase
 ) : ViewModel(), DetailsMessagesContract.DetailsMessagesViewModel {
     val _companionUid = MutableLiveData<String>()
     val companionUid: LiveData<String> = _companionUid
@@ -71,6 +73,15 @@ class DetailsMessagesViewModel @Inject constructor(
     override fun saveMessage(message: Message) {
         viewModelScope.launch {
             saveMessageUseCase.execute(message = message).collect { }
+        }
+    }
+
+    override fun listenFromToUserMessages(fromToUser: FromToUser): LiveData<Response<Message>> = liveData {
+        emit(Response.Loading())
+        try {
+            listenFromToUserMessagesUseCase.execute(fromToUser = fromToUser).collect { emit(it) }
+        } catch (e: Exception) {
+            emit(Response.Fail(e = e))
         }
     }
 }
