@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
 import com.example.dispatch.domain.models.FromToUser
 import com.example.dispatch.domain.models.Message
@@ -17,6 +18,8 @@ import com.example.dispatch.presentation.detailsMessages.DetailsMessagesContract
 import com.example.dispatch.presentation.detailsMessages.viewmodel.DetailsMessagesViewModel
 import com.example.dispatch.presentation.listUsers.view.ListUsersFragment
 import com.squareup.picasso.Picasso
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,6 +32,7 @@ import kotlinx.coroutines.launch
 class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessagesFragment {
     private lateinit var binding: FragmentDetailsMessagesBinding
     private val viewModel: DetailsMessagesViewModel by viewModels()
+    private val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +50,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         getCurrentUserUidObserver()
         companionDetailsObserver()
         currentUserUidObserver()
+        recyclerViewScrollPosition()
     }
 
     override fun setOnClickListeners() {
@@ -157,6 +162,15 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                 }
                 is Response.Success -> {
                     hideProgressBarLoadMessages()
+
+                    val message = result.data
+                    if (message.fromUserUid == viewModel.currUserUid.value) {
+                        adapter.add(MessageFromItem(message = message))
+                    } else {
+                        adapter.add(MessageToItem(message = message))
+                    }
+
+                    binding.recyclerViewMessages.adapter = adapter
                 }
             }
         }
@@ -174,6 +188,16 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         viewModel.currUserUid.observe(viewLifecycleOwner) { currentUserUid ->
             val fromToUser = FromToUser(currentUserUid, viewModel.companionUid.value.toString())
             listenFromToUserMessagesObserver(fromToUser = fromToUser)
+        }
+    }
+
+    override fun recyclerViewScrollPosition() {
+        binding.recyclerViewMessages.viewTreeObserver.addOnGlobalLayoutListener {
+            val heightDiff: Int =
+                binding.recyclerViewMessages.rootView.height - binding.recyclerViewMessages.height
+            if (heightDiff > 100) {
+                if (adapter.itemCount > 0) binding.recyclerViewMessages.smoothScrollToPosition(adapter.itemCount - 1)
+            }
         }
     }
 }
