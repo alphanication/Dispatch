@@ -70,5 +70,7 @@ class FirebaseMessageStorage : MessageStorage {
                 trySend(Response.Fail(e = error.toException()))
             }
         })
+
+        awaitClose { this.cancel() }
     }
 }

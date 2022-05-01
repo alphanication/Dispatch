@@ -1,6 +1,7 @@
 package com.example.dispatch.presentation.detailsMessages
 
 import androidx.lifecycle.LiveData
+import com.example.dispatch.domain.models.FromToUser
 import com.example.dispatch.domain.models.Message
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetailsPublic
@@ -25,6 +26,14 @@ interface DetailsMessagesContract {
         fun getCurrentUserUidObserver()
 
         fun layoutSendClick()
+
+        fun listenFromToUserMessagesObserver(fromToUser: FromToUser)
+
+        fun showProgressBarLoadMessages()
+
+        fun hideProgressBarLoadMessages()
+
+        fun currentUserUidObserver()
     }
 
     interface DetailsMessagesViewModel {
@@ -37,5 +46,7 @@ interface DetailsMessagesContract {
         fun getCurrentUserUid() : LiveData<Response<String>>
 
         fun saveMessage(message: Message)
+
+        fun listenFromToUserMessages(fromToUser: FromToUser) : LiveData<Response<Message>>
     }
 }
