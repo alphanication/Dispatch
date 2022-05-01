@@ -1,21 +1,13 @@
 package com.example.dispatch.di
 
-import com.example.dispatch.data.repository.TranslateRepositoryImpl
-import com.example.dispatch.data.repository.UserAuthRepositoryImpl
-import com.example.dispatch.data.repository.UserDetailsRepositoryImpl
-import com.example.dispatch.data.repository.UserImagesRepositoryImpl
-import com.example.dispatch.data.storage.TranslateStorage
-import com.example.dispatch.data.storage.UserAuthStorage
-import com.example.dispatch.data.storage.UserDetailsStorage
-import com.example.dispatch.data.storage.UserImagesStorage
+import com.example.dispatch.data.repository.*
+import com.example.dispatch.data.storage.*
+import com.example.dispatch.data.storage.firebase.FirebaseMessageStorage
 import com.example.dispatch.data.storage.firebase.FirebaseUserAuthStorage
 import com.example.dispatch.data.storage.firebase.FirebaseUserDetailsStorage
 import com.example.dispatch.data.storage.firebase.FirebaseUserImagesStorage
 import com.example.dispatch.data.storage.mlkit.MlKitTranslateStorage
-import com.example.dispatch.domain.repository.TranslateRepository
-import com.example.dispatch.domain.repository.UserAuthRepository
-import com.example.dispatch.domain.repository.UserDetailsRepository
-import com.example.dispatch.domain.repository.UserImagesRepository
+import com.example.dispatch.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -73,5 +65,17 @@ class DataModule {
     @Singleton
     fun providesTranslateRepository(translateStorage: TranslateStorage) : TranslateRepository {
         return TranslateRepositoryImpl(translateStorage = translateStorage)
+    }
+
+    @Provides
+    @Singleton
+    fun providesMessageStorage() : MessageStorage {
+        return FirebaseMessageStorage()
+    }
+
+    @Provides
+    @Singleton
+    fun providesMessageRepository(messageStorage: MessageStorage) : MessageRepository {
+        return MessageRepositoryImpl(messageStorage = messageStorage)
     }
 }

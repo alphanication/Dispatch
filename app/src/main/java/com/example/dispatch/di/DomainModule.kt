@@ -1,9 +1,6 @@
 package com.example.dispatch.di
 
-import com.example.dispatch.domain.repository.TranslateRepository
-import com.example.dispatch.domain.repository.UserAuthRepository
-import com.example.dispatch.domain.repository.UserDetailsRepository
-import com.example.dispatch.domain.repository.UserImagesRepository
+import com.example.dispatch.domain.repository.*
 import com.example.dispatch.domain.usecase.*
 import dagger.Module
 import dagger.Provides
@@ -133,5 +130,10 @@ class DomainModule {
     @Provides
     fun providesTranslateRussianEnglishText(translateRepository: TranslateRepository) : TranslateRussianEnglishText {
         return TranslateRussianEnglishText(translateRepository = translateRepository)
+    }
+
+    @Provides
+    fun providesSaveMessageUseCase(messageRepository: MessageRepository) : SaveMessageUseCase {
+        return SaveMessageUseCase(messageRepository = messageRepository)
     }
 }
