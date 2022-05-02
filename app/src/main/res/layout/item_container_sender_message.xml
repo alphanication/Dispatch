@@ -17,6 +17,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageview_translated"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@drawable/ic_translate"
+        app:layout_constraintBottom_toBottomOf="@id/textView_message"
+        app:layout_constraintEnd_toStartOf="@id/textView_message"
+        app:layout_constraintTop_toTopOf="@id/textView_message" />
+
     <TextView
         android:id="@+id/textView_date_time"
         android:layout_width="0dp"
