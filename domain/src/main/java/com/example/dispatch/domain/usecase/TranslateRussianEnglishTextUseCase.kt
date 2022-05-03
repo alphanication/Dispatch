@@ -6,8 +6,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
-class TranslateEnglishRussianText(private val translateRepository: TranslateRepository) {
+class TranslateRussianEnglishTextUseCase(private val translateRepository: TranslateRepository) {
     suspend fun execute(text: String) : Flow<Response<String>> {
-        return translateRepository.translateEnglishRussianText(text = text)
+        return translateRepository.translateRussianEnglishText(text = text)
     }
 }

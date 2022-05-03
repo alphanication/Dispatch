@@ -19,8 +19,8 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class DetailsMessagesViewModel @Inject constructor(
     private val getUserDetailsPublicOnUidUseCase: GetUserDetailsPublicOnUidUseCase,
-    private val translateEnglishRussianText: TranslateEnglishRussianText,
-    private val translateRussianEnglishText: TranslateRussianEnglishText,
+    private val translateEnglishRussianTextUseCase: TranslateEnglishRussianTextUseCase,
+    private val translateRussianEnglishTextUseCase: TranslateRussianEnglishTextUseCase,
     private val getCurrentUserUidUseCase: GetCurrentUserUidUseCase,
     private val saveMessageUseCase: SaveMessageUseCase,
     private val listenFromToUserMessagesUseCase: ListenFromToUserMessagesUseCase
@@ -46,7 +46,7 @@ class DetailsMessagesViewModel @Inject constructor(
     override fun translateRussianEnglishText(text: String): Flow<Response<String>> = flow {
         emit(Response.Loading())
         try {
-            translateRussianEnglishText.execute(text = text).collect { emit(it) }
+            translateRussianEnglishTextUseCase.execute(text = text).collect { emit(it) }
         } catch (e: Exception) {
             emit(Response.Fail(e = e))
         }
@@ -55,7 +55,7 @@ class DetailsMessagesViewModel @Inject constructor(
     override fun translateEnglishRussianText(text: String): Flow<Response<String>> = flow {
         emit(Response.Loading())
         try {
-            translateEnglishRussianText.execute(text = text).collect { emit(it) }
+            translateEnglishRussianTextUseCase.execute(text = text).collect { emit(it) }
         } catch (e: Exception) {
             emit(Response.Fail(e = e))
         }

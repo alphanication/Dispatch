@@ -123,13 +123,13 @@ class DomainModule {
     }
 
     @Provides
-    fun providesTranslateEnglishRussianText(translateRepository: TranslateRepository) : TranslateEnglishRussianText {
-        return TranslateEnglishRussianText(translateRepository = translateRepository)
+    fun providesTranslateEnglishRussianTextUseCase(translateRepository: TranslateRepository) : TranslateEnglishRussianTextUseCase {
+        return TranslateEnglishRussianTextUseCase(translateRepository = translateRepository)
     }
 
     @Provides
-    fun providesTranslateRussianEnglishText(translateRepository: TranslateRepository) : TranslateRussianEnglishText {
-        return TranslateRussianEnglishText(translateRepository = translateRepository)
+    fun providesTranslateRussianEnglishTextUseCase(translateRepository: TranslateRepository) : TranslateRussianEnglishTextUseCase {
+        return TranslateRussianEnglishTextUseCase(translateRepository = translateRepository)
     }
 
     @Provides
