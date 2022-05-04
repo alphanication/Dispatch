@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
+import com.example.dispatch.domain.constants.LanguageCodeConstants
 import com.example.dispatch.domain.models.FromToUser
 import com.example.dispatch.domain.models.Message
 import com.example.dispatch.domain.models.Response
@@ -22,9 +22,6 @@ import com.xwray.groupie.GroupieViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
@@ -67,21 +64,17 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
 
     override fun companionUidObserver() {
         viewModel.companionUid.observe(viewLifecycleOwner) { companionUid ->
-            if (companionUid.isNotEmpty()) {
-                getUserDetailsPublicOnUidObserver(uid = companionUid)
-            }
+            if (companionUid.isNotEmpty()) getUserDetailsPublicOnUidObserver(uid = companionUid)
         }
     }
 
     override fun getUserDetailsPublicOnUidObserver(uid: String) {
         viewModel.getUserDetailsPublicOnUid(uid = uid).observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Fail -> {
-                    Toast.makeText(activity, "Load user info false :( ", Toast.LENGTH_SHORT).show()
-                }
-                is Response.Success -> {
-                    viewModel._companionDetails.value = result.data
-                }
+                is Response.Fail -> Toast
+                    .makeText(activity, "Load user info false :( ", Toast.LENGTH_SHORT)
+                    .show()
+                is Response.Success -> viewModel._companionDetails.value = result.data
             }
         }
     }
@@ -95,40 +88,16 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         }
     }
 
-    override fun translateRussianEnglishTextObserver(text: String): Flow<String> = flow {
-        viewModel.translateRussianEnglishText(text = text).collect { result ->
+    override fun translateRussianEnglishTextObserver(text: String) {
+        viewModel.translateRussianEnglishText(text = text).observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Fail -> {
-                    Toast.makeText(activity, "Translated russian-english false :( ", Toast.LENGTH_SHORT).show()
-                }
+                is Response.Fail -> Toast
+                    .makeText(activity, "Translated russian-english false :( ", Toast.LENGTH_SHORT)
+                    .show()
                 is Response.Success -> {
-                    emit(result.data)
-                }
-            }
-        }
-    }
-
-    override fun getCurrentUserUidObserver() {
-        viewModel.getCurrentUserUid().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Response.Success -> {
-                    viewModel._currUserUid.value = result.data
-                }
-            }
-        }
-    }
-
-    override fun layoutSendClick() {
-        val russianMessage = binding.editTextInputMessage.text.toString()
-        binding.editTextInputMessage.text.clear()
-
-        if (russianMessage.isNotEmpty()) {
-
-            lifecycleScope.launch {
-                translateRussianEnglishTextObserver(text = russianMessage).collect { englishMessage ->
                     val message = Message(
-                        russianMessage = russianMessage,
-                        englishMessage = englishMessage,
+                        russianMessage = text,
+                        englishMessage = result.data,
                         timestamp = System.currentTimeMillis(),
                         fromUserUid = viewModel.currUserUid.value.toString(),
                         toUserUid = viewModel.companionUid.value.toString()
@@ -136,16 +105,71 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                     viewModel.saveMessage(message = message)
                 }
             }
+        }
+    }
 
+    override fun translateEnglishRussianTextObserver(text: String) {
+        viewModel.translateEnglishRussianText(text = text).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Response.Fail -> Toast
+                    .makeText(activity, "Translated english-russian false :( ", Toast.LENGTH_SHORT)
+                    .show()
+                is Response.Success -> {
+                    val message = Message(
+                        russianMessage = result.data,
+                        englishMessage = text,
+                        timestamp = System.currentTimeMillis(),
+                        fromUserUid = viewModel.currUserUid.value.toString(),
+                        toUserUid = viewModel.companionUid.value.toString()
+                    )
+                    viewModel.saveMessage(message = message)
+                }
+            }
+        }
+    }
+
+    override fun languageIdentifierObserver(text: String) {
+        viewModel.languageIdentifier(text = text).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Response.Success -> {
+                    if (result.data == LanguageCodeConstants.RU) {
+                        translateRussianEnglishTextObserver(text = text)
+                    } else if (result.data == LanguageCodeConstants.EN) {
+                        translateEnglishRussianTextObserver(text = text)
+                    } else {
+                        Toast
+                            .makeText(activity, "The text must be in English or Russian.", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                }
+                is Response.Fail -> Toast
+                    .makeText(activity, "Language identifier false :(", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
+
+    override fun getCurrentUserUidObserver() {
+        viewModel.getCurrentUserUid().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Response.Success -> viewModel._currUserUid.value = result.data
+            }
+        }
+    }
+
+    override fun layoutSendClick() {
+        val textMessage = binding.editTextInputMessage.text.toString()
+        binding.editTextInputMessage.text.clear()
+
+        if (textMessage.isNotEmpty()) {
+            languageIdentifierObserver(text = textMessage)
         }
     }
 
     override fun listenFromToUserMessagesObserver(fromToUser: FromToUser) {
         viewModel.listenFromToUserMessages(fromToUser = fromToUser).observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Loading -> {
-                    showProgressBarLoadMessages()
-                }
+                is Response.Loading -> showProgressBarLoadMessages()
                 is Response.Fail -> {
                     Toast.makeText(activity, "Listen user messages false :( ", Toast.LENGTH_SHORT).show()
                     hideProgressBarLoadMessages()

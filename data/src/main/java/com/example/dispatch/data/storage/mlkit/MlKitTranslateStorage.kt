@@ -90,5 +90,7 @@ class MlKitTranslateStorage : TranslateStorage {
             .addOnFailureListener { e ->
                 trySend(Response.Fail(e = e))
             }
+
+        awaitClose { this.cancel() }
     }
 }

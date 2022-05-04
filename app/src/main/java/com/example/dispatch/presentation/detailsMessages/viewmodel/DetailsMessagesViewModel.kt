@@ -10,8 +10,6 @@ import com.example.dispatch.presentation.detailsMessages.DetailsMessagesContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,6 +18,8 @@ import javax.inject.Inject
 class DetailsMessagesViewModel @Inject constructor(
     private val getUserDetailsPublicOnUidUseCase: GetUserDetailsPublicOnUidUseCase,
     private val translateRussianEnglishTextUseCase: TranslateRussianEnglishTextUseCase,
+    private val translateEnglishRussianTextUseCase: TranslateEnglishRussianTextUseCase,
+    private val languageIdentifierUseCase: LanguageIdentifierUseCase,
     private val getCurrentUserUidUseCase: GetCurrentUserUidUseCase,
     private val saveMessageUseCase: SaveMessageUseCase,
     private val listenFromToUserMessagesUseCase: ListenFromToUserMessagesUseCase
@@ -41,10 +41,28 @@ class DetailsMessagesViewModel @Inject constructor(
             }
         }
 
-    override fun translateRussianEnglishText(text: String): Flow<Response<String>> = flow {
+    override fun translateRussianEnglishText(text: String): LiveData<Response<String>> = liveData {
         emit(Response.Loading())
         try {
             translateRussianEnglishTextUseCase.execute(text = text).collect { emit(it) }
+        } catch (e: Exception) {
+            emit(Response.Fail(e = e))
+        }
+    }
+
+    override fun translateEnglishRussianText(text: String): LiveData<Response<String>> = liveData {
+        emit(Response.Loading())
+        try {
+            translateEnglishRussianTextUseCase.execute(text = text).collect { emit(it) }
+        } catch (e: Exception) {
+            emit(Response.Fail(e = e))
+        }
+    }
+
+    override fun languageIdentifier(text: String): LiveData<Response<String>> = liveData {
+        emit(Response.Loading())
+        try {
+            languageIdentifierUseCase.execute(text = text).collect { emit(it) }
         } catch (e: Exception) {
             emit(Response.Fail(e = e))
         }
