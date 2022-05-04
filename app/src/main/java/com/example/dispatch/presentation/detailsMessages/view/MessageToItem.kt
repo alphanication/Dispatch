@@ -13,11 +13,22 @@ import java.text.SimpleDateFormat
 class MessageToItem(private val message: Message) :
     BindableItem<ItemContainerRecipientMessageBinding>() {
     override fun bind(viewBinding: ItemContainerRecipientMessageBinding, position: Int) {
-        viewBinding.textViewMessage.text = message.message
+        viewBinding.textViewMessage.text = message.englishMessage
 
         val netDate = Date(Timestamp(message.timestamp).time)
         val date = SimpleDateFormat("dd/MM/yy hh:mm a").format(netDate)
         viewBinding.textViewDateTime.text = date
+
+        var textEnglish: Boolean = true
+        viewBinding.imageviewTranslated.setOnClickListener {
+            if (textEnglish) {
+                viewBinding.textViewMessage.text = message.russianMessage
+                textEnglish = false
+            } else {
+                viewBinding.textViewMessage.text = message.englishMessage
+                textEnglish = true
+            }
+        }
     }
 
     override fun getLayout(): Int {
