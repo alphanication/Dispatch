@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
 import com.example.dispatch.domain.models.FromToUser
@@ -57,6 +58,10 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         binding.layoutSend.setOnClickListener {
             layoutSendClick()
         }
+
+        binding.imageViewBack.setOnClickListener {
+            navigateToPopBackStack()
+        }
     }
 
     override fun getCompanionUidFromListUsersFragment() {
@@ -98,19 +103,6 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
             when (result) {
                 is Response.Fail -> {
                     Toast.makeText(activity, "Translated russian-english false :( ", Toast.LENGTH_SHORT).show()
-                }
-                is Response.Success -> {
-                    emit(result.data)
-                }
-            }
-        }
-    }
-
-    override fun translateEnglishRussianTextObserver(text: String): Flow<String> = flow {
-        viewModel.translateEnglishRussianText(text = text).collect { result ->
-            when (result) {
-                is Response.Fail -> {
-                    Toast.makeText(activity, "Translated english-russian false :( ", Toast.LENGTH_SHORT).show()
                 }
                 is Response.Success -> {
                     emit(result.data)
@@ -200,5 +192,9 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                 if (adapter.itemCount > 0) binding.recyclerViewMessages.smoothScrollToPosition(adapter.itemCount - 1)
             }
         }
+    }
+
+    override fun navigateToPopBackStack() {
+        findNavController().popBackStack()
     }
 }
