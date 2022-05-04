@@ -33,12 +33,12 @@
         android:id="@+id/imageView_companion_profile_image"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
-        android:layout_marginStart="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_8sdp"
         android:background="@drawable/ic_account_circle"
         android:backgroundTint="@color/background_shapeableimageview"
-        app:layout_constraintStart_toEndOf="@id/imageView_back"
         app:layout_constraintBottom_toTopOf="@id/viewBackground"
+        app:layout_constraintStart_toEndOf="@id/imageView_back"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -97,8 +97,8 @@
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginEnd="@dimen/_12sdp"
-        android:background="@drawable/background_details_messages_input"
         android:layout_marginBottom="@dimen/_12sdp"
+        android:background="@drawable/background_details_messages_input"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
