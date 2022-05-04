@@ -130,15 +130,16 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     }
 
     override fun layoutSendClick() {
-        val inputMess = binding.editTextInputMessage.text.toString()
+        val russianMessage = binding.editTextInputMessage.text.toString()
         binding.editTextInputMessage.text.clear()
 
-        if (inputMess.isNotEmpty()) {
+        if (russianMessage.isNotEmpty()) {
 
             lifecycleScope.launch {
-                translateRussianEnglishTextObserver(text = inputMess).collect { messageTranslated ->
+                translateRussianEnglishTextObserver(text = russianMessage).collect { englishMessage ->
                     val message = Message(
-                        message = messageTranslated,
+                        russianMessage = russianMessage,
+                        englishMessage = englishMessage,
                         timestamp = System.currentTimeMillis(),
                         fromUserUid = viewModel.currUserUid.value.toString(),
                         toUserUid = viewModel.companionUid.value.toString()
