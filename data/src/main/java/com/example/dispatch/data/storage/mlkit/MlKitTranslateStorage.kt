@@ -1,7 +1,9 @@
 package com.example.dispatch.data.storage.mlkit
 
 import com.example.dispatch.data.storage.TranslateStorage
+import com.example.dispatch.domain.constants.LanguageCodeConstants
 import com.example.dispatch.domain.models.Response
+import com.google.mlkit.nl.languageid.LanguageIdentification
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
@@ -72,5 +74,21 @@ class MlKitTranslateStorage : TranslateStorage {
             }
 
         awaitClose { this.cancel() }
+    }
+
+    override suspend fun languageIndentifier(text: String): Flow<Response<String>> = callbackFlow {
+        val languageIdentifier = LanguageIdentification.getClient()
+
+        languageIdentifier.identifyLanguage(text)
+            .addOnSuccessListener { languageCode ->
+                when (languageCode) {
+                    LanguageCodeConstants.EN -> trySend(Response.Success(data = LanguageCodeConstants.EN))
+                    LanguageCodeConstants.RU -> trySend(Response.Success(data = LanguageCodeConstants.RU))
+                    else -> trySend(Response.Success(data = languageCode))
+                }
+            }
+            .addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
     }
 }

@@ -19,4 +19,8 @@ class TranslateRepositoryImpl(private val translateStorage: TranslateStorage) : 
     override suspend fun translateEnglishRussianText(text: String): Flow<Response<String>> {
         return translateStorage.translateEnglishRussianText(text = text)
     }
+
+    override suspend fun languageIndentifier(text: String): Flow<Response<String>> {
+        return translateStorage.languageIndentifier(text = text)
+    }
 }
