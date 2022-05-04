@@ -19,7 +19,6 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class DetailsMessagesViewModel @Inject constructor(
     private val getUserDetailsPublicOnUidUseCase: GetUserDetailsPublicOnUidUseCase,
-    private val translateEnglishRussianTextUseCase: TranslateEnglishRussianTextUseCase,
     private val translateRussianEnglishTextUseCase: TranslateRussianEnglishTextUseCase,
     private val getCurrentUserUidUseCase: GetCurrentUserUidUseCase,
     private val saveMessageUseCase: SaveMessageUseCase,
@@ -31,7 +30,6 @@ class DetailsMessagesViewModel @Inject constructor(
     val companionDetails: LiveData<UserDetailsPublic> = _companionDetails
     val _currUserUid = MutableLiveData<String>()
     val currUserUid: LiveData<String> = _currUserUid
-
 
     override fun getUserDetailsPublicOnUid(uid: String): LiveData<Response<UserDetailsPublic>> =
         liveData(Dispatchers.IO) {
@@ -47,15 +45,6 @@ class DetailsMessagesViewModel @Inject constructor(
         emit(Response.Loading())
         try {
             translateRussianEnglishTextUseCase.execute(text = text).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
-        }
-    }
-
-    override fun translateEnglishRussianText(text: String): Flow<Response<String>> = flow {
-        emit(Response.Loading())
-        try {
-            translateEnglishRussianTextUseCase.execute(text = text).collect { emit(it) }
         } catch (e: Exception) {
             emit(Response.Fail(e = e))
         }

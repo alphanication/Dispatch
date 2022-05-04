@@ -21,8 +21,6 @@ interface DetailsMessagesContract {
 
         fun translateRussianEnglishTextObserver(text: String): Flow<String>
 
-        fun translateEnglishRussianTextObserver(text: String): Flow<String>
-
         fun getCurrentUserUidObserver()
 
         fun layoutSendClick()
@@ -36,14 +34,14 @@ interface DetailsMessagesContract {
         fun currentUserUidObserver()
 
         fun recyclerViewScrollPosition()
+
+        fun navigateToPopBackStack()
     }
 
     interface DetailsMessagesViewModel {
         fun getUserDetailsPublicOnUid(uid: String): LiveData<Response<UserDetailsPublic>>
 
         fun translateRussianEnglishText(text: String) : Flow<Response<String>>
-
-        fun translateEnglishRussianText(text: String) : Flow<Response<String>>
 
         fun getCurrentUserUid() : LiveData<Response<String>>
 
