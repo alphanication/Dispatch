@@ -141,4 +141,9 @@ class DomainModule {
     fun providesListenFromToUserMessages(messageRepository: MessageRepository) : ListenFromToUserMessagesUseCase {
         return ListenFromToUserMessagesUseCase(messageRepository = messageRepository)
     }
+
+    @Provides
+    fun providesLanguageIdentifierUseCase(translateRepository: TranslateRepository) : LanguageIdentifierUseCase {
+        return LanguageIdentifierUseCase(translateRepository = translateRepository)
+    }
 }
