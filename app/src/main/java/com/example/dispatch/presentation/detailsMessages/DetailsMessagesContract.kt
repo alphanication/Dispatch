@@ -33,7 +33,7 @@ interface DetailsMessagesContract {
 
         fun currentUserUidObserver()
 
-        fun recyclerViewScrollPosition()
+        fun recyclerViewScrollPositionDown()
 
         fun navigateToPopBackStack()
     }

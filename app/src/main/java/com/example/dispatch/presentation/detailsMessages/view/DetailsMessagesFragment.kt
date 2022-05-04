@@ -1,7 +1,6 @@
 package com.example.dispatch.presentation.detailsMessages.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
 import com.example.dispatch.domain.models.FromToUser
 import com.example.dispatch.domain.models.Message
@@ -51,7 +49,6 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         getCurrentUserUidObserver()
         companionDetailsObserver()
         currentUserUidObserver()
-        recyclerViewScrollPosition()
     }
 
     override fun setOnClickListeners() {
@@ -164,6 +161,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                     }
 
                     binding.recyclerViewMessages.adapter = adapter
+                    recyclerViewScrollPositionDown()
                 }
             }
         }
@@ -184,14 +182,8 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         }
     }
 
-    override fun recyclerViewScrollPosition() {
-        binding.recyclerViewMessages.viewTreeObserver.addOnGlobalLayoutListener {
-            val heightDiff: Int =
-                binding.recyclerViewMessages.rootView.height - binding.recyclerViewMessages.height
-            if (heightDiff > 100) {
-                if (adapter.itemCount > 0) binding.recyclerViewMessages.smoothScrollToPosition(adapter.itemCount - 1)
-            }
-        }
+    override fun recyclerViewScrollPositionDown() {
+        binding.recyclerViewMessages.smoothScrollToPosition(adapter.itemCount - 1)
     }
 
     override fun navigateToPopBackStack() {
