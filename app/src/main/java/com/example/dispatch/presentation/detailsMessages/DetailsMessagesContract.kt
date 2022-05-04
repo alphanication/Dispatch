@@ -19,7 +19,11 @@ interface DetailsMessagesContract {
 
         fun companionDetailsObserver()
 
-        fun translateRussianEnglishTextObserver(text: String): Flow<String>
+        fun translateRussianEnglishTextObserver(text: String)
+
+        fun translateEnglishRussianTextObserver(text: String)
+
+        fun languageIdentifierObserver(text: String)
 
         fun getCurrentUserUidObserver()
 
@@ -41,7 +45,11 @@ interface DetailsMessagesContract {
     interface DetailsMessagesViewModel {
         fun getUserDetailsPublicOnUid(uid: String): LiveData<Response<UserDetailsPublic>>
 
-        fun translateRussianEnglishText(text: String) : Flow<Response<String>>
+        fun translateRussianEnglishText(text: String) : LiveData<Response<String>>
+
+        fun translateEnglishRussianText(text: String) : LiveData<Response<String>>
+
+        fun languageIdentifier(text: String) : LiveData<Response<String>>
 
         fun getCurrentUserUid() : LiveData<Response<String>>
 
