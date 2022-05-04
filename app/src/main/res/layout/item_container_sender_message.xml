@@ -9,22 +9,22 @@
         android:id="@+id/textView_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_10sdp"
         android:background="@drawable/background_sender_message"
         android:maxWidth="@dimen/_200sdp"
         android:padding="@dimen/_12sdp"
         android:textColor="@color/white"
         android:textSize="@dimen/_13ssp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imageview_translated"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageview_translated"
         android:layout_width="@dimen/_20sdp"
         android:layout_height="@dimen/_20sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
         android:background="@drawable/ic_translate"
         app:layout_constraintBottom_toBottomOf="@id/textView_message"
-        app:layout_constraintEnd_toStartOf="@id/textView_message"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/textView_message" />
 
     <TextView
