@@ -36,7 +36,8 @@ class SignInFragment : Fragment(), SignInContract.SignInFragment {
         super.onViewCreated(view, savedInstanceState)
 
         setOnClickListeners()
-        checkUserAuthSignedInObserver()
+        progressBarSignInObserver()
+        signInSuccessObserver()
     }
 
     override fun setOnClickListeners() {
@@ -45,42 +46,14 @@ class SignInFragment : Fragment(), SignInContract.SignInFragment {
         }
 
         binding.buttonSignIn.setOnClickListener {
-            if (validEditTextError()) {
+            if (validEditTextShowError()) {
                 val userAuth: UserAuth = editTextUserAuthInit()
-                signInUserAuthObserver(userAuth = userAuth)
+                viewModel.signInUserAuth(userAuth = userAuth)
             }
         }
 
         binding.textviewRestorePassword.setOnClickListener {
             navigateToRestorePasswordFragment()
-        }
-    }
-
-    override fun checkUserAuthSignedInObserver() {
-        viewModel.checkUserAuthSignedIn().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Response.Success -> {
-                    navigateToLatestMessagesFragment()
-                }
-            }
-        }
-    }
-
-    override fun signInUserAuthObserver(userAuth: UserAuth) {
-        viewModel.signInUserAuth(userAuth = userAuth).observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Response.Loading -> {
-                    showProgressBarSignIn()
-                }
-                is Response.Fail -> {
-                    hideProgressBarSignIn()
-                    Toast.makeText(activity, "User auth fail :(", Toast.LENGTH_SHORT).show()
-                }
-                is Response.Success -> {
-                    hideProgressBarSignIn()
-                    navigateToLatestMessagesFragment()
-                }
-            }
         }
     }
 
@@ -92,7 +65,24 @@ class SignInFragment : Fragment(), SignInContract.SignInFragment {
         return userAuth
     }
 
-    private fun validEditTextError(): Boolean {
+    override fun progressBarSignInObserver() {
+        viewModel.progressBarSignIn.observe(viewLifecycleOwner) { result ->
+            if (result) showProgressBarSignIn()
+            else hideProgressBarSignIn()
+        }
+    }
+
+    override fun signInSuccessObserver() {
+        viewModel.signInSuccess.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Response.Loading -> {}
+                is Response.Fail -> showToastLengthLong("Sign in fail: ${result.e}")
+                is Response.Success -> navigateToLatestMessagesFragment()
+            }
+        }
+    }
+
+    override fun validEditTextShowError(): Boolean {
         val email = binding.edittextEmail.text.toString()
         val password = binding.edittextPassword.text.toString()
 
@@ -119,9 +109,14 @@ class SignInFragment : Fragment(), SignInContract.SignInFragment {
         return valid
     }
 
+    override fun showToastLengthLong(text: String) {
+        Toast.makeText(activity, text, Toast.LENGTH_LONG)
+            .show()
+    }
+
     override fun showProgressBarSignIn() {
-            binding.progressbarSignIn.visibility = View.VISIBLE
-            binding.buttonSignIn.visibility = View.INVISIBLE
+        binding.progressbarSignIn.visibility = View.VISIBLE
+        binding.buttonSignIn.visibility = View.INVISIBLE
     }
 
     override fun hideProgressBarSignIn() {

@@ -1,33 +1,78 @@
 package com.example.dispatch.presentation.signIn
 
-import androidx.lifecycle.LiveData
-import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 
 interface SignInContract {
     interface SignInFragment {
+        /**
+         * Sets the required setOnClickListener on the views fragment
+         */
         fun setOnClickListeners()
 
+        /**
+         * Initialize the UserAuth variable with values from the corresponding edittext
+         * @return - initialized [UserAuth]
+         */
+        fun editTextUserAuthInit(): UserAuth
+
+        /**
+         * Checks the edittext for valid data
+         * @return - corresponding boolean value (correct / incorrect)
+         */
+        fun validEditTextShowError(): Boolean
+
+        /**
+         * Observer progressBarSignIn LiveData from [SignInViewModel]
+         */
+        fun progressBarSignInObserver()
+
+        /**
+         * Observer signInSuccess LiveData from [SignInViewModel]
+         */
+        fun signInSuccessObserver()
+
+        /**
+         * Show toast Toast.LENGTH_LONG type
+         * @param text - text, shown in toast
+         */
+        fun showToastLengthLong(text: String)
+
+        /**
+         * Shows progress bar sign in
+         */
         fun showProgressBarSignIn()
 
+        /**
+         * Hides progress bar sign in
+         */
         fun hideProgressBarSignIn()
 
-        fun editTextUserAuthInit() : UserAuth
-
-        fun checkUserAuthSignedInObserver()
-
-        fun signInUserAuthObserver(userAuth: UserAuth)
-
+        /**
+         * Navigate to SignUpFragment
+         */
         fun navigateToSignUpFragment()
 
+        /**
+         * Navigate to RestorePasswordFragment
+         */
         fun navigateToRestorePasswordFragment()
 
+        /**
+         * Navigate to LatestMessagesFragment
+         */
         fun navigateToLatestMessagesFragment()
     }
 
     interface SignInViewModel {
-        fun signInUserAuth(userAuth: UserAuth) : LiveData<Response<Boolean>>
+        /**
+         * User authorization in the system
+         * @param userAuth - authorization data
+         */
+        fun signInUserAuth(userAuth: UserAuth)
 
-        fun checkUserAuthSignedIn() : LiveData<Response<Boolean>>
+        /**
+         * Checking if the user is already logged in
+         */
+        fun checkUserAuthSignedIn()
     }
 }
