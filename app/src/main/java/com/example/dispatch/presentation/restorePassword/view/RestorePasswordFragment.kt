@@ -34,41 +34,44 @@ class RestorePasswordFragment : Fragment(), RestorePasswordContract.RestorePassw
         super.onViewCreated(view, savedInstanceState)
 
         setOnClickListeners()
+        progressBarRestoreObserver()
+        restoreSuccessObserver()
     }
 
     override fun setOnClickListeners() {
         binding.buttonBack.setOnClickListener {
-            findNavController().popBackStack()
+            navigateToPopBackStack()
         }
 
         binding.buttonRestore.setOnClickListener {
             if (validEditTextShowError()) {
                 val email = editTextEmailInit()
-                restoreUserPasswordObserve(email = email)
+                viewModel.restoreUserByEmail(email = email)
             }
         }
     }
 
-    override fun restoreUserPasswordObserve(email: String) {
-        viewModel.restoreUserByEmail(email).observe(viewLifecycleOwner) { result ->
+    override fun progressBarRestoreObserver() {
+        viewModel.progressBarRestore.observe(viewLifecycleOwner) { result ->
+            if (result) showProgressBarRestore()
+            else hideProgressBarRestore()
+        }
+    }
+
+    override fun restoreSuccessObserver() {
+        viewModel.restoreSuccess.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Loading -> {
-                    showProgressBarRestore()
-                }
-                is Response.Fail -> {
-                    hideProgressBarRestore()
-                    Toast.makeText(activity, "Restore password fail :(", Toast.LENGTH_SHORT).show()
-                }
+                is Response.Loading -> {}
+                is Response.Fail -> showToastLengthLong(text = "Restore password failed: ${result.e}")
                 is Response.Success -> {
-                    hideProgressBarRestore()
-                    Toast.makeText(activity, "Check your email! :)", Toast.LENGTH_SHORT).show()
-                    findNavController().popBackStack()
+                    showToastLengthLong(text = "Check your email! ;)")
+                    navigateToPopBackStack()
                 }
             }
         }
     }
 
-    override fun editTextEmailInit() : String {
+    override fun editTextEmailInit(): String {
         return binding.edittextEmail.text.toString()
     }
 
@@ -86,21 +89,28 @@ class RestorePasswordFragment : Fragment(), RestorePasswordContract.RestorePassw
                 binding.edittextEmail.setError("Enter valid email address.", null)
                 binding.edittextEmail.requestFocus()
             }
-            else -> {
-                valid = true
-            }
+            else -> valid = true
         }
 
         return valid
     }
 
+    override fun showToastLengthLong(text: String) {
+        Toast.makeText(activity, text, Toast.LENGTH_LONG)
+            .show()
+    }
+
     override fun showProgressBarRestore() {
-            binding.progressbarRestore.visibility = View.VISIBLE
-            binding.buttonRestore.visibility = View.INVISIBLE
+        binding.progressbarRestore.visibility = View.VISIBLE
+        binding.buttonRestore.visibility = View.INVISIBLE
     }
 
     override fun hideProgressBarRestore() {
         binding.progressbarRestore.visibility = View.INVISIBLE
         binding.buttonRestore.visibility = View.VISIBLE
+    }
+
+    override fun navigateToPopBackStack() {
+        findNavController().popBackStack()
     }
 }
