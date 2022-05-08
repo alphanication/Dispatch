@@ -29,8 +29,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class SignUpFragment : Fragment(), SignUpContract.SignUpFragment {
     private lateinit var binding: FragmentSignUpBinding
     private val viewModel: SignUpViewModel by viewModels()
-    private val userDetails = UserDetails()
-    private val userAuth = UserAuth()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +43,8 @@ class SignUpFragment : Fragment(), SignUpContract.SignUpFragment {
 
         setOnClickListeners()
         cropImageViewObserver()
+        progressBarSignUpObserver()
+        signUpSuccessObserver()
     }
 
     @Deprecated("Deprecated in Java")
@@ -66,8 +66,11 @@ class SignUpFragment : Fragment(), SignUpContract.SignUpFragment {
         binding.buttonSignUp.setOnClickListener {
             if (validEditTextShowError()) {
                 userDetailsEditTextInit()
-                userAuthEditTextInit()
-                signUpUserAuthObserver(userAuth = userAuth)
+                val userAuth = UserAuth(
+                    email = viewModel.userDetails.email,
+                    password = viewModel.userDetails.password
+                )
+                viewModel.signUpUserAuth(userAuth = userAuth)
             }
         }
 
@@ -92,92 +95,21 @@ class SignUpFragment : Fragment(), SignUpContract.SignUpFragment {
         }
     }
 
-    override fun signUpUserAuthObserver(userAuth: UserAuth) {
-        viewModel.signUpUserAuth(userAuth = userAuth)
-            .observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is Response.Loading -> {
-                        showProgressBarSignUp()
-                    }
-                    is Response.Fail -> {
-                        hideProgressBarSignUp()
-                        Toast.makeText(activity, "User register false :(", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                    is Response.Success -> {
-                        getCurrentUserUidObserver()
-                    }
-                }
-            }
-    }
-
-    override fun getCurrentUserUidObserver() {
-        viewModel.getCurrentUserUid().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Response.Loading -> {}
-                is Response.Fail -> {
-                    hideProgressBarSignUp()
-                    deleteCurrentUserAuthObserve()
-                    Toast.makeText(activity, "Get user uid false :(", Toast.LENGTH_SHORT).show()
-                }
-                is Response.Success -> {
-                    userDetails.uid = result.data
-
-                    val imageUriCache = viewModel.cropImageView.value.toString()
-                    if (imageUriCache.isNotEmpty()) {
-                        saveUserProfileImageObserver(imageUriStr = imageUriCache)
-                    } else {
-                        saveUserDetailsObserver(userDetails = userDetails)
-                    }
-                }
-            }
+    override fun progressBarSignUpObserver() {
+        viewModel.progressBarSignUp.observe(viewLifecycleOwner) { result ->
+            if (result) showProgressBarSignUp()
+            else hideProgressBarSignUp()
         }
     }
 
-    override fun saveUserProfileImageObserver(imageUriStr: String) {
-        viewModel.saveUserProfileImage(imageUriStr = imageUriStr)
-            .observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is Response.Loading -> {}
-                    is Response.Fail -> {
-                        hideProgressBarSignUp()
-                        deleteCurrentUserAuthObserve()
-                        Toast.makeText(activity, "Save image false :(", Toast.LENGTH_SHORT).show()
-                    }
-                    is Response.Success -> {
-                        userDetails.photoProfileUrl = result.data
-                        saveUserDetailsObserver(userDetails = userDetails)
-                    }
-                }
+    override fun signUpSuccessObserver() {
+        viewModel.signUpSuccess.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Response.Loading -> {}
+                is Response.Fail -> showToastLengthLong(text = "User register false: ${result.e}")
+                is Response.Success -> navigateToPopBackStack()
             }
-    }
-
-    override fun saveUserDetailsObserver(userDetails: UserDetails) {
-        viewModel.saveUserDetails(userDetails = userDetails)
-            .observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is Response.Loading -> {}
-                    is Response.Fail -> {
-                        hideProgressBarSignUp()
-                        Toast.makeText(activity, "Save user to DB false :(", Toast.LENGTH_SHORT)
-                            .show()
-                        deleteCurrentUserAuthObserve()
-                        deleteUserImageProfileObserve()
-                    }
-                    is Response.Success -> {
-                        hideProgressBarSignUp()
-                        navigateToPopBackStack()
-                    }
-                }
-            }
-    }
-
-    override fun deleteCurrentUserAuthObserve() {
-        viewModel.deleteCurrentUserAuth().observe(viewLifecycleOwner) {}
-    }
-
-    override fun deleteUserImageProfileObserve() {
-        viewModel.deleteUserImageProfile().observe(viewLifecycleOwner) {}
+        }
     }
 
     override fun cropImageActivityStart() {
@@ -191,17 +123,14 @@ class SignUpFragment : Fragment(), SignUpContract.SignUpFragment {
             .start(requireContext(), this)
     }
 
-    override fun userAuthEditTextInit() {
-        userAuth.email = binding.edittextEmail.text.toString()
-        userAuth.password = binding.edittextPassword.text.toString()
-    }
-
     override fun userDetailsEditTextInit() {
-        userDetails.fullname = binding.edittextFullname.text.toString()
-        userDetails.dateBirth = binding.edittextDateBirth.text.toString()
-        userDetails.email = binding.edittextEmail.text.toString()
-        userDetails.password = binding.edittextPassword.text.toString()
-        userDetails.photoProfileUrl = viewModel.cropImageView.value.toString()
+        viewModel.userDetails = UserDetails(
+            fullname = binding.edittextFullname.text.toString(),
+            dateBirth = binding.edittextDateBirth.text.toString(),
+            email = binding.edittextEmail.text.toString(),
+            password = binding.edittextPassword.text.toString(),
+            photoProfileUrl = viewModel.cropImageView.value.toString()
+        )
     }
 
     override fun validEditTextShowError(): Boolean {
@@ -270,6 +199,11 @@ class SignUpFragment : Fragment(), SignUpContract.SignUpFragment {
     override fun hideProgressBarSignUp() {
         binding.progressbarSignUp.visibility = View.INVISIBLE
         binding.buttonSignUp.visibility = View.VISIBLE
+    }
+
+    override fun showToastLengthLong(text: String) {
+        Toast.makeText(activity, text, Toast.LENGTH_LONG)
+            .show()
     }
 
     override fun navigateToPopBackStack() {
