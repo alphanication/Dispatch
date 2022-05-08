@@ -3,7 +3,7 @@ package com.example.dispatch.presentation.signUp.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.models.UserDetails
@@ -12,6 +12,7 @@ import com.example.dispatch.presentation.signUp.SignUpContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,54 +25,106 @@ class SignUpViewModel @Inject constructor(
     private val saveUserImageProfileUseCase: SaveUserImageProfileUseCase,
     private val deleteUserImageProfileUseCase: DeleteUserImageProfileUseCase
 ) : ViewModel(), SignUpContract.SignUpViewModel {
+
+    var userDetails: UserDetails = UserDetails()
+
     private val _cropImageView = MutableLiveData("")
     val cropImageView: LiveData<String> = _cropImageView
 
-    override fun getCurrentUserUid(): LiveData<Response<String>> = liveData(Dispatchers.IO) {
-        try {
-            getCurrentUserUidUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    private val _progressBarSignUp = MutableLiveData<Boolean>()
+    val progressBarSignUp: LiveData<Boolean> = _progressBarSignUp
+
+    private val _signUpSuccess = MutableLiveData<Response<Boolean>>()
+    val signUpSuccess: LiveData<Response<Boolean>> = _signUpSuccess
+
+    override fun signUpUserAuth(userAuth: UserAuth) {
+        viewModelScope.launch(Dispatchers.IO) {
+            signUpUserAuthUseCase.execute(userAuth = userAuth).collect { result ->
+                when (result) {
+                    is Response.Loading -> _progressBarSignUp.postValue(true)
+                    is Response.Fail -> {
+                        _progressBarSignUp.postValue(false)
+                        _signUpSuccess.postValue(Response.Fail(e = result.e))
+                    }
+                    is Response.Success -> getCurrentUserUid()
+                }
+            }
         }
     }
 
-    override fun signUpUserAuth(userAuth: UserAuth): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            signUpUserAuthUseCase.execute(userAuth = userAuth).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun getCurrentUserUid() {
+        viewModelScope.launch(Dispatchers.IO) {
+            getCurrentUserUidUseCase.execute().collect { result ->
+                when (result) {
+                    is Response.Loading -> {}
+                    is Response.Fail -> {
+                        _progressBarSignUp.postValue(false)
+                        _signUpSuccess.postValue(Response.Fail(e = result.e))
+                        deleteCurrentUserAuth()
+                    }
+                    is Response.Success -> {
+                        userDetails.uid = result.data
+
+                        val imageUriCache = cropImageView.value.toString()
+                        if (imageUriCache.isNotEmpty()) {
+                            saveUserProfileImage(imageUriStr = imageUriCache)
+                        } else {
+                            saveUserDetails(userDetails = userDetails)
+                        }
+                    }
+                }
+            }
         }
     }
 
-    override fun deleteCurrentUserAuth(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            deleteCurrentUserAuthUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun saveUserProfileImage(imageUriStr: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            saveUserImageProfileUseCase.execute(newImageUriStr = imageUriStr).collect { result ->
+                when (result) {
+                    is Response.Loading -> {}
+                    is Response.Fail -> {
+                        _progressBarSignUp.postValue(false)
+                        _signUpSuccess.postValue(Response.Fail(e = result.e))
+                        deleteCurrentUserAuth()
+                    }
+                    is Response.Success -> {
+                        userDetails.photoProfileUrl = result.data
+                        saveUserDetails(userDetails = userDetails)
+                    }
+                }
+            }
         }
     }
 
-    override fun saveUserDetails(userDetails: UserDetails): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            saveUserDetailsUseCase.execute(userDetails = userDetails).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun deleteUserImageProfile() {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteUserImageProfileUseCase.execute().collect { }
         }
     }
 
-    override fun saveUserProfileImage(imageUriStr: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
-        try {
-            saveUserImageProfileUseCase.execute(newImageUriStr = imageUriStr).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun deleteCurrentUserAuth() {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteCurrentUserAuthUseCase.execute().collect { }
         }
     }
 
-    override fun deleteUserImageProfile(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            deleteUserImageProfileUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun saveUserDetails(userDetails: UserDetails) {
+        viewModelScope.launch(Dispatchers.IO) {
+            saveUserDetailsUseCase.execute(userDetails = userDetails).collect { result ->
+                when (result) {
+                    is Response.Loading -> {}
+                    is Response.Fail -> {
+                        _progressBarSignUp.postValue(false)
+                        _signUpSuccess.postValue(Response.Fail(e = result.e))
+                        deleteCurrentUserAuth()
+                        deleteUserImageProfile()
+                    }
+                    is Response.Success -> {
+                        _progressBarSignUp.postValue(false)
+                        _signUpSuccess.postValue(Response.Success(data = true))
+                    }
+                }
+            }
         }
     }
 
