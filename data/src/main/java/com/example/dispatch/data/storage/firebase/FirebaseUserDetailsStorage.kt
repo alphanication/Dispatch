@@ -22,23 +22,26 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         private val fDatabase = FirebaseDatabase.getInstance()
     }
 
-    override suspend fun save(userDetails: UserDetails): Flow<Response<Boolean>> =
-        callbackFlow {
-            val uidCurrentUser = fAuth.currentUser?.uid.toString()
-            val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
+    override suspend fun save(userDetails: UserDetails): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
 
-            refCurrentUser.setValue(userDetails)
-                .addOnSuccessListener {
-                    trySend(Response.Success(data = true))
-                }
-                .addOnFailureListener { e ->
-                    trySend(Response.Fail(e = e))
-                }
+        val uidCurrentUser = fAuth.currentUser?.uid.toString()
+        val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
 
-            awaitClose { this.cancel() }
-        }
+        refCurrentUser.setValue(userDetails)
+            .addOnSuccessListener {
+                trySend(Response.Success(data = true))
+            }
+            .addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
+
+        awaitClose { this.cancel() }
+    }
 
     override suspend fun getCurrentUser(): Flow<Response<UserDetails>> = callbackFlow {
+        trySend(Response.Loading())
+
         val uidCurrentUser = fAuth.currentUser?.uid.toString()
         val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
 
@@ -57,6 +60,8 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
     }
 
     override suspend fun deleteCurrentUser(): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
         val uid = fAuth.currentUser?.uid.toString()
         val refCurrentUser = fDatabase.getReference("/users/$uid")
 
@@ -69,86 +74,93 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         awaitClose { this.cancel() }
     }
 
-    override suspend fun changeFullname(newFullname: String): Flow<Response<Boolean>> =
-        callbackFlow {
+    override suspend fun changeFullname(newFullname: String): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
 
-            val uidCurrentUser = fAuth.currentUser?.uid.toString()
-            val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
+        val uidCurrentUser = fAuth.currentUser?.uid.toString()
+        val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
 
-            refCurrentUser.child("fullname").setValue(newFullname)
-                .addOnSuccessListener {
-                    trySend(Response.Success(data = true))
-                }.addOnFailureListener { e ->
-                    trySend(Response.Fail(e = e))
-                }
+        refCurrentUser.child("fullname").setValue(newFullname)
+            .addOnSuccessListener {
+                trySend(Response.Success(data = true))
+            }.addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
 
-            awaitClose { this.cancel() }
-        }
+        awaitClose { this.cancel() }
+    }
 
-    override suspend fun changeDateBirth(newDateBirth: String): Flow<Response<Boolean>> =
-        callbackFlow {
-            val uidCurrentUser = fAuth.currentUser?.uid.toString()
-            val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
+    override suspend fun changeDateBirth(newDateBirth: String): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
 
-            refCurrentUser.child("dateBirth").setValue(newDateBirth)
-                .addOnSuccessListener {
-                    trySend(Response.Success(data = true))
-                }.addOnFailureListener { e ->
-                    trySend(Response.Fail(e = e))
-                }
+        val uidCurrentUser = fAuth.currentUser?.uid.toString()
+        val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
 
-            awaitClose { this.cancel() }
-        }
+        refCurrentUser.child("dateBirth").setValue(newDateBirth)
+            .addOnSuccessListener {
+                trySend(Response.Success(data = true))
+            }.addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
 
-    override suspend fun changeImageProfileUri(newImageUriStr: String): Flow<Response<Boolean>> =
-        callbackFlow {
-            val uidCurrentUser = fAuth.currentUser?.uid.toString()
-            val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
+        awaitClose { this.cancel() }
+    }
 
-            refCurrentUser.child("photoProfileUrl").setValue(newImageUriStr)
-                .addOnSuccessListener {
-                    trySend(Response.Success(data = true))
-                }.addOnFailureListener { e ->
-                    trySend(Response.Fail(e = e))
-                }
+    override suspend fun changeImageProfileUri(newImageUriStr: String): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
 
-            awaitClose { this.cancel() }
-        }
+        val uidCurrentUser = fAuth.currentUser?.uid.toString()
+        val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
 
-    override suspend fun changeEmailAddress(newEmail: String): Flow<Response<Boolean>> =
-        callbackFlow {
-            val uidCurrentUser = fAuth.currentUser?.uid.toString()
-            val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
+        refCurrentUser.child("photoProfileUrl").setValue(newImageUriStr)
+            .addOnSuccessListener {
+                trySend(Response.Success(data = true))
+            }.addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
 
-            refCurrentUser.child("email").setValue(newEmail)
-                .addOnSuccessListener {
-                    trySend(Response.Success(data = true))
-                }.addOnFailureListener { e ->
-                    trySend(Response.Fail(e = e))
-                }
+        awaitClose { this.cancel() }
+    }
 
-            awaitClose { this.cancel() }
-        }
+    override suspend fun changeEmailAddress(newEmail: String): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
 
-    override suspend fun changePassword(newPassword: String): Flow<Response<Boolean>> =
-        callbackFlow {
-            val uidCurrentUser = fAuth.currentUser?.uid.toString()
-            val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
+        val uidCurrentUser = fAuth.currentUser?.uid.toString()
+        val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
 
-            refCurrentUser.child("password").setValue(newPassword)
-                .addOnSuccessListener {
-                    trySend(Response.Success(data = true))
-                }.addOnFailureListener { e ->
-                    trySend(Response.Fail(e = e))
-                }
+        refCurrentUser.child("email").setValue(newEmail)
+            .addOnSuccessListener {
+                trySend(Response.Success(data = true))
+            }.addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
 
-            awaitClose { this.cancel() }
-        }
+        awaitClose { this.cancel() }
+    }
+
+    override suspend fun changePassword(newPassword: String): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
+        val uidCurrentUser = fAuth.currentUser?.uid.toString()
+        val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
+
+        refCurrentUser.child("password").setValue(newPassword)
+            .addOnSuccessListener {
+                trySend(Response.Success(data = true))
+            }.addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
+
+        awaitClose { this.cancel() }
+    }
 
     override suspend fun getUsersList(): Flow<Response<UserDetailsPublic>> = callbackFlow {
+        trySend(Response.Loading())
+
         val refUsers = fDatabase.getReference("/users/")
 
         refUsers.addListenerForSingleValueEvent(object : ValueEventListener {
+
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach {
                     val user = it.getValue(UserDetails::class.java)
@@ -176,6 +188,8 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
     }
 
     override suspend fun getUserDetailsPublicOnUid(uid: String): Flow<Response<UserDetailsPublic>> = callbackFlow {
+        trySend(Response.Loading())
+
         val refUserUid = fDatabase.getReference("/users/$uid")
 
         refUserUid.get().addOnSuccessListener { result ->

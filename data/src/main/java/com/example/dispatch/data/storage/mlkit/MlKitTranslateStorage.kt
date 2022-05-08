@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.callbackFlow
 @ExperimentalCoroutinesApi
 class MlKitTranslateStorage : TranslateStorage {
     override suspend fun downloadLangRussianEnglishPack(): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
         val options = TranslatorOptions.Builder()
             .setSourceLanguage(TranslateLanguage.RUSSIAN)
             .setTargetLanguage(TranslateLanguage.ENGLISH)
@@ -33,6 +35,8 @@ class MlKitTranslateStorage : TranslateStorage {
     }
 
     override suspend fun translateRussianEnglishText(text: String): Flow<Response<String>> = callbackFlow {
+        trySend(Response.Loading())
+
         val options = TranslatorOptions.Builder()
             .setSourceLanguage(TranslateLanguage.RUSSIAN)
             .setTargetLanguage(TranslateLanguage.ENGLISH)
@@ -55,6 +59,8 @@ class MlKitTranslateStorage : TranslateStorage {
     }
 
     override suspend fun translateEnglishRussianText(text: String): Flow<Response<String>> = callbackFlow {
+        trySend(Response.Loading())
+
         val options = TranslatorOptions.Builder()
             .setSourceLanguage(TranslateLanguage.ENGLISH)
             .setTargetLanguage(TranslateLanguage.RUSSIAN)
@@ -77,6 +83,8 @@ class MlKitTranslateStorage : TranslateStorage {
     }
 
     override suspend fun languageIndentifier(text: String): Flow<Response<String>> = callbackFlow {
+        trySend(Response.Loading())
+
         val languageIdentifier = LanguageIdentification.getClient()
 
         languageIdentifier.identifyLanguage(text)

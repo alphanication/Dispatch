@@ -33,7 +33,6 @@ class DetailsMessagesViewModel @Inject constructor(
 
     override fun getUserDetailsPublicOnUid(uid: String): LiveData<Response<UserDetailsPublic>> =
         liveData(Dispatchers.IO) {
-            emit(Response.Loading())
             try {
                 getUserDetailsPublicOnUidUseCase.execute(uid = uid).collect { emit(it) }
             } catch (e: Exception) {
@@ -42,7 +41,6 @@ class DetailsMessagesViewModel @Inject constructor(
         }
 
     override fun translateRussianEnglishText(text: String): LiveData<Response<String>> = liveData {
-        emit(Response.Loading())
         try {
             translateRussianEnglishTextUseCase.execute(text = text).collect { emit(it) }
         } catch (e: Exception) {
@@ -51,7 +49,6 @@ class DetailsMessagesViewModel @Inject constructor(
     }
 
     override fun translateEnglishRussianText(text: String): LiveData<Response<String>> = liveData {
-        emit(Response.Loading())
         try {
             translateEnglishRussianTextUseCase.execute(text = text).collect { emit(it) }
         } catch (e: Exception) {
@@ -60,7 +57,6 @@ class DetailsMessagesViewModel @Inject constructor(
     }
 
     override fun languageIdentifier(text: String): LiveData<Response<String>> = liveData {
-        emit(Response.Loading())
         try {
             languageIdentifierUseCase.execute(text = text).collect { emit(it) }
         } catch (e: Exception) {
@@ -69,7 +65,6 @@ class DetailsMessagesViewModel @Inject constructor(
     }
 
     override fun getCurrentUserUid(): LiveData<Response<String>> = liveData {
-        emit(Response.Loading())
         try {
             getCurrentUserUidUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
@@ -84,7 +79,6 @@ class DetailsMessagesViewModel @Inject constructor(
     }
 
     override fun listenFromToUserMessages(fromToUser: FromToUser): LiveData<Response<Message>> = liveData {
-        emit(Response.Loading())
         try {
             listenFromToUserMessagesUseCase.execute(fromToUser = fromToUser).collect { emit(it) }
         } catch (e: Exception) {

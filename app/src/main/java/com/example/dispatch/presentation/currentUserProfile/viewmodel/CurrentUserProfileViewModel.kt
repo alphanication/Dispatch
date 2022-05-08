@@ -37,7 +37,6 @@ class CurrentUserProfileViewModel @Inject constructor(
     val userDetailsGet: LiveData<UserDetails> = _userDetailsGet
 
     override fun signOutUserAuth(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             signOutUserAuthUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
@@ -46,7 +45,6 @@ class CurrentUserProfileViewModel @Inject constructor(
     }
 
     override fun deleteUserImageProfile(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             deleteUserImageProfileUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
@@ -55,7 +53,6 @@ class CurrentUserProfileViewModel @Inject constructor(
     }
 
     override fun deleteCurrentUserAuth(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             deleteCurrentUserAuthUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
@@ -64,7 +61,6 @@ class CurrentUserProfileViewModel @Inject constructor(
     }
 
     override fun deleteCurrentUserDetails(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             deleteCurrentUserDetailsUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
@@ -73,7 +69,6 @@ class CurrentUserProfileViewModel @Inject constructor(
     }
 
     override fun getCurrentUserDetails(): LiveData<Response<UserDetails>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             getCurrentUserDetailsUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
@@ -82,7 +77,6 @@ class CurrentUserProfileViewModel @Inject constructor(
     }
 
     override fun saveUserImageProfile(imageUriCache: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             saveUserImageProfileUseCase.execute(newImageUriStr = imageUriCache).collect { emit(it) }
         } catch (e: Exception) {
@@ -92,7 +86,6 @@ class CurrentUserProfileViewModel @Inject constructor(
 
     override fun changeUserDetailsPhotoProfileUrl(imageUriStr: String): LiveData<Response<Boolean>> =
         liveData(Dispatchers.IO) {
-            emit(Response.Loading())
             try {
                 changeUserDetailsPhotoProfileUrlUseCase.execute(newImageUriStr = imageUriStr)
                     .collect { emit(it) }
@@ -103,7 +96,6 @@ class CurrentUserProfileViewModel @Inject constructor(
 
     override fun changeUserAuthEmail(userAuth: UserAuth, newEmail: String): LiveData<Response<Boolean>> =
         liveData(Dispatchers.IO) {
-            emit(Response.Loading())
             try {
                 changeUserAuthEmailUseCase.execute(userAuth = userAuth, newEmail = newEmail)
                     .collect { emit(it) }
@@ -113,7 +105,6 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
 
     override fun changeUserDetailsEmail(newEmail: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             changeUserDetailsEmailUseCase.execute(newEmail = newEmail).collect { emit(it) }
         } catch (e: Exception) {
@@ -123,7 +114,6 @@ class CurrentUserProfileViewModel @Inject constructor(
 
     override fun changeUserAuthPassword(userAuth: UserAuth, newPassword: String): LiveData<Response<Boolean>> =
         liveData(Dispatchers.IO) {
-            emit(Response.Loading())
             try {
                 changeUserAuthPasswordUseCase.execute(userAuth = userAuth, newPassword = newPassword)
                     .collect { emit(it) }
@@ -133,7 +123,6 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
 
     override fun changeUserDetailsPassword(newPassword: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             changeUserDetailsPasswordUseCase.execute(newPassword = newPassword).collect { emit(it) }
         } catch (e: Exception) {
@@ -142,7 +131,6 @@ class CurrentUserProfileViewModel @Inject constructor(
     }
 
     override fun changeUserDetailsFullname(newFullname: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             changeUserDetailsFullnameUseCase.execute(newFullname = newFullname).collect { emit(it) }
         } catch (e: Exception) {
@@ -151,7 +139,6 @@ class CurrentUserProfileViewModel @Inject constructor(
     }
 
     override fun changeUserDetailsDateBirth(newDateBirth: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             changeUserDetailsDateBirthUseCase.execute(newDateBirth = newDateBirth)
                 .collect { emit(it) }

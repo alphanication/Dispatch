@@ -21,6 +21,8 @@ class FirebaseMessageStorage : MessageStorage {
     }
 
     override suspend fun save(message: Message): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
         if (message.fromUserUid != message.toUserUid) {
             val toRefMessages =
                 fDatabase.getReference("/user-messages/${message.toUserUid}/${message.fromUserUid}")
@@ -40,6 +42,8 @@ class FirebaseMessageStorage : MessageStorage {
     }
 
     override suspend fun listenFromToUserMessages(fromToUser: FromToUser): Flow<Response<Message>> = callbackFlow {
+        trySend(Response.Loading())
+
         val refMessages =
             fDatabase.getReference("/user-messages/${fromToUser.fromUserUid}/${fromToUser.toUserUid}")
 
