@@ -28,7 +28,6 @@ class SignUpViewModel @Inject constructor(
     val cropImageView: LiveData<String> = _cropImageView
 
     override fun getCurrentUserUid(): LiveData<Response<String>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             getCurrentUserUidUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
@@ -37,7 +36,6 @@ class SignUpViewModel @Inject constructor(
     }
 
     override fun signUpUserAuth(userAuth: UserAuth): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             signUpUserAuthUseCase.execute(userAuth = userAuth).collect { emit(it) }
         } catch (e: Exception) {
@@ -46,7 +44,6 @@ class SignUpViewModel @Inject constructor(
     }
 
     override fun deleteCurrentUserAuth(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             deleteCurrentUserAuthUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
@@ -55,7 +52,6 @@ class SignUpViewModel @Inject constructor(
     }
 
     override fun saveUserDetails(userDetails: UserDetails): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             saveUserDetailsUseCase.execute(userDetails = userDetails).collect { emit(it) }
         } catch (e: Exception) {
@@ -64,7 +60,6 @@ class SignUpViewModel @Inject constructor(
     }
 
     override fun saveUserProfileImage(imageUriStr: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             saveUserImageProfileUseCase.execute(newImageUriStr = imageUriStr).collect { emit(it) }
         } catch (e: Exception) {
@@ -73,7 +68,6 @@ class SignUpViewModel @Inject constructor(
     }
 
     override fun deleteUserImageProfile(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             deleteUserImageProfileUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {

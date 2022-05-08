@@ -19,6 +19,8 @@ class FirebaseUserImagesStorage : UserImagesStorage {
     }
 
     override suspend fun saveImageProfile(newImageUriStr: String): Flow<Response<String>> = callbackFlow {
+        trySend(Response.Loading())
+
         val uidCurrentUser = fAuth.currentUser?.uid.toString()
         val refImage = fStorage.getReference("/$uidCurrentUser/profile.jpg")
         val imageProfileUri: Uri = Uri.parse(newImageUriStr)
@@ -38,6 +40,8 @@ class FirebaseUserImagesStorage : UserImagesStorage {
     }
 
     override suspend fun deleteImageProfile(): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
         val uidCurrentUser = fAuth.currentUser?.uid.toString()
         val refImage = fStorage.getReference("/$uidCurrentUser/profile.jpg")
 

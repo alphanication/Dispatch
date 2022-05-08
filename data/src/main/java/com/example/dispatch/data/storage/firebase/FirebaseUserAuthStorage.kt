@@ -17,6 +17,8 @@ class FirebaseUserAuthStorage : UserAuthStorage {
     }
 
     override suspend fun login(userAuth: UserAuth): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
         fAuth.signInWithEmailAndPassword(userAuth.email, userAuth.password)
             .addOnSuccessListener {
                 trySend(Response.Success(data = true))
@@ -27,19 +29,22 @@ class FirebaseUserAuthStorage : UserAuthStorage {
         awaitClose { this.cancel() }
     }
 
-    override suspend fun register(userAuth: UserAuth): Flow<Response<Boolean>> =
-        callbackFlow {
-            fAuth.createUserWithEmailAndPassword(userAuth.email, userAuth.password)
-                .addOnSuccessListener {
-                    trySend(Response.Success(data = true))
-                }.addOnFailureListener { e ->
-                    trySend(Response.Fail(e = e))
-                }
+    override suspend fun register(userAuth: UserAuth): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
 
-            awaitClose { this.cancel() }
-        }
+        fAuth.createUserWithEmailAndPassword(userAuth.email, userAuth.password)
+            .addOnSuccessListener {
+                trySend(Response.Success(data = true))
+            }.addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
+
+        awaitClose { this.cancel() }
+    }
 
     override suspend fun checkSignedIn(): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
         val currentUser = fAuth.currentUser
 
         if (currentUser != null) {
@@ -52,6 +57,8 @@ class FirebaseUserAuthStorage : UserAuthStorage {
     }
 
     override suspend fun getCurrentUserUid(): Flow<Response<String>> = callbackFlow {
+        trySend(Response.Loading())
+
         try {
             val uidCurrentUser = fAuth.currentUser?.uid.toString()
             trySend(Response.Success(data = uidCurrentUser))
@@ -63,36 +70,37 @@ class FirebaseUserAuthStorage : UserAuthStorage {
     }
 
     override suspend fun deleteCurrentUser(): Flow<Response<Boolean>> = callbackFlow {
-        try {
-            fAuth.currentUser?.delete()
-                ?.addOnSuccessListener {
-                    trySend(Response.Success(data = true))
-                }?.addOnFailureListener { e ->
-                    trySend(Response.Fail(e = e))
-                }
-        } catch (e: Exception) {
-            trySend(Response.Fail(e = e))
-        }
+        trySend(Response.Loading())
+
+        fAuth.currentUser?.delete()
+            ?.addOnSuccessListener {
+                trySend(Response.Success(data = true))
+            }?.addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
 
         awaitClose { this.cancel() }
     }
 
-    override suspend fun restorePasswordByEmail(email: String): Flow<Response<Boolean>> =
-        callbackFlow {
-            fAuth.sendPasswordResetEmail(email)
-                .addOnSuccessListener {
-                    trySend(Response.Success(data = true))
-                }.addOnFailureListener { e ->
-                    trySend(Response.Fail(e = e))
-                }
+    override suspend fun restorePasswordByEmail(email: String): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
 
-            awaitClose { this.cancel() }
-        }
+        fAuth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                trySend(Response.Success(data = true))
+            }.addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
+
+        awaitClose { this.cancel() }
+    }
 
     override suspend fun changeEmail(
         userAuth: UserAuth,
         newEmail: String
     ): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
         fAuth.signInWithEmailAndPassword(userAuth.email, userAuth.password)
         fAuth.currentUser?.updateEmail(newEmail)
             ?.addOnSuccessListener {
@@ -108,6 +116,8 @@ class FirebaseUserAuthStorage : UserAuthStorage {
         userAuth: UserAuth,
         newPassword: String
     ): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
         fAuth.signInWithEmailAndPassword(userAuth.email, userAuth.password)
         fAuth.currentUser?.updatePassword(newPassword)
             ?.addOnSuccessListener {
@@ -120,6 +130,8 @@ class FirebaseUserAuthStorage : UserAuthStorage {
     }
 
     override suspend fun signOut(): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
         fAuth.signOut()
         trySend(Response.Success(data = true))
 

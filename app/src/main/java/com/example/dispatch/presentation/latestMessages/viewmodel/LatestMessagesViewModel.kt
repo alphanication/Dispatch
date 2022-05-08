@@ -24,7 +24,6 @@ class LatestMessagesViewModel @Inject constructor(
     val userDetails: LiveData<UserDetails> = _userDetails
 
     override fun getCurrentUserDetails(): LiveData<Response<UserDetails>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             getCurrentUserDetailsUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
@@ -33,7 +32,6 @@ class LatestMessagesViewModel @Inject constructor(
     }
 
     override fun downloadLangRussianEnglishPack(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             downloadLangRussianEnglishPackUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {

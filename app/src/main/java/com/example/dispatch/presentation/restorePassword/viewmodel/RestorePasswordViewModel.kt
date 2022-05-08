@@ -17,7 +17,6 @@ class RestorePasswordViewModel @Inject constructor(
     private val restoreUserByEmailUseCase: RestoreUserByEmailUseCase
 ) : ViewModel(), RestorePasswordContract.RestorePasswordViewModel {
     override fun restoreUserByEmail(email: String) : LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             restoreUserByEmailUseCase.execute(email = email).collect { emit(it) }
         } catch (e: Exception) {

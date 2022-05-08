@@ -20,7 +20,6 @@ class SignInViewModel @Inject constructor(
     private val checkUserAuthSignedInUseCase: CheckUserAuthSignedInUseCase
 ) : ViewModel(), SignInContract.SignInViewModel {
     override fun signInUserAuth(userAuth: UserAuth): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             signInUserAuthUseCase.execute(userAuth = userAuth).collect { emit(it) }
         } catch (e: Exception) {
@@ -29,7 +28,6 @@ class SignInViewModel @Inject constructor(
     }
 
     override fun checkUserAuthSignedIn(): LiveData<Response<Boolean>> = liveData {
-        emit(Response.Loading())
         try {
             checkUserAuthSignedInUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {

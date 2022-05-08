@@ -22,7 +22,6 @@ class ListUsersViewModel @Inject constructor(
     val userDetailsPublic: LiveData<UserDetailsPublic> = _userDetailsPublic
 
     override fun getUsersList(): LiveData<Response<UserDetailsPublic>> = liveData(Dispatchers.IO) {
-        emit(Response.Loading())
         try {
             getUsersListUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
