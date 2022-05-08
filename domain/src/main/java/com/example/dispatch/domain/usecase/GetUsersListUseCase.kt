@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class GetUsersListUseCase(private val userDetailsRepository: UserDetailsRepository) {
-    suspend fun execute(): Flow<Response<UserDetailsPublic>> {
+    suspend fun execute(): Flow<Response<ArrayList<UserDetailsPublic>>> {
         return userDetailsRepository.getUsersList()
     }
 }

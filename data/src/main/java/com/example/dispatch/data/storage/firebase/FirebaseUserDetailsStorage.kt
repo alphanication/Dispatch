@@ -154,7 +154,7 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         awaitClose { this.cancel() }
     }
 
-    override suspend fun getUsersList(): Flow<Response<UserDetailsPublic>> = callbackFlow {
+    override suspend fun getUsersList(): Flow<Response<ArrayList<UserDetailsPublic>>> = callbackFlow {
         trySend(Response.Loading())
 
         val refUsers = fDatabase.getReference("/users/")
@@ -162,6 +162,8 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         refUsers.addListenerForSingleValueEvent(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
+                val listUsers = ArrayList<UserDetailsPublic>()
+
                 snapshot.children.forEach {
                     val user = it.getValue(UserDetails::class.java)
                     if (user != null) {
@@ -172,11 +174,11 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
                             email = user.email,
                             photoProfileUrl = user.photoProfileUrl
                         )
-                        trySend(Response.Success(userPublic))
-                    } else {
-                        trySend(Response.Fail(e = Exception("user null")))
+                        listUsers.add(userPublic)
                     }
                 }
+
+                trySend(Response.Success(data = listUsers))
             }
 
             override fun onCancelled(error: DatabaseError) {

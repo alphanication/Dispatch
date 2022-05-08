@@ -57,7 +57,7 @@ interface UserDetailsRepository {
      */
     suspend fun changePassword(newPassword: String): Flow<Response<Boolean>>
 
-    suspend fun getUsersList() : Flow<Response<UserDetailsPublic>>
+    suspend fun getUsersList() : Flow<Response<ArrayList<UserDetailsPublic>>>
 
     suspend fun getUserDetailsPublicOnUid(uid: String) : Flow<Response<UserDetailsPublic>>
 }

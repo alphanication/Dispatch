@@ -43,7 +43,7 @@ class UserDetailsRepositoryImpl(private val userDetailsStorage: UserDetailsStora
         return userDetailsStorage.changePassword(newPassword = newPassword)
     }
 
-    override suspend fun getUsersList(): Flow<Response<UserDetailsPublic>> {
+    override suspend fun getUsersList(): Flow<Response<ArrayList<UserDetailsPublic>>> {
         return userDetailsStorage.getUsersList()
     }
 

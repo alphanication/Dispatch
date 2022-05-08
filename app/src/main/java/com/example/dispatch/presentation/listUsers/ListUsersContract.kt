@@ -6,22 +6,54 @@ import com.example.dispatch.domain.models.UserDetailsPublic
 
 interface ListUsersContract {
     interface ListUsersFragment {
+        /**
+         * Sets the required setOnClickListener on the views fragment
+         */
         fun setOnClickListeners()
 
-        fun getUsersListObserve()
+        /**
+         * Observer usersList LiveData from [ListUsersViewModel]
+         */
+        fun usersListObserver()
 
-        fun userDetailsPublicObserver()
+        /**
+         * Observer progressBarListUsers LiveData from [ListUsersViewModel]
+         */
+        fun progressBarListUsersObserver()
 
+        /**
+         * Shows progress bar list users
+         */
         fun showProgressBarListUsers()
 
+        /**
+         * Hides progress bar list users
+         */
         fun hideProgressBarListUsers()
 
+        /**
+         * Add user item into adapter, update adapter
+         * @param userDetailsPublic - [UserDetailsPublic] model user
+         */
+        fun adapterAddItemUser(userDetailsPublic: UserDetailsPublic)
+
+        /**
+         * Navigate to pop back stack
+         */
         fun navigateToPopBackStack()
 
-        fun navigateToDetailsMessagesFragmentTransferSelectedUser(userUid: String)
+        /**
+         * Navigate to DetailsMessagesFragment, passing the uid of the user selected
+         * in the adapter to the fragment
+         * @param userUid - selected user (uid) from adapter
+         */
+        fun navigateToDetailsMessagesFragmentTransferSelectedUser(selectedUserUid: String)
     }
 
     interface ListUsersViewModel {
-        fun getUsersList(): LiveData<Response<UserDetailsPublic>>
+        /**
+         * Get list users
+         */
+        fun getCurrentUserListUsers()
     }
 }
