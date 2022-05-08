@@ -3,7 +3,7 @@ package com.example.dispatch.presentation.listUsers.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetailsPublic
 import com.example.dispatch.domain.usecase.GetUsersListUseCase
@@ -11,6 +11,7 @@ import com.example.dispatch.presentation.listUsers.ListUsersContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,14 +19,29 @@ import javax.inject.Inject
 class ListUsersViewModel @Inject constructor(
     private val getUsersListUseCase: GetUsersListUseCase
 ) : ViewModel(), ListUsersContract.ListUsersViewModel {
-    val _userDetailsPublic = MutableLiveData<UserDetailsPublic>()
-    val userDetailsPublic: LiveData<UserDetailsPublic> = _userDetailsPublic
 
-    override fun getUsersList(): LiveData<Response<UserDetailsPublic>> = liveData(Dispatchers.IO) {
-        try {
-            getUsersListUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e))
+    private val _usersList = MutableLiveData<ArrayList<UserDetailsPublic>>()
+    val usersList: LiveData<ArrayList<UserDetailsPublic>> = _usersList
+
+    private val _progressBarListUsers = MutableLiveData<Boolean>()
+    val progressBarListUsers: LiveData<Boolean> = _progressBarListUsers
+
+    init {
+        getCurrentUserListUsers()
+    }
+
+    override fun getCurrentUserListUsers() {
+        viewModelScope.launch(Dispatchers.IO) {
+            getUsersListUseCase.execute().collect { result ->
+                when (result) {
+                    is Response.Loading -> _progressBarListUsers.postValue(true)
+                    is Response.Fail -> _progressBarListUsers.postValue(false)
+                    is Response.Success -> {
+                        _progressBarListUsers.postValue(false)
+                        this@ListUsersViewModel._usersList.postValue(result.data)
+                    }
+                }
+            }
         }
     }
 }

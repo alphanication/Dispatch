@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentListUsersBinding
 import com.example.dispatch.databinding.ItemContainerUserBinding
-import com.example.dispatch.domain.models.Response
+import com.example.dispatch.domain.models.UserDetailsPublic
 import com.example.dispatch.presentation.listUsers.ListUsersContract
 import com.example.dispatch.presentation.listUsers.viewmodel.ListUsersViewModel
 import com.xwray.groupie.GroupAdapter
@@ -27,7 +27,7 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
     private val adapter = GroupAdapter<GroupieViewHolder<ItemContainerUserBinding>>()
 
     companion object {
-        const val PARTNER_UID = "PARTNER_UID"
+        const val SELECTED_USER_UID = "selected_user_uid"
     }
 
     override fun onCreateView(
@@ -42,8 +42,8 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
         super.onViewCreated(view, savedInstanceState)
 
         setOnClickListeners()
-        getUsersListObserve()
-        userDetailsPublicObserver()
+        progressBarListUsersObserver()
+        usersListObserver()
     }
 
     override fun setOnClickListeners() {
@@ -55,31 +55,22 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
             val userItem = item as UserItem
             val selectedUserUid = userItem.user.uid
 
-            navigateToDetailsMessagesFragmentTransferSelectedUser(userUid = selectedUserUid)
+            navigateToDetailsMessagesFragmentTransferSelectedUser(selectedUserUid = selectedUserUid)
         }
     }
 
-    override fun userDetailsPublicObserver() {
-        viewModel.userDetailsPublic.observe(viewLifecycleOwner) { userDetailsPublic ->
-            adapter.add(UserItem(user = userDetailsPublic))
-            binding.recyclerViewListUsers.adapter = adapter
-        }
-    }
-
-    override fun getUsersListObserve() {
-        viewModel.getUsersList().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Response.Loading -> {
-                    showProgressBarListUsers()
-                }
-                is Response.Fail -> {
-                    hideProgressBarListUsers()
-                }
-                is Response.Success -> {
-                    viewModel._userDetailsPublic.value = result.data
-                    hideProgressBarListUsers()
-                }
+    override fun usersListObserver() {
+        viewModel.usersList.observe(viewLifecycleOwner) { usersList ->
+            usersList.forEach { userDetailsPublic ->
+                adapterAddItemUser(userDetailsPublic = userDetailsPublic)
             }
+        }
+    }
+
+    override fun progressBarListUsersObserver() {
+        viewModel.progressBarListUsers.observe(viewLifecycleOwner) { result ->
+            if (result) showProgressBarListUsers()
+            else hideProgressBarListUsers()
         }
     }
 
@@ -91,13 +82,18 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
         binding.progressBarListUsers.visibility = View.INVISIBLE
     }
 
+    override fun adapterAddItemUser(userDetailsPublic: UserDetailsPublic) {
+        adapter.add(UserItem(user = userDetailsPublic))
+        binding.recyclerViewListUsers.adapter = adapter
+    }
+
     override fun navigateToPopBackStack() {
         findNavController().popBackStack()
     }
 
-    override fun navigateToDetailsMessagesFragmentTransferSelectedUser(userUid: String) {
+    override fun navigateToDetailsMessagesFragmentTransferSelectedUser(selectedUserUid: String) {
         findNavController().navigate(R.id.action_listUsersFragment_to_detailsMessagesFragment, Bundle().apply {
-            putString(PARTNER_UID, userUid)
+            putString(SELECTED_USER_UID, selectedUserUid)
         })
     }
 }

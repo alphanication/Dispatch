@@ -59,7 +59,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     }
 
     override fun getCompanionUidFromListUsersFragment() {
-        viewModel._companionUid.value = requireArguments().getString(ListUsersFragment.PARTNER_UID).toString()
+        viewModel._companionUid.value = requireArguments().getString(ListUsersFragment.SELECTED_USER_UID).toString()
     }
 
     override fun companionUidObserver() {
