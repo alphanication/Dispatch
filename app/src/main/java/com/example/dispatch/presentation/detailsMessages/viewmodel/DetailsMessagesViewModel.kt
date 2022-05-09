@@ -24,12 +24,19 @@ class DetailsMessagesViewModel @Inject constructor(
     private val saveMessageUseCase: SaveMessageUseCase,
     private val listenFromToUserMessagesUseCase: ListenFromToUserMessagesUseCase
 ) : ViewModel(), DetailsMessagesContract.DetailsMessagesViewModel {
+
     val _companionUid = MutableLiveData<String>()
     val companionUid: LiveData<String> = _companionUid
+
     val _companionDetails = MutableLiveData<UserDetailsPublic>()
     val companionDetails: LiveData<UserDetailsPublic> = _companionDetails
+
     val _currUserUid = MutableLiveData<String>()
     val currUserUid: LiveData<String> = _currUserUid
+
+    init {
+        getCurrentUserUid()
+    }
 
     override fun getUserDetailsPublicOnUid(uid: String): LiveData<Response<UserDetailsPublic>> =
         liveData(Dispatchers.IO) {
@@ -64,11 +71,13 @@ class DetailsMessagesViewModel @Inject constructor(
         }
     }
 
-    override fun getCurrentUserUid(): LiveData<Response<String>> = liveData {
-        try {
-            getCurrentUserUidUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun getCurrentUserUid() {
+        viewModelScope.launch(Dispatchers.IO) {
+            getCurrentUserUidUseCase.execute().collect { result ->
+                when (result) {
+                    is Response.Success -> this@DetailsMessagesViewModel._currUserUid.postValue(result.data)
+                }
+            }
         }
     }
 
