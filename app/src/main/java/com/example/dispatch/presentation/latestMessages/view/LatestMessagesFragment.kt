@@ -40,7 +40,6 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
         progressBarLoadUserDetailsObserver()
         loadCurrentUserDetailsSuccessObserver()
         userDetailsObserver()
-        loadRussianEnglishPackObserver()
     }
 
     override fun setOnClickListeners() {
@@ -69,16 +68,6 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
             when(result) {
                 is Response.Loading -> {}
                 is Response.Fail -> showToastLengthLong(text = "Load current user details false: ${result.e}")
-                is Response.Success -> {}
-            }
-        }
-    }
-
-    override fun loadRussianEnglishPackObserver() {
-        viewModel.loadRussianEnglishPack.observe(viewLifecycleOwner) { result ->
-            when(result) {
-                is Response.Loading -> {}
-                is Response.Fail -> showToastLengthLong(text = "Load RU-EN pack false: ${result.e}")
                 is Response.Success -> {}
             }
         }

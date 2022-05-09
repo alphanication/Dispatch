@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
 import com.example.dispatch.domain.usecase.CheckUserAuthSignedInUseCase
+import com.example.dispatch.domain.usecase.DownloadLangRussianEnglishPackUseCase
 import com.example.dispatch.domain.usecase.SignInUserAuthUseCase
 import com.example.dispatch.presentation.signIn.SignInContract
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class SignInViewModel @Inject constructor(
     private val signInUserAuthUseCase: SignInUserAuthUseCase,
-    private val checkUserAuthSignedInUseCase: CheckUserAuthSignedInUseCase
+    private val checkUserAuthSignedInUseCase: CheckUserAuthSignedInUseCase,
+    private val downloadLangRussianEnglishPackUseCase: DownloadLangRussianEnglishPackUseCase
 ) : ViewModel(), SignInContract.SignInViewModel {
 
     private val _progressBarSignIn = MutableLiveData<Boolean>()
@@ -28,8 +30,12 @@ class SignInViewModel @Inject constructor(
     private val _signInSuccess = MutableLiveData<Response<Boolean>>()
     val signInSuccess: LiveData<Response<Boolean>> = _signInSuccess
 
+    private val _loadRussianEnglishPack = MutableLiveData<Response<Boolean>>()
+    val loadRussianEnglishPack: LiveData<Response<Boolean>> = _loadRussianEnglishPack
+
     init {
         checkUserAuthSignedIn()
+        downloadLangRussianEnglishPack()
     }
 
     override fun signInUserAuth(userAuth: UserAuth) {
@@ -57,6 +63,18 @@ class SignInViewModel @Inject constructor(
                     is Response.Loading -> {}
                     is Response.Fail -> {}
                     is Response.Success -> _signInSuccess.postValue(Response.Success(data = true))
+                }
+            }
+        }
+    }
+
+    override fun downloadLangRussianEnglishPack() {
+        viewModelScope.launch(Dispatchers.IO) {
+            downloadLangRussianEnglishPackUseCase.execute().collect { result ->
+                when (result) {
+                    is Response.Loading -> {}
+                    is Response.Fail -> _loadRussianEnglishPack.postValue(Response.Fail(e = result.e))
+                    is Response.Success -> {}
                 }
             }
         }
