@@ -37,9 +37,10 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
         super.onViewCreated(view, savedInstanceState)
 
         setOnClickListeners()
-        getCurrentUserDetailsObserver()
+        progressBarLoadUserDetailsObserver()
+        loadCurrentUserDetailsSuccessObserver()
         userDetailsObserver()
-        downloadLangRussianEnglishPackObserver()
+        loadRussianEnglishPackObserver()
     }
 
     override fun setOnClickListeners() {
@@ -56,31 +57,28 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
         }
     }
 
-    override fun getCurrentUserDetailsObserver() {
-        viewModel.getCurrentUserDetails().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Response.Loading -> {
-                    showProgressBarLoadUserDetails()
-                }
-                is Response.Fail -> {
-                    hideProgressBarLoadUserDetails()
-                    Toast.makeText(activity, "Load user info false :( ", Toast.LENGTH_SHORT).show()
-                }
-                is Response.Success -> {
-                    hideProgressBarLoadUserDetails()
-                    viewModel._userDetails.value = result.data
-                }
+    override fun progressBarLoadUserDetailsObserver() {
+        viewModel.progressBarLoadUserDetails.observe(viewLifecycleOwner) { result ->
+            if (result) showProgressBarLoadUserDetails()
+            else hideProgressBarLoadUserDetails()
+        }
+    }
+
+    override fun loadCurrentUserDetailsSuccessObserver() {
+        viewModel.loadCurrentUserDetailsSuccess.observe(viewLifecycleOwner) { result ->
+            when(result) {
+                is Response.Loading -> {}
+                is Response.Fail -> showToastLengthLong(text = "Load current user details false: ${result.e}")
+                is Response.Success -> {}
             }
         }
     }
 
-    override fun downloadLangRussianEnglishPackObserver() {
-        viewModel.downloadLangRussianEnglishPack().observe(viewLifecycleOwner) { result ->
-            when (result) {
+    override fun loadRussianEnglishPackObserver() {
+        viewModel.loadRussianEnglishPack.observe(viewLifecycleOwner) { result ->
+            when(result) {
                 is Response.Loading -> {}
-                is Response.Fail -> {
-                    Toast.makeText(activity, "Download pack language false :(", Toast.LENGTH_SHORT).show()
-                }
+                is Response.Fail -> showToastLengthLong(text = "Load RU-EN pack false: ${result.e}")
                 is Response.Success -> {}
             }
         }
@@ -94,6 +92,11 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
     override fun hideProgressBarLoadUserDetails() {
         binding.progressBarUserDetailsLoad.visibility = View.INVISIBLE
         binding.textViewProfileFullname.visibility = View.VISIBLE
+    }
+
+    override fun showToastLengthLong(text: String) {
+        Toast.makeText(activity, text, Toast.LENGTH_LONG)
+            .show()
     }
 
     override fun navigateToListUsersFragment() {

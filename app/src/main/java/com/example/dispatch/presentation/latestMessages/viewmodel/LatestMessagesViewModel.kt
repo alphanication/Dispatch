@@ -1,9 +1,10 @@
 package com.example.dispatch.presentation.latestMessages.viewmodel
 
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetails
 import com.example.dispatch.domain.usecase.DownloadLangRussianEnglishPackUseCase
@@ -12,6 +13,7 @@ import com.example.dispatch.presentation.latestMessages.LatestMessagesContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,22 +22,51 @@ class LatestMessagesViewModel @Inject constructor(
     private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase,
     private val downloadLangRussianEnglishPackUseCase: DownloadLangRussianEnglishPackUseCase
 ) : ViewModel(), LatestMessagesContract.LatestMessagesViewModel {
-    val _userDetails = MutableLiveData<UserDetails>()
+
+    private val _userDetails = MutableLiveData<UserDetails>()
     val userDetails: LiveData<UserDetails> = _userDetails
 
-    override fun getCurrentUserDetails(): LiveData<Response<UserDetails>> = liveData(Dispatchers.IO) {
-        try {
-            getCurrentUserDetailsUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    private val _progressBarLoadUserDetails = MutableLiveData<Boolean>()
+    val progressBarLoadUserDetails: LiveData<Boolean> = _progressBarLoadUserDetails
+
+    private val _loadCurrentUserDetailsSuccess = MutableLiveData<Response<Boolean>>()
+    val loadCurrentUserDetailsSuccess: LiveData<Response<Boolean>> = _loadCurrentUserDetailsSuccess
+
+    private val _loadRussianEnglishPack = MutableLiveData<Response<Boolean>>()
+    val loadRussianEnglishPack: LiveData<Response<Boolean>> = _loadRussianEnglishPack
+
+    init {
+        getCurrentUserDetails()
+        downloadLangRussianEnglishPack()
+    }
+
+    override fun getCurrentUserDetails() {
+        viewModelScope.launch(Dispatchers.IO) {
+            getCurrentUserDetailsUseCase.execute().collect { result ->
+                when (result) {
+                    is Response.Loading -> _progressBarLoadUserDetails.postValue(true)
+                    is Response.Fail -> {
+                        _progressBarLoadUserDetails.postValue(false)
+                        _loadCurrentUserDetailsSuccess.postValue(Response.Fail(e = result.e))
+                    }
+                    is Response.Success -> {
+                        _progressBarLoadUserDetails.postValue(false)
+                        this@LatestMessagesViewModel._userDetails.postValue(result.data)
+                    }
+                }
+            }
         }
     }
 
-    override fun downloadLangRussianEnglishPack(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            downloadLangRussianEnglishPackUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun downloadLangRussianEnglishPack() {
+        viewModelScope.launch(Dispatchers.IO) {
+            downloadLangRussianEnglishPackUseCase.execute().collect { result ->
+                when (result) {
+                    is Response.Loading -> {}
+                    is Response.Fail -> _loadRussianEnglishPack.postValue(Response.Fail(e = result.e))
+                    is Response.Success -> {}
+                }
+            }
         }
     }
 }
