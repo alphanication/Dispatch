@@ -40,10 +40,10 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setOnClickListeners()
         getCompanionUidFromListUsersFragment()
         companionUidObserver()
-        getCurrentUserUidObserver()
         companionDetailsObserver()
         currentUserUidObserver()
     }
@@ -71,9 +71,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     override fun getUserDetailsPublicOnUidObserver(uid: String) {
         viewModel.getUserDetailsPublicOnUid(uid = uid).observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Fail -> Toast
-                    .makeText(activity, "Load user info false :( ", Toast.LENGTH_SHORT)
-                    .show()
+                is Response.Fail -> showToastLengthLong(text = "Load user info false :( ")
                 is Response.Success -> viewModel._companionDetails.value = result.data
             }
         }
@@ -91,9 +89,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     override fun translateRussianEnglishTextObserver(text: String) {
         viewModel.translateRussianEnglishText(text = text).observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Fail -> Toast
-                    .makeText(activity, "Translated russian-english false :( ", Toast.LENGTH_SHORT)
-                    .show()
+                is Response.Fail -> showToastLengthLong(text = "Translated russian-english false :( ")
                 is Response.Success -> {
                     val message = Message(
                         russianMessage = text,
@@ -111,9 +107,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     override fun translateEnglishRussianTextObserver(text: String) {
         viewModel.translateEnglishRussianText(text = text).observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Fail -> Toast
-                    .makeText(activity, "Translated english-russian false :( ", Toast.LENGTH_SHORT)
-                    .show()
+                is Response.Fail -> showToastLengthLong(text = "Translated english-russian false :( ")
                 is Response.Success -> {
                     val message = Message(
                         russianMessage = result.data,
@@ -131,28 +125,12 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     override fun languageIdentifierObserver(text: String) {
         viewModel.languageIdentifier(text = text).observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Success -> {
-                    if (result.data == LanguageCodeConstants.RU) {
-                        translateRussianEnglishTextObserver(text = text)
-                    } else if (result.data == LanguageCodeConstants.EN) {
-                        translateEnglishRussianTextObserver(text = text)
-                    } else {
-                        Toast
-                            .makeText(activity, "The text must be in English or Russian.", Toast.LENGTH_LONG)
-                            .show()
+                is Response.Success -> when (result.data) {
+                        LanguageCodeConstants.RU -> translateRussianEnglishTextObserver(text = text)
+                        LanguageCodeConstants.EN -> translateEnglishRussianTextObserver(text = text)
+                        else -> showToastLengthLong(text = "The text must be in English or Russian.")
                     }
-                }
-                is Response.Fail -> Toast
-                    .makeText(activity, "Language identifier false :(", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-    }
-
-    override fun getCurrentUserUidObserver() {
-        viewModel.getCurrentUserUid().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Response.Success -> viewModel._currUserUid.value = result.data
+                is Response.Fail -> showToastLengthLong(text = "Language identifier false :(")
             }
         }
     }
@@ -171,7 +149,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
             when (result) {
                 is Response.Loading -> showProgressBarLoadMessages()
                 is Response.Fail -> {
-                    Toast.makeText(activity, "Listen user messages false :( ", Toast.LENGTH_SHORT).show()
+                    showToastLengthLong(text = "Listen user messages false :( ")
                     hideProgressBarLoadMessages()
                 }
                 is Response.Success -> {
@@ -212,5 +190,10 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
 
     override fun navigateToPopBackStack() {
         findNavController().popBackStack()
+    }
+
+    override fun showToastLengthLong(text: String) {
+        Toast.makeText(activity, text, Toast.LENGTH_LONG)
+            .show()
     }
 }
