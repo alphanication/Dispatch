@@ -56,8 +56,7 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
             if (resultCode == RESULT_OK) {
-                val resultUriStr = result.uri.toString()
-                viewModel.saveUserImageLiveData(imageUriStr = resultUriStr)
+                viewModel.saveUserImageLiveData(imageUriStr = result.uri.toString())
             }
         }
     }
@@ -92,8 +91,11 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
             binding.edittextFullname.setText(userDetailsGet.fullname)
             binding.edittextDateBirth.setText(userDetailsGet.dateBirth)
             binding.edittextEmail.setText(userDetailsGet.email)
-            Picasso.get().load(userDetailsGet.photoProfileUrl).transform(CropCircleTransformation())
-                .into(binding.shapeableimagePhotoUser)
+
+            if (userDetailsGet.photoProfileUrl.isNotEmpty()) {
+                Picasso.get().load(userDetailsGet.photoProfileUrl).transform(CropCircleTransformation())
+                    .into(binding.shapeableimagePhotoUser)
+            }
         }
     }
 
@@ -102,9 +104,7 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
             if (cropImageUri.isNotEmpty()) {
                 binding.shapeableimagePhotoUser.setImageResource(0)
                 saveUserImageProfileObserver(imageUriCache = cropImageUri)
-            } else {
-                binding.shapeableimagePhotoUser.setImageResource(0)
-            }
+            } else binding.shapeableimagePhotoUser.setImageResource(0)
         }
     }
 
@@ -140,13 +140,10 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
         viewModel.changeUserAuthPassword(userAuth = userAuth, newPassword = newPassword)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is Response.Loading -> {
-                        showProgressBarChangePassword()
-                    }
+                    is Response.Loading -> showProgressBarChangePassword()
                     is Response.Fail -> {
                         hideProgressBarChangePassword()
-                        Toast.makeText(activity, "Change password false :( ", Toast.LENGTH_SHORT)
-                            .show()
+                        showToastLengthLong(text = "Change password false :(")
                     }
                     is Response.Success -> {
                         changeUserDetailsPasswordObserver(newPassword = newPassword)
@@ -159,12 +156,8 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
         viewModel.changeUserDetailsPassword(newPassword = newPassword)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is Response.Loading -> {
-                        showProgressBarChangePassword()
-                    }
-                    is Response.Fail -> {
-                        hideProgressBarChangePassword()
-                    }
+                    is Response.Loading -> showProgressBarChangePassword()
+                    is Response.Fail -> hideProgressBarChangePassword()
                     is Response.Success -> {
                         hideProgressBarChangePassword()
                         getCurrentUserDetailsObserver()
@@ -178,13 +171,10 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
         viewModel.changeUserDetailsFullname(newFullname = newFullname)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is Response.Loading -> {
-                        showProgressBarUpdateProfile()
-                    }
+                    is Response.Loading -> showProgressBarUpdateProfile()
                     is Response.Fail -> {
                         hideProgressBarUpdateProfile()
-                        Toast.makeText(activity, "Update fullname false :( ", Toast.LENGTH_SHORT)
-                            .show()
+                        showToastLengthLong(text = "Update fullname false :(")
                     }
                     is Response.Success -> {
                         hideProgressBarUpdateProfile()
@@ -198,13 +188,10 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
         viewModel.changeUserDetailsDateBirth(newDateBirth = newDateBirth)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is Response.Loading -> {
-                        showProgressBarUpdateProfile()
-                    }
+                    is Response.Loading -> showProgressBarUpdateProfile()
                     is Response.Fail -> {
                         hideProgressBarUpdateProfile()
-                        Toast.makeText(activity, "Update date birth false :( ", Toast.LENGTH_SHORT)
-                            .show()
+                        showToastLengthLong(text = "Update date birth false :(")
                     }
                     is Response.Success -> {
                         hideProgressBarUpdateProfile()
@@ -221,8 +208,7 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
                     is Response.Loading -> {}
                     is Response.Fail -> {
                         hideProgressBarUpdateProfile()
-                        Toast.makeText(activity, "Update email false :( ", Toast.LENGTH_SHORT)
-                            .show()
+                        showToastLengthLong(text = "Update email false :( ")
                     }
                     is Response.Success -> {
                         changeUserDetailsEmailObserver(newEmail = newEmail)
@@ -253,13 +239,10 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
         viewModel.saveUserImageProfile(imageUriCache = imageUriCache)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is Response.Loading -> {
-                        showProgressBarLoadInfoUser()
-                    }
+                    is Response.Loading -> showProgressBarLoadInfoUser()
                     is Response.Fail -> {
-                        Toast.makeText(activity, "Save photo profile user false :( ", Toast.LENGTH_SHORT)
-                            .show()
                         getCurrentUserDetailsObserver()
+                        showToastLengthLong(text = "Save photo profile user false :(")
                     }
                     is Response.Success -> {
                         viewModel.deleteUserImageLiveData()
@@ -275,17 +258,12 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
         viewModel.changeUserDetailsPhotoProfileUrl(imageUriStr = imageUriStr)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is Response.Loading -> {
-                        showProgressBarLoadInfoUser()
-                    }
+                    is Response.Loading -> showProgressBarLoadInfoUser()
                     is Response.Fail -> {
                         hideProgressBarLoadInfoUser()
-                        Toast.makeText(activity, "Save user photo false :(", Toast.LENGTH_SHORT)
-                            .show()
+                        showToastLengthLong(text = "Save user photo false :(")
                     }
-                    is Response.Success -> {
-                        getCurrentUserDetailsObserver()
-                    }
+                    is Response.Success -> getCurrentUserDetailsObserver()
                 }
             }
     }
@@ -293,16 +271,14 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
     override fun deleteCurrentUserAuthObserver() {
         viewModel.deleteCurrentUserAuth().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Loading -> {
-                    showProgressBarDeleteUser()
-                }
+                is Response.Loading -> showProgressBarDeleteUser()
                 is Response.Fail -> {
                     hideProgressBarDeleteUser()
-                    Toast.makeText(activity, "Delete user false :(", Toast.LENGTH_SHORT).show()
+                    showToastLengthLong(text = "Delete user false :(")
                 }
                 is Response.Success -> {
-                    Toast.makeText(activity, "Delete user success!", Toast.LENGTH_SHORT).show()
                     signOutUserAuthObserver()
+                    showToastLengthLong(text = "Delete user success!")
                 }
             }
         }
@@ -314,7 +290,7 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
                 is Response.Loading -> {}
                 is Response.Fail -> {
                     hideProgressBarDeleteUser()
-                    Toast.makeText(activity, "User sign out error :( ", Toast.LENGTH_SHORT).show()
+                    showToastLengthLong(text = "User sign out error :( ")
                 }
                 is Response.Success -> {
                     hideProgressBarDeleteUser()
@@ -327,15 +303,9 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
     override fun deleteCurrentUserDetailsObserver() {
         viewModel.deleteCurrentUserDetails().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Loading -> {
-                    showProgressBarDeleteUser()
-                }
-                is Response.Fail -> {
-                    deleteCurrentUserAuthObserver()
-                }
-                is Response.Success -> {
-                    deleteCurrentUserAuthObserver()
-                }
+                is Response.Loading -> showProgressBarDeleteUser()
+                is Response.Fail -> deleteCurrentUserAuthObserver()
+                is Response.Success -> deleteCurrentUserAuthObserver()
             }
         }
     }
@@ -343,15 +313,9 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
     override fun deleteUserImageProfileObserver() {
         viewModel.deleteUserImageProfile().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Loading -> {
-                    showProgressBarDeleteUser()
-                }
-                is Response.Fail -> {
-                    deleteCurrentUserDetailsObserver()
-                }
-                is Response.Success -> {
-                    deleteCurrentUserDetailsObserver()
-                }
+                is Response.Loading -> showProgressBarDeleteUser()
+                is Response.Fail -> deleteCurrentUserDetailsObserver()
+                is Response.Success -> deleteCurrentUserDetailsObserver()
             }
         }
     }
@@ -359,12 +323,10 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
     override fun getCurrentUserDetailsObserver() {
         viewModel.getCurrentUserDetails().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Loading -> {
-                    showProgressBarLoadInfoUser()
-                }
+                is Response.Loading -> showProgressBarLoadInfoUser()
                 is Response.Fail -> {
                     hideProgressBarLoadInfoUser()
-                    Toast.makeText(activity, "Load user info false :( ", Toast.LENGTH_SHORT).show()
+                    showToastLengthLong(text = "Load user info false :( ")
                 }
                 is Response.Success -> {
                     hideProgressBarLoadInfoUser()
@@ -388,9 +350,7 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
                 binding.edittextPassword.setError("Password length must be > 6 characters.", null)
                 binding.edittextPassword.requestFocus()
             }
-            else -> {
-                valid = true
-            }
+            else -> valid = true
         }
 
         return valid
@@ -434,6 +394,11 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
         }
 
         return valid
+    }
+
+    override fun showToastLengthLong(text: String) {
+        Toast.makeText(activity, text, Toast.LENGTH_LONG)
+            .show()
     }
 
     override fun cropImageActivityStart() {

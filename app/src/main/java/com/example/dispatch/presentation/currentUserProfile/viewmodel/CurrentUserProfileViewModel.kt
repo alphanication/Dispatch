@@ -31,8 +31,10 @@ class CurrentUserProfileViewModel @Inject constructor(
     private val changeUserDetailsFullnameUseCase: ChangeUserDetailsFullnameUseCase,
     private val changeUserDetailsDateBirthUseCase: ChangeUserDetailsDateBirthUseCase
 ) : ViewModel(), CurrentUserProfileContract.CurrentUserProfileViewModel {
+
     private val _cropImageView = MutableLiveData("")
     val cropImageView: LiveData<String> = _cropImageView
+
     val _userDetailsGet = MutableLiveData<UserDetails>()
     val userDetailsGet: LiveData<UserDetails> = _userDetailsGet
 
@@ -76,13 +78,14 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    override fun saveUserImageProfile(imageUriCache: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
-        try {
-            saveUserImageProfileUseCase.execute(newImageUriStr = imageUriCache).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e))
+    override fun saveUserImageProfile(imageUriCache: String): LiveData<Response<String>> =
+        liveData(Dispatchers.IO) {
+            try {
+                saveUserImageProfileUseCase.execute(newImageUriStr = imageUriCache).collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e))
+            }
         }
-    }
 
     override fun changeUserDetailsPhotoProfileUrl(imageUriStr: String): LiveData<Response<Boolean>> =
         liveData(Dispatchers.IO) {
@@ -122,30 +125,33 @@ class CurrentUserProfileViewModel @Inject constructor(
             }
         }
 
-    override fun changeUserDetailsPassword(newPassword: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            changeUserDetailsPasswordUseCase.execute(newPassword = newPassword).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun changeUserDetailsPassword(newPassword: String): LiveData<Response<Boolean>> =
+        liveData(Dispatchers.IO) {
+            try {
+                changeUserDetailsPasswordUseCase.execute(newPassword = newPassword).collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
         }
-    }
 
-    override fun changeUserDetailsFullname(newFullname: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            changeUserDetailsFullnameUseCase.execute(newFullname = newFullname).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun changeUserDetailsFullname(newFullname: String): LiveData<Response<Boolean>> =
+        liveData(Dispatchers.IO) {
+            try {
+                changeUserDetailsFullnameUseCase.execute(newFullname = newFullname).collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
         }
-    }
 
-    override fun changeUserDetailsDateBirth(newDateBirth: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            changeUserDetailsDateBirthUseCase.execute(newDateBirth = newDateBirth)
-                .collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun changeUserDetailsDateBirth(newDateBirth: String): LiveData<Response<Boolean>> =
+        liveData(Dispatchers.IO) {
+            try {
+                changeUserDetailsDateBirthUseCase.execute(newDateBirth = newDateBirth)
+                    .collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
         }
-    }
 
     override fun saveUserImageLiveData(imageUriStr: String) {
         if (imageUriStr.isNotEmpty()) {
