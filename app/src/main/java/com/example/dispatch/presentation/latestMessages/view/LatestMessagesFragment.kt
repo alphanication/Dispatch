@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentLatestMessagesBinding
 import com.example.dispatch.domain.models.Response
+import com.example.dispatch.domain.models.UserDetails
 import com.example.dispatch.presentation.latestMessages.LatestMessagesContract
 import com.example.dispatch.presentation.latestMessages.viewmodel.LatestMessagesViewModel
 import com.squareup.picasso.Picasso
@@ -51,8 +52,11 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
     override fun userDetailsObserver() {
         viewModel.userDetails.observe(viewLifecycleOwner) { userDetails ->
             binding.textViewProfileFullname.text = userDetails.fullname
+
+            if (userDetails.photoProfileUrl.isNotEmpty()) {
             Picasso.get().load(userDetails.photoProfileUrl).transform(CropCircleTransformation())
                 .into(binding.shapeableImageViewProfileImage)
+            }
         }
     }
 
