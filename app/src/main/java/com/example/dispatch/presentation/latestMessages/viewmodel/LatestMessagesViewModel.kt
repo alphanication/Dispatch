@@ -20,7 +20,6 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class LatestMessagesViewModel @Inject constructor(
     private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase,
-    private val downloadLangRussianEnglishPackUseCase: DownloadLangRussianEnglishPackUseCase
 ) : ViewModel(), LatestMessagesContract.LatestMessagesViewModel {
 
     private val _userDetails = MutableLiveData<UserDetails>()
@@ -32,12 +31,8 @@ class LatestMessagesViewModel @Inject constructor(
     private val _loadCurrentUserDetailsSuccess = MutableLiveData<Response<Boolean>>()
     val loadCurrentUserDetailsSuccess: LiveData<Response<Boolean>> = _loadCurrentUserDetailsSuccess
 
-    private val _loadRussianEnglishPack = MutableLiveData<Response<Boolean>>()
-    val loadRussianEnglishPack: LiveData<Response<Boolean>> = _loadRussianEnglishPack
-
     init {
         getCurrentUserDetails()
-        downloadLangRussianEnglishPack()
     }
 
     override fun getCurrentUserDetails() {
@@ -53,18 +48,6 @@ class LatestMessagesViewModel @Inject constructor(
                         _progressBarLoadUserDetails.postValue(false)
                         this@LatestMessagesViewModel._userDetails.postValue(result.data)
                     }
-                }
-            }
-        }
-    }
-
-    override fun downloadLangRussianEnglishPack() {
-        viewModelScope.launch(Dispatchers.IO) {
-            downloadLangRussianEnglishPackUseCase.execute().collect { result ->
-                when (result) {
-                    is Response.Loading -> {}
-                    is Response.Fail -> _loadRussianEnglishPack.postValue(Response.Fail(e = result.e))
-                    is Response.Success -> {}
                 }
             }
         }

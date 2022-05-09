@@ -27,11 +27,6 @@ interface LatestMessagesContract {
         fun loadCurrentUserDetailsSuccessObserver()
 
         /**
-         * Observer loadRussianEnglishPack LiveData from [LatestMessagesViewModel]
-         */
-        fun loadRussianEnglishPackObserver()
-
-        /**
          * Shows progress bar load user details
          */
         fun showProgressBarLoadUserDetails()
@@ -58,10 +53,5 @@ interface LatestMessagesContract {
          * Getting the details of the currently logged in user
          */
         fun getCurrentUserDetails()
-
-        /**
-         * Download language ru-en pack (ml kit translate)
-         */
-        fun downloadLangRussianEnglishPack()
     }
 }

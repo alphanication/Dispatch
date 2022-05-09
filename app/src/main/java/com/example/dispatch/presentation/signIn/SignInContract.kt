@@ -1,6 +1,7 @@
 package com.example.dispatch.presentation.signIn
 
 import com.example.dispatch.domain.models.UserAuth
+import com.example.dispatch.presentation.latestMessages.LatestMessagesContract.LatestMessagesViewModel
 
 interface SignInContract {
     interface SignInFragment {
@@ -30,6 +31,11 @@ interface SignInContract {
          * Observer signInSuccess LiveData from [SignInViewModel]
          */
         fun signInSuccessObserver()
+
+        /**
+         * Observer loadRussianEnglishPack LiveData from [LatestMessagesViewModel]
+         */
+        fun loadRussianEnglishPackObserver()
 
         /**
          * Show toast Toast.LENGTH_LONG type
@@ -74,5 +80,10 @@ interface SignInContract {
          * Checking if the user is already logged in
          */
         fun checkUserAuthSignedIn()
+
+        /**
+         * Download language ru-en pack (ml kit translate)
+         */
+        fun downloadLangRussianEnglishPack()
     }
 }

@@ -38,6 +38,7 @@ class SignInFragment : Fragment(), SignInContract.SignInFragment {
         setOnClickListeners()
         progressBarSignInObserver()
         signInSuccessObserver()
+        loadRussianEnglishPackObserver()
     }
 
     override fun setOnClickListeners() {
@@ -78,6 +79,16 @@ class SignInFragment : Fragment(), SignInContract.SignInFragment {
                 is Response.Loading -> {}
                 is Response.Fail -> showToastLengthLong("Sign in fail: ${result.e}")
                 is Response.Success -> navigateToLatestMessagesFragment()
+            }
+        }
+    }
+
+    override fun loadRussianEnglishPackObserver() {
+        viewModel.loadRussianEnglishPack.observe(viewLifecycleOwner) { result ->
+            when(result) {
+                is Response.Loading -> {}
+                is Response.Fail -> showToastLengthLong(text = "Load RU-EN pack false: ${result.e}")
+                is Response.Success -> {}
             }
         }
     }
