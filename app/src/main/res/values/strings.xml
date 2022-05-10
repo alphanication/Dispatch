@@ -35,4 +35,5 @@
     <string name="fragmentCurrentUserProfile_change_password">CHANGE PASSWORD</string>
     <string name="fragmentListUsers_select_user">SELECT USER</string>
     <string name="fragmentDetailsMessages_type_message">Type a message</string>
+    <string name="detailsMessagesMenu_clear_history">Clear history</string>
 </resources>

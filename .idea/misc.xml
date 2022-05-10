@@ -29,6 +29,8 @@
         <entry key="app/src/main/res/layout/item_container_sender_message.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_container_user.xml" value="0.22" />
         <entry key="app/src/main/res/menu/bottom_menu.xml" value="0.21979166666666666" />
+        <entry key="app/src/main/res/menu/details_messages_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/menu_details_messages.xml" value="0.1" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.159" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.159" />
       </map>
