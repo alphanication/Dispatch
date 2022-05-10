@@ -4,10 +4,7 @@ import com.example.dispatch.data.storage.MessageStorage
 import com.example.dispatch.domain.models.FromToUser
 import com.example.dispatch.domain.models.Message
 import com.example.dispatch.domain.models.Response
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -46,6 +43,17 @@ class FirebaseMessageStorage : MessageStorage {
 
         val refMessages =
             fDatabase.getReference("/user-messages/${fromToUser.fromUserUid}/${fromToUser.toUserUid}")
+
+        // checks does the data exist in the link
+        refMessages.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.exists()) trySend(Response.Fail(e = Exception("!exists")))
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
 
         refMessages.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
