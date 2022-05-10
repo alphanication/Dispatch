@@ -51,7 +51,7 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun providesUserImagesRepository(userImagesStorage: UserImagesStorage) : UserImagesRepository {
+    fun providesUserImagesRepository(userImagesStorage: UserImagesStorage): UserImagesRepository {
         return UserImagesRepositoryImpl(userImagesStorage = userImagesStorage)
     }
 
@@ -63,19 +63,19 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun providesTranslateRepository(translateStorage: TranslateStorage) : TranslateRepository {
+    fun providesTranslateRepository(translateStorage: TranslateStorage): TranslateRepository {
         return TranslateRepositoryImpl(translateStorage = translateStorage)
     }
 
     @Provides
     @Singleton
-    fun providesMessageStorage() : MessageStorage {
+    fun providesMessageStorage(): MessageStorage {
         return FirebaseMessageStorage()
     }
 
     @Provides
     @Singleton
-    fun providesMessageRepository(messageStorage: MessageStorage) : MessageRepository {
+    fun providesMessageRepository(messageStorage: MessageStorage): MessageRepository {
         return MessageRepositoryImpl(messageStorage = messageStorage)
     }
 }

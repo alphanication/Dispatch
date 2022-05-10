@@ -85,7 +85,7 @@ class SignInFragment : Fragment(), SignInContract.SignInFragment {
 
     override fun loadRussianEnglishPackObserver() {
         viewModel.loadRussianEnglishPack.observe(viewLifecycleOwner) { result ->
-            when(result) {
+            when (result) {
                 is Response.Loading -> {}
                 is Response.Fail -> showToastLengthLong(text = "Load RU-EN pack false: ${result.e}")
                 is Response.Success -> {}

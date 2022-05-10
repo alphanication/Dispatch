@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class GetUserDetailsPublicOnUidUseCase(private val userDetailsRepository: UserDetailsRepository) {
-    suspend fun execute(uid: String) : Flow<Response<UserDetailsPublic>> {
+    suspend fun execute(uid: String): Flow<Response<UserDetailsPublic>> {
         return userDetailsRepository.getUserDetailsPublicOnUid(uid = uid)
     }
 }

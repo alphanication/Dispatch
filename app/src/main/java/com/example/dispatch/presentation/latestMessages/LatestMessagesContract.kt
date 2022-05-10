@@ -1,9 +1,5 @@
 package com.example.dispatch.presentation.latestMessages
 
-import androidx.lifecycle.LiveData
-import com.example.dispatch.domain.models.Response
-import com.example.dispatch.domain.models.UserDetails
-
 interface LatestMessagesContract {
     interface LatestMessagesFragment {
         /**

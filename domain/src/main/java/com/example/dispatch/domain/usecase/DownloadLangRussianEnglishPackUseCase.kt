@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class DownloadLangRussianEnglishPackUseCase(private val translateRepository: TranslateRepository) {
-    suspend fun execute() : Flow<Response<Boolean>> {
+    suspend fun execute(): Flow<Response<Boolean>> {
         return translateRepository.downloadLangRussianEnglishPack()
     }
 }
