@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
 import com.example.dispatch.domain.constants.LanguageCodeConstants
 import com.example.dispatch.domain.models.FromToUser
@@ -55,6 +57,10 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
 
         binding.imageViewBack.setOnClickListener {
             navigateToPopBackStack()
+        }
+
+        binding.imageViewMoreDetails.setOnClickListener {
+            popupMenuMoreDetails(view = it)
         }
     }
 
@@ -196,5 +202,20 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     override fun showToastLengthLong(text: String) {
         Toast.makeText(activity, text, Toast.LENGTH_LONG)
             .show()
+    }
+
+    override fun popupMenuMoreDetails(view: View) {
+        val popupMenu = PopupMenu(activity, view)
+        popupMenu.inflate(R.menu.details_messages_menu)
+        popupMenu.show()
+
+        popupMenu.setOnMenuItemClickListener { item ->
+            when(item.itemId) {
+                R.id.clear_history -> {
+                    showToastLengthLong("click plus")
+                    true
+                } else -> false
+            }
+        }
     }
 }
