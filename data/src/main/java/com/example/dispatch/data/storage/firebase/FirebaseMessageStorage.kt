@@ -77,4 +77,19 @@ class FirebaseMessageStorage : MessageStorage {
 
         awaitClose { this.cancel() }
     }
+
+    override suspend fun deleteDialogBothUsers(fromToUser: FromToUser): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
+        val refMessages =
+            fDatabase.getReference("/user-messages/${fromToUser.fromUserUid}/${fromToUser.toUserUid}")
+        refMessages.removeValue()
+            .addOnSuccessListener {
+                trySend(Response.Success(data = true))
+            }.addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
+
+        awaitClose { this.cancel() }
+    }
 }

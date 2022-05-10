@@ -9,4 +9,6 @@ interface MessageStorage {
     suspend fun save(message: Message): Flow<Response<Boolean>>
 
     suspend fun listenFromToUserMessages(fromToUser: FromToUser): Flow<Response<Message>>
+
+    suspend fun deleteDialogBothUsers(fromToUser: FromToUser) : Flow<Response<Boolean>>
 }
