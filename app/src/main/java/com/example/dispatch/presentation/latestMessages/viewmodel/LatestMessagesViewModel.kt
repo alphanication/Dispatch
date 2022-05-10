@@ -1,13 +1,11 @@
 package com.example.dispatch.presentation.latestMessages.viewmodel
 
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetails
-import com.example.dispatch.domain.usecase.DownloadLangRussianEnglishPackUseCase
 import com.example.dispatch.domain.usecase.GetCurrentUserDetailsUseCase
 import com.example.dispatch.presentation.latestMessages.LatestMessagesContract
 import dagger.hilt.android.lifecycle.HiltViewModel

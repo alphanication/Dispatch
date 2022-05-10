@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 interface MessageRepository {
-    suspend fun save(message: Message) : Flow<Response<Boolean>>
+    suspend fun save(message: Message): Flow<Response<Boolean>>
 
-    suspend fun listenFromToUserMessages(fromToUser: FromToUser) : Flow<Response<Message>>
+    suspend fun listenFromToUserMessages(fromToUser: FromToUser): Flow<Response<Message>>
 }

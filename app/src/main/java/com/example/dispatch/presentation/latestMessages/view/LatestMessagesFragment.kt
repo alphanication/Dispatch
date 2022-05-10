@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentLatestMessagesBinding
 import com.example.dispatch.domain.models.Response
-import com.example.dispatch.domain.models.UserDetails
 import com.example.dispatch.presentation.latestMessages.LatestMessagesContract
 import com.example.dispatch.presentation.latestMessages.viewmodel.LatestMessagesViewModel
 import com.squareup.picasso.Picasso
@@ -54,8 +53,8 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
             binding.textViewProfileFullname.text = userDetails.fullname
 
             if (userDetails.photoProfileUrl.isNotEmpty()) {
-            Picasso.get().load(userDetails.photoProfileUrl).transform(CropCircleTransformation())
-                .into(binding.shapeableImageViewProfileImage)
+                Picasso.get().load(userDetails.photoProfileUrl).transform(CropCircleTransformation())
+                    .into(binding.shapeableImageViewProfileImage)
             }
         }
     }
@@ -69,7 +68,7 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
 
     override fun loadCurrentUserDetailsSuccessObserver() {
         viewModel.loadCurrentUserDetailsSuccess.observe(viewLifecycleOwner) { result ->
-            when(result) {
+            when (result) {
                 is Response.Loading -> {}
                 is Response.Fail -> showToastLengthLong(text = "Load current user details false: ${result.e}")
                 is Response.Success -> {}

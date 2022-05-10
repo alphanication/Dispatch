@@ -1,7 +1,5 @@
 package com.example.dispatch.presentation.listUsers
 
-import androidx.lifecycle.LiveData
-import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetailsPublic
 
 interface ListUsersContract {

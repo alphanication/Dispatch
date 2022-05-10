@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class ListenFromToUserMessagesUseCase(private val messageRepository: MessageRepository) {
-    suspend fun execute(fromToUser: FromToUser) : Flow<Response<Message>> {
+    suspend fun execute(fromToUser: FromToUser): Flow<Response<Message>> {
         return messageRepository.listenFromToUserMessages(fromToUser = fromToUser)
     }
 }

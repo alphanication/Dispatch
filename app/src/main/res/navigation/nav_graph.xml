@@ -24,7 +24,7 @@
         android:id="@+id/signUpFragment"
         android:name="com.example.dispatch.presentation.signUp.view.SignUpFragment"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up"/>
+        tools:layout="@layout/fragment_sign_up" />
     <fragment
         android:id="@+id/restorePasswordFragment"
         android:name="com.example.dispatch.presentation.restorePassword.view.RestorePasswordFragment"
@@ -57,7 +57,7 @@
         android:id="@+id/listUsersFragment"
         android:name="com.example.dispatch.presentation.listUsers.view.ListUsersFragment"
         android:label="fragment_list_users"
-        tools:layout="@layout/fragment_list_users" >
+        tools:layout="@layout/fragment_list_users">
         <action
             android:id="@+id/action_listUsersFragment_to_detailsMessagesFragment"
             app:popUpTo="@id/latestMessagesFragment"
@@ -68,7 +68,7 @@
         android:id="@+id/splashScreenFragment"
         android:name="com.example.dispatch.presentation.splash.SplashScreenFragment"
         android:label="fragment_splash_screen"
-        tools:layout="@layout/fragment_splash_screen" >
+        tools:layout="@layout/fragment_splash_screen">
         <action
             android:id="@+id/action_splashScreenFragment_to_signInFragment"
             app:popUpTo="@id/nav_graph"

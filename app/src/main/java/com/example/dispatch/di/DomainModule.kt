@@ -123,27 +123,27 @@ class DomainModule {
     }
 
     @Provides
-    fun providesTranslateEnglishRussianTextUseCase(translateRepository: TranslateRepository) : TranslateEnglishRussianTextUseCase {
+    fun providesTranslateEnglishRussianTextUseCase(translateRepository: TranslateRepository): TranslateEnglishRussianTextUseCase {
         return TranslateEnglishRussianTextUseCase(translateRepository = translateRepository)
     }
 
     @Provides
-    fun providesTranslateRussianEnglishTextUseCase(translateRepository: TranslateRepository) : TranslateRussianEnglishTextUseCase {
+    fun providesTranslateRussianEnglishTextUseCase(translateRepository: TranslateRepository): TranslateRussianEnglishTextUseCase {
         return TranslateRussianEnglishTextUseCase(translateRepository = translateRepository)
     }
 
     @Provides
-    fun providesSaveMessageUseCase(messageRepository: MessageRepository) : SaveMessageUseCase {
+    fun providesSaveMessageUseCase(messageRepository: MessageRepository): SaveMessageUseCase {
         return SaveMessageUseCase(messageRepository = messageRepository)
     }
 
     @Provides
-    fun providesListenFromToUserMessages(messageRepository: MessageRepository) : ListenFromToUserMessagesUseCase {
+    fun providesListenFromToUserMessages(messageRepository: MessageRepository): ListenFromToUserMessagesUseCase {
         return ListenFromToUserMessagesUseCase(messageRepository = messageRepository)
     }
 
     @Provides
-    fun providesLanguageIdentifierUseCase(translateRepository: TranslateRepository) : LanguageIdentifierUseCase {
+    fun providesLanguageIdentifierUseCase(translateRepository: TranslateRepository): LanguageIdentifierUseCase {
         return LanguageIdentifierUseCase(translateRepository = translateRepository)
     }
 }

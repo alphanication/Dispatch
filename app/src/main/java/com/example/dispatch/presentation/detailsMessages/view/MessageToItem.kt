@@ -3,7 +3,6 @@ package com.example.dispatch.presentation.detailsMessages.view
 import android.view.View
 import com.example.dispatch.R
 import com.example.dispatch.databinding.ItemContainerRecipientMessageBinding
-import com.example.dispatch.databinding.ItemContainerSenderMessageBinding
 import com.example.dispatch.domain.models.Message
 import com.xwray.groupie.viewbinding.BindableItem
 import java.sql.Date

@@ -59,7 +59,8 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     }
 
     override fun getCompanionUidFromListUsersFragment() {
-        viewModel._companionUid.value = requireArguments().getString(ListUsersFragment.SELECTED_USER_UID).toString()
+        viewModel._companionUid.value =
+            requireArguments().getString(ListUsersFragment.SELECTED_USER_UID).toString()
     }
 
     override fun companionUidObserver() {
@@ -126,10 +127,10 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         viewModel.languageIdentifier(text = text).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Success -> when (result.data) {
-                        LanguageCodeConstants.RU -> translateRussianEnglishTextObserver(text = text)
-                        LanguageCodeConstants.EN -> translateEnglishRussianTextObserver(text = text)
-                        else -> showToastLengthLong(text = "The text must be in English or Russian.")
-                    }
+                    LanguageCodeConstants.RU -> translateRussianEnglishTextObserver(text = text)
+                    LanguageCodeConstants.EN -> translateEnglishRussianTextObserver(text = text)
+                    else -> showToastLengthLong(text = "The text must be in English or Russian.")
+                }
                 is Response.Fail -> showToastLengthLong(text = "Language identifier false :(")
             }
         }
