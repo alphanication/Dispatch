@@ -210,12 +210,17 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         popupMenu.show()
 
         popupMenu.setOnMenuItemClickListener { item ->
-            when(item.itemId) {
-                R.id.clear_history -> {
-                    showToastLengthLong("click plus")
+            when (item.itemId) {
+                R.id.delete_messages -> {
+                    showAlertDialogDeleteMessages()
                     true
-                } else -> false
+                }
+                else -> false
             }
         }
+    }
+
+    override fun showAlertDialogDeleteMessages() {
+        DeleteMessagesDialog().show(childFragmentManager, "DeleteMessagesFragment")
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/clear_history"
-        android:title="@string/detailsMessagesMenu_clear_history" />
+        android:id="@+id/delete_messages"
+        android:title="@string/detailsMessagesMenu_delete_messages" />
 </menu>

@@ -103,6 +103,8 @@ interface DetailsMessagesContract {
          * Sets popupMenu to moreDetails view
          */
         fun popupMenuMoreDetails(view: View)
+
+        fun showAlertDialogDeleteMessages()
     }
 
     interface DetailsMessagesViewModel {
