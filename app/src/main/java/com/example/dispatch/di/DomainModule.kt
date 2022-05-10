@@ -146,4 +146,9 @@ class DomainModule {
     fun providesLanguageIdentifierUseCase(translateRepository: TranslateRepository): LanguageIdentifierUseCase {
         return LanguageIdentifierUseCase(translateRepository = translateRepository)
     }
+
+    @Provides
+    fun providesDeleteDialogBothUsersUseCase(messageRepository: MessageRepository): DeleteDialogBothUsersUseCase {
+        return DeleteDialogBothUsersUseCase(messageRepository = messageRepository)
+    }
 }
