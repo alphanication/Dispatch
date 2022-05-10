@@ -1,5 +1,6 @@
 package com.example.dispatch.presentation.detailsMessages
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import com.example.dispatch.domain.models.FromToUser
 import com.example.dispatch.domain.models.Message
@@ -97,6 +98,11 @@ interface DetailsMessagesContract {
          * @param text - text, shown in toast
          */
         fun showToastLengthLong(text: String)
+
+        /**
+         * Sets popupMenu to moreDetails view
+         */
+        fun popupMenuMoreDetails(view: View)
     }
 
     interface DetailsMessagesViewModel {
