@@ -104,6 +104,9 @@ interface DetailsMessagesContract {
          */
         fun popupMenuMoreDetails(view: View)
 
+        /**
+         * Shows alert dialog delete messages
+         */
         fun showAlertDialogDeleteMessages()
     }
 
@@ -153,5 +156,18 @@ interface DetailsMessagesContract {
          * @return each [Message] from a dialogue between users
          */
         fun listenFromToUserMessages(fromToUser: FromToUser): LiveData<Response<Message>>
+
+        /**
+         * Deleting the dialog for both users
+         * @param fromToUser - [FromToUser] model
+         */
+        fun deleteDialogBothUsers(fromToUser: FromToUser)
+    }
+
+    interface DeleteMessagesDialogClickListener {
+        /**
+         * Alert Dialog delete messages, onPositiveButton click
+         */
+        fun onClickPositive()
     }
 }

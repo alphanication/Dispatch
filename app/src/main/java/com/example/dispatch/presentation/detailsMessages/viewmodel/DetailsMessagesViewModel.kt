@@ -22,7 +22,8 @@ class DetailsMessagesViewModel @Inject constructor(
     private val languageIdentifierUseCase: LanguageIdentifierUseCase,
     private val getCurrentUserUidUseCase: GetCurrentUserUidUseCase,
     private val saveMessageUseCase: SaveMessageUseCase,
-    private val listenFromToUserMessagesUseCase: ListenFromToUserMessagesUseCase
+    private val listenFromToUserMessagesUseCase: ListenFromToUserMessagesUseCase,
+    private val deleteDialogBothUsersUseCase: DeleteDialogBothUsersUseCase
 ) : ViewModel(), DetailsMessagesContract.DetailsMessagesViewModel {
 
     val _companionUid = MutableLiveData<String>()
@@ -31,7 +32,7 @@ class DetailsMessagesViewModel @Inject constructor(
     val _companionDetails = MutableLiveData<UserDetailsPublic>()
     val companionDetails: LiveData<UserDetailsPublic> = _companionDetails
 
-    val _currUserUid = MutableLiveData<String>()
+    private val _currUserUid = MutableLiveData<String>()
     val currUserUid: LiveData<String> = _currUserUid
 
     init {
@@ -75,6 +76,8 @@ class DetailsMessagesViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getCurrentUserUidUseCase.execute().collect { result ->
                 when (result) {
+                    is Response.Loading -> {}
+                    is Response.Fail -> {}
                     is Response.Success -> this@DetailsMessagesViewModel._currUserUid.postValue(result.data)
                 }
             }
@@ -92,6 +95,12 @@ class DetailsMessagesViewModel @Inject constructor(
             listenFromToUserMessagesUseCase.execute(fromToUser = fromToUser).collect { emit(it) }
         } catch (e: Exception) {
             emit(Response.Fail(e = e))
+        }
+    }
+
+    override fun deleteDialogBothUsers(fromToUser: FromToUser) {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteDialogBothUsersUseCase.execute(fromToUser = fromToUser).collect { }
         }
     }
 }

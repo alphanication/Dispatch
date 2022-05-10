@@ -1,6 +1,7 @@
 package com.example.dispatch.presentation.detailsMessages.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessagesFragment {
+class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessagesFragment,
+    DetailsMessagesContract.DeleteMessagesDialogClickListener {
+
     private lateinit var binding: FragmentDetailsMessagesBinding
     private val viewModel: DetailsMessagesViewModel by viewModels()
     private val adapter = GroupAdapter<GroupieViewHolder>()
@@ -155,10 +158,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         viewModel.listenFromToUserMessages(fromToUser = fromToUser).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Loading -> showProgressBarLoadMessages()
-                is Response.Fail -> {
-                    showToastLengthLong(text = "Listen user messages false :( ")
-                    hideProgressBarLoadMessages()
-                }
+                is Response.Fail -> hideProgressBarLoadMessages()
                 is Response.Success -> {
                     hideProgressBarLoadMessages()
 
@@ -221,6 +221,15 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     }
 
     override fun showAlertDialogDeleteMessages() {
-        DeleteMessagesDialog().show(childFragmentManager, "DeleteMessagesFragment")
+        DeleteMessagesDialog(dialogClickListener = this).show(childFragmentManager, "DeleteMessagesFragment")
+    }
+
+    override fun onClickPositive() {
+        val fromToUser = FromToUser(
+            fromUserUid = viewModel.currUserUid.value.toString(),
+            toUserUid = viewModel.companionUid.value.toString()
+        )
+        viewModel.deleteDialogBothUsers(fromToUser = fromToUser)
+        adapter.clear()
     }
 }
