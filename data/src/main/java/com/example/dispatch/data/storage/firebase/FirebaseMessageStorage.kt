@@ -42,11 +42,11 @@ class FirebaseMessageStorage : MessageStorage {
         trySend(Response.Loading())
 
         val latestMessageFromRef = FirebaseDatabase.getInstance()
-                .getReference("/latest-messages/${message.fromUserUid}/${message.toUserUid}")
+            .getReference("/latest-messages/${message.fromUserUid}/${message.toUserUid}")
         latestMessageFromRef.setValue(message)
 
         val latestMessageToRef = FirebaseDatabase.getInstance()
-                .getReference("/latest-messages/${message.toUserUid}/${message.fromUserUid}")
+            .getReference("/latest-messages/${message.toUserUid}/${message.fromUserUid}")
         latestMessageToRef.setValue(message).addOnSuccessListener {
             trySend(Response.Success(data = true))
         }.addOnFailureListener { e ->
@@ -118,4 +118,23 @@ class FirebaseMessageStorage : MessageStorage {
 
         awaitClose { this.cancel() }
     }
+
+    override suspend fun deleteLatestMessageBothUsers(fromToUser: FromToUser): Flow<Response<Boolean>> =
+        callbackFlow {
+            trySend(Response.Loading())
+
+            val latestMessageFromRef = FirebaseDatabase.getInstance()
+                .getReference("/latest-messages/${fromToUser.fromUserUid}/${fromToUser.toUserUid}")
+            latestMessageFromRef.removeValue()
+
+            val latestMessageToRef = FirebaseDatabase.getInstance()
+                .getReference("/latest-messages/${fromToUser.toUserUid}/${fromToUser.fromUserUid}")
+            latestMessageToRef.removeValue().addOnSuccessListener {
+                trySend(Response.Success(data = true))
+            }.addOnFailureListener { e ->
+                trySend(Response.Fail(e = e))
+            }
+
+            awaitClose { this.cancel() }
+        }
 }

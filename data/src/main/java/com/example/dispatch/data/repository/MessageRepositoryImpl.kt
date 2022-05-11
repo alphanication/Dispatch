@@ -25,4 +25,8 @@ class MessageRepositoryImpl(private val messageStorage: MessageStorage) : Messag
     override suspend fun deleteDialogBothUsers(fromToUser: FromToUser): Flow<Response<Boolean>> {
         return messageStorage.deleteDialogBothUsers(fromToUser = fromToUser)
     }
+
+    override suspend fun deleteLatestMessageBothUsers(fromToUser: FromToUser): Flow<Response<Boolean>> {
+        return messageStorage.deleteLatestMessageBothUsers(fromToUser = fromToUser)
+    }
 }
