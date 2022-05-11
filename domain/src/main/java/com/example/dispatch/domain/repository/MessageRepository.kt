@@ -15,4 +15,6 @@ interface MessageRepository {
     suspend fun listenFromToUserMessages(fromToUser: FromToUser): Flow<Response<Message>>
 
     suspend fun deleteDialogBothUsers(fromToUser: FromToUser): Flow<Response<Boolean>>
+
+    suspend fun deleteLatestMessageBothUsers(fromToUser: FromToUser) : Flow<Response<Boolean>>
 }
