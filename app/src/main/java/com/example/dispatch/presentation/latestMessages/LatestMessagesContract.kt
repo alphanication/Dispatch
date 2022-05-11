@@ -49,5 +49,11 @@ interface LatestMessagesContract {
          * Getting the details of the currently logged in user
          */
         fun getCurrentUserDetails()
+
+        /**
+         * Get ArrayList all latest messages current user
+         * @param currentUserUid - [String] uid current user
+         */
+        fun getLatestMessages(currentUserUid: String)
     }
 }
