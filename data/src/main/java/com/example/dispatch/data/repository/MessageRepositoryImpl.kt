@@ -14,6 +14,10 @@ class MessageRepositoryImpl(private val messageStorage: MessageStorage) : Messag
         return messageStorage.save(message = message)
     }
 
+    override suspend fun saveLatestMessage(message: Message): Flow<Response<Boolean>> {
+        return messageStorage.saveLatestMessage(message = message)
+    }
+
     override suspend fun listenFromToUserMessages(fromToUser: FromToUser): Flow<Response<Message>> {
         return messageStorage.listenFromToUserMessages(fromToUser = fromToUser)
     }
