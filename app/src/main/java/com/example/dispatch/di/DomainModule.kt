@@ -151,4 +151,9 @@ class DomainModule {
     fun providesDeleteDialogBothUsersUseCase(messageRepository: MessageRepository): DeleteDialogBothUsersUseCase {
         return DeleteDialogBothUsersUseCase(messageRepository = messageRepository)
     }
+
+    @Provides
+    fun providesSaveLatestMessageUseCase(messageRepository: MessageRepository) : SaveLatestMessageUseCase {
+        return SaveLatestMessageUseCase(messageRepository = messageRepository)
+    }
 }
