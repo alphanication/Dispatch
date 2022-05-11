@@ -23,7 +23,8 @@ class DetailsMessagesViewModel @Inject constructor(
     private val getCurrentUserUidUseCase: GetCurrentUserUidUseCase,
     private val saveMessageUseCase: SaveMessageUseCase,
     private val listenFromToUserMessagesUseCase: ListenFromToUserMessagesUseCase,
-    private val deleteDialogBothUsersUseCase: DeleteDialogBothUsersUseCase
+    private val deleteDialogBothUsersUseCase: DeleteDialogBothUsersUseCase,
+    private val saveLatestMessageUseCase: SaveLatestMessageUseCase
 ) : ViewModel(), DetailsMessagesContract.DetailsMessagesViewModel {
 
     val _companionUid = MutableLiveData<String>()
@@ -48,7 +49,7 @@ class DetailsMessagesViewModel @Inject constructor(
             }
         }
 
-    override fun translateRussianEnglishText(text: String): LiveData<Response<String>> = liveData {
+    override fun translateRussianEnglishText(text: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
         try {
             translateRussianEnglishTextUseCase.execute(text = text).collect { emit(it) }
         } catch (e: Exception) {
@@ -56,7 +57,7 @@ class DetailsMessagesViewModel @Inject constructor(
         }
     }
 
-    override fun translateEnglishRussianText(text: String): LiveData<Response<String>> = liveData {
+    override fun translateEnglishRussianText(text: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
         try {
             translateEnglishRussianTextUseCase.execute(text = text).collect { emit(it) }
         } catch (e: Exception) {
@@ -64,7 +65,7 @@ class DetailsMessagesViewModel @Inject constructor(
         }
     }
 
-    override fun languageIdentifier(text: String): LiveData<Response<String>> = liveData {
+    override fun languageIdentifier(text: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
         try {
             languageIdentifierUseCase.execute(text = text).collect { emit(it) }
         } catch (e: Exception) {
@@ -84,19 +85,28 @@ class DetailsMessagesViewModel @Inject constructor(
         }
     }
 
-    override fun saveMessage(message: Message) {
-        viewModelScope.launch {
-            saveMessageUseCase.execute(message = message).collect { }
-        }
-    }
-
-    override fun listenFromToUserMessages(fromToUser: FromToUser): LiveData<Response<Message>> = liveData {
+    override fun saveMessage(message: Message): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         try {
-            listenFromToUserMessagesUseCase.execute(fromToUser = fromToUser).collect { emit(it) }
+            saveMessageUseCase.execute(message = message).collect { emit(it) }
         } catch (e: Exception) {
             emit(Response.Fail(e = e))
         }
     }
+
+    override fun saveLatestMessage(message: Message) {
+        viewModelScope.launch(Dispatchers.IO) {
+            saveLatestMessageUseCase.execute(message = message).collect {}
+        }
+    }
+
+    override fun listenFromToUserMessages(fromToUser: FromToUser): LiveData<Response<Message>> =
+        liveData(Dispatchers.IO) {
+            try {
+                listenFromToUserMessagesUseCase.execute(fromToUser = fromToUser).collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
+        }
 
     override fun deleteDialogBothUsers(fromToUser: FromToUser) {
         viewModelScope.launch(Dispatchers.IO) {

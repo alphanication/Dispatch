@@ -69,6 +69,12 @@ interface DetailsMessagesContract {
         fun listenFromToUserMessagesObserver(fromToUser: FromToUser)
 
         /**
+         * Observer LiveData-function saveMessage(message: Message) from [DetailsMessagesViewModel]
+         * @param message - [Message] model
+         */
+        fun saveMessageObserver(message: Message)
+
+        /**
          * Observer currentUserUid LiveData from [DetailsMessagesViewModel]
          */
         fun currentUserUidObserver()
@@ -148,7 +154,13 @@ interface DetailsMessagesContract {
          * Stores the message in the database
          * @param message - [Message] model
          */
-        fun saveMessage(message: Message)
+        fun saveMessage(message: Message) : LiveData<Response<Boolean>>
+
+        /**
+         * Stores latest message in the database
+         * @param message - [Message] model
+         */
+        fun saveLatestMessage(message: Message)
 
         /**
          * Listens to each message from a conversation between two users
