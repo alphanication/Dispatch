@@ -108,7 +108,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                         fromUserUid = viewModel.currUserUid.value.toString(),
                         toUserUid = viewModel.companionUid.value.toString()
                     )
-                    viewModel.saveMessage(message = message)
+                    saveMessageObserver(message = message)
                 }
             }
         }
@@ -126,7 +126,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                         fromUserUid = viewModel.currUserUid.value.toString(),
                         toUserUid = viewModel.companionUid.value.toString()
                     )
-                    viewModel.saveMessage(message = message)
+                    saveMessageObserver(message = message)
                 }
             }
         }
@@ -172,6 +172,16 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                     binding.recyclerViewMessages.adapter = adapter
                     recyclerViewScrollPositionDown()
                 }
+            }
+        }
+    }
+
+    override fun saveMessageObserver(message: Message) {
+        viewModel.saveMessage(message = message).observe(viewLifecycleOwner) { result ->
+            when(result) {
+                is Response.Loading -> {}
+                is Response.Fail -> {}
+                is Response.Success -> viewModel.saveLatestMessage(message = message)
             }
         }
     }
