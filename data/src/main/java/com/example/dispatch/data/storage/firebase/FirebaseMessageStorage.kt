@@ -38,6 +38,24 @@ class FirebaseMessageStorage : MessageStorage {
         awaitClose { this.cancel() }
     }
 
+    override suspend fun saveLatestMessage(message: Message): Flow<Response<Boolean>> = callbackFlow {
+        trySend(Response.Loading())
+
+        val latestMessageFromRef = FirebaseDatabase.getInstance()
+                .getReference("/latest-messages/${message.fromUserUid}/${message.toUserUid}")
+        latestMessageFromRef.setValue(message)
+
+        val latestMessageToRef = FirebaseDatabase.getInstance()
+                .getReference("/latest-messages/${message.toUserUid}/${message.fromUserUid}")
+        latestMessageToRef.setValue(message).addOnSuccessListener {
+            trySend(Response.Success(data = true))
+        }.addOnFailureListener { e ->
+            trySend(Response.Fail(e = e))
+        }
+
+        awaitClose { this.cancel() }
+    }
+
     override suspend fun listenFromToUserMessages(fromToUser: FromToUser): Flow<Response<Message>> = callbackFlow {
         trySend(Response.Loading())
 
@@ -45,7 +63,7 @@ class FirebaseMessageStorage : MessageStorage {
             fDatabase.getReference("/user-messages/${fromToUser.fromUserUid}/${fromToUser.toUserUid}")
 
         // checks does the data exist in the link
-        refMessages.addValueEventListener(object: ValueEventListener {
+        refMessages.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (!snapshot.exists()) trySend(Response.Fail(e = Exception("!exists")))
             }
