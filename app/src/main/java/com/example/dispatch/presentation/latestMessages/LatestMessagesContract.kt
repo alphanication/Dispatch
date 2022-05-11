@@ -1,5 +1,9 @@
 package com.example.dispatch.presentation.latestMessages
 
+import com.example.dispatch.domain.models.Message
+import com.example.dispatch.domain.models.UserDetailsPublic
+import kotlinx.coroutines.flow.Flow
+
 interface LatestMessagesContract {
     interface LatestMessagesFragment {
         /**
@@ -23,6 +27,11 @@ interface LatestMessagesContract {
         fun loadCurrentUserDetailsSuccessObserver()
 
         /**
+         * Observer latestMessagesList LiveData from [LatestMessagesViewModel]
+         */
+        fun latestMessagesListObserver()
+
+        /**
          * Shows progress bar load user details
          */
         fun showProgressBarLoadUserDetails()
@@ -42,6 +51,13 @@ interface LatestMessagesContract {
          * Navigate to ListUsersFragment
          */
         fun navigateToListUsersFragment()
+
+        /**
+         * Add user item into adapter, update adapter
+         * @param message - [Message] model
+         * @param user - [UserDetailsPublic] model
+         */
+        fun adapterAddLatestMessage(message: Message, user: UserDetailsPublic)
     }
 
     interface LatestMessagesViewModel {
@@ -55,5 +71,11 @@ interface LatestMessagesContract {
          * @param currentUserUid - [String] uid current user
          */
         fun getLatestMessages(currentUserUid: String)
+
+        /**
+         * Get user details by his uid
+         * @param uid - [String] uid user
+         */
+        fun getUserDetailsPublicOnUid(uid: String): Flow<UserDetailsPublic>
     }
 }

@@ -7,12 +7,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.dispatch.domain.models.Message
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetails
+import com.example.dispatch.domain.models.UserDetailsPublic
 import com.example.dispatch.domain.usecase.GetCurrentUserDetailsUseCase
 import com.example.dispatch.domain.usecase.GetLatestMessagesUseCase
+import com.example.dispatch.domain.usecase.GetUserDetailsPublicOnUidUseCase
 import com.example.dispatch.presentation.latestMessages.LatestMessagesContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +24,8 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class LatestMessagesViewModel @Inject constructor(
     private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase,
-    private val getLatestMessagesUseCase: GetLatestMessagesUseCase
+    private val getLatestMessagesUseCase: GetLatestMessagesUseCase,
+    private val getUserDetailsPublicOnUidUseCase: GetUserDetailsPublicOnUidUseCase
 ) : ViewModel(), LatestMessagesContract.LatestMessagesViewModel {
 
     private val _userDetails = MutableLiveData(UserDetails())
@@ -62,10 +67,18 @@ class LatestMessagesViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getLatestMessagesUseCase.execute(fromUserUid = currentUserUid).collect { result ->
                 when (result) {
-                    is Response.Loading -> {}
-                    is Response.Fail -> {}
                     is Response.Success -> this@LatestMessagesViewModel._latestMessagesList.postValue(result.data)
+                    else -> {}
                 }
+            }
+        }
+    }
+
+    override fun getUserDetailsPublicOnUid(uid: String): Flow<UserDetailsPublic> = flow {
+        getUserDetailsPublicOnUidUseCase.execute(uid = uid).collect { result ->
+            when(result) {
+                is Response.Success -> emit(result.data)
+                else -> {}
             }
         }
     }
