@@ -1,23 +1,30 @@
 package com.example.dispatch.presentation.latestMessages.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentLatestMessagesBinding
+import com.example.dispatch.databinding.ItemContainerLatestMessageBinding
+import com.example.dispatch.domain.models.Message
 import com.example.dispatch.domain.models.Response
+import com.example.dispatch.domain.models.UserDetailsPublic
 import com.example.dispatch.presentation.latestMessages.LatestMessagesContract
 import com.example.dispatch.presentation.latestMessages.viewmodel.LatestMessagesViewModel
 import com.squareup.picasso.Picasso
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.viewbinding.GroupieViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -25,6 +32,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessagesFragment {
     private lateinit var binding: FragmentLatestMessagesBinding
     private val viewModel: LatestMessagesViewModel by viewModels()
+    private val adapter = GroupAdapter<GroupieViewHolder<ItemContainerLatestMessageBinding>>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +49,7 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
         progressBarLoadUserDetailsObserver()
         loadCurrentUserDetailsSuccessObserver()
         userDetailsObserver()
+        latestMessagesListObserver()
     }
 
     override fun setOnClickListeners() {
@@ -77,6 +86,19 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
         }
     }
 
+    override fun latestMessagesListObserver() {
+        viewModel.latestMessagesList.observe(viewLifecycleOwner) { listMessages ->
+            listMessages.forEach { message ->
+                val toUserUid = message.toUserUid
+                lifecycleScope.launch {
+                    viewModel.getUserDetailsPublicOnUid(uid = toUserUid).collect { user ->
+                        adapterAddLatestMessage(message = message, user = user)
+                    }
+                }
+            }
+        }
+    }
+
     override fun showProgressBarLoadUserDetails() {
         binding.textViewProfileFullname.visibility = View.INVISIBLE
         binding.progressBarUserDetailsLoad.visibility = View.VISIBLE
@@ -94,5 +116,10 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
 
     override fun navigateToListUsersFragment() {
         findNavController().navigate(R.id.action_latestMessagesFragment_to_listUsersFragment)
+    }
+
+    override fun adapterAddLatestMessage(message: Message, user: UserDetailsPublic) {
+        adapter.add(LatestMessage(message = message, companionUser = user))
+        binding.recyclerViewLatestMessages.adapter = adapter
     }
 }
