@@ -174,6 +174,12 @@ interface DetailsMessagesContract {
          * @param fromToUser - [FromToUser] model
          */
         fun deleteDialogBothUsers(fromToUser: FromToUser)
+
+        /**
+         * Deleting latest messages for both users
+         * @param fromToUser - [FromToUser] model
+         */
+        fun deleteLatestMessageBothUsers(fromToUser: FromToUser)
     }
 
     interface DeleteMessagesDialogClickListener {

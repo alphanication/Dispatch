@@ -156,4 +156,9 @@ class DomainModule {
     fun providesSaveLatestMessageUseCase(messageRepository: MessageRepository) : SaveLatestMessageUseCase {
         return SaveLatestMessageUseCase(messageRepository = messageRepository)
     }
+
+    @Provides
+    fun providesDeleteLatestMessagesBothUsersUseCase(messageRepository: MessageRepository) : DeleteLatestMessagesBothUsersUseCase {
+        return DeleteLatestMessagesBothUsersUseCase(messageRepository = messageRepository)
+    }
 }

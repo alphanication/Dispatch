@@ -24,7 +24,8 @@ class DetailsMessagesViewModel @Inject constructor(
     private val saveMessageUseCase: SaveMessageUseCase,
     private val listenFromToUserMessagesUseCase: ListenFromToUserMessagesUseCase,
     private val deleteDialogBothUsersUseCase: DeleteDialogBothUsersUseCase,
-    private val saveLatestMessageUseCase: SaveLatestMessageUseCase
+    private val saveLatestMessageUseCase: SaveLatestMessageUseCase,
+    private val deleteLatestMessagesBothUsersUseCase: DeleteLatestMessagesBothUsersUseCase
 ) : ViewModel(), DetailsMessagesContract.DetailsMessagesViewModel {
 
     val _companionUid = MutableLiveData<String>()
@@ -110,7 +111,18 @@ class DetailsMessagesViewModel @Inject constructor(
 
     override fun deleteDialogBothUsers(fromToUser: FromToUser) {
         viewModelScope.launch(Dispatchers.IO) {
-            deleteDialogBothUsersUseCase.execute(fromToUser = fromToUser).collect { }
+            deleteDialogBothUsersUseCase.execute(fromToUser = fromToUser).collect { result ->
+                when (result) {
+                    is Response.Success -> deleteLatestMessageBothUsers(fromToUser = fromToUser)
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    override fun deleteLatestMessageBothUsers(fromToUser: FromToUser) {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteLatestMessagesBothUsersUseCase.execute(fromToUser = fromToUser).collect {}
         }
     }
 }
