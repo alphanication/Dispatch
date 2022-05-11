@@ -15,4 +15,6 @@ interface MessageStorage {
     suspend fun deleteDialogBothUsers(fromToUser: FromToUser) : Flow<Response<Boolean>>
 
     suspend fun deleteLatestMessageBothUsers(fromToUser: FromToUser) : Flow<Response<Boolean>>
+
+    suspend fun getLatestMessages(fromUserUid: String) : Flow<Response<ArrayList<Message>>>
 }

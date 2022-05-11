@@ -29,4 +29,8 @@ class MessageRepositoryImpl(private val messageStorage: MessageStorage) : Messag
     override suspend fun deleteLatestMessageBothUsers(fromToUser: FromToUser): Flow<Response<Boolean>> {
         return messageStorage.deleteLatestMessageBothUsers(fromToUser = fromToUser)
     }
+
+    override suspend fun getLatestMessages(fromUserUid: String): Flow<Response<ArrayList<Message>>> {
+        return messageStorage.getLatestMessages(fromUserUid = fromUserUid)
+    }
 }

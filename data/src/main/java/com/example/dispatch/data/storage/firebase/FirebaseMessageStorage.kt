@@ -137,4 +137,31 @@ class FirebaseMessageStorage : MessageStorage {
 
             awaitClose { this.cancel() }
         }
+
+    override suspend fun getLatestMessages(fromUserUid: String): Flow<Response<ArrayList<Message>>> =
+        callbackFlow {
+            trySend(Response.Loading())
+
+            val refLatestMessages = fDatabase.getReference("/latest-messages/$fromUserUid")
+
+            refLatestMessages.addListenerForSingleValueEvent(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val latestMessagesList = ArrayList<Message>()
+
+                    snapshot.children.forEach {
+                        val message = it.getValue(Message::class.java)
+                        if (message != null) latestMessagesList.add(message)
+                    }
+
+                    trySend(Response.Success(data = latestMessagesList))
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    trySend(Response.Fail(e = error.toException()))
+                }
+
+            })
+
+            awaitClose { this.cancel() }
+        }
 }
