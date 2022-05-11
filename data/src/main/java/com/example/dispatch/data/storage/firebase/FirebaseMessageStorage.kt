@@ -1,5 +1,6 @@
 package com.example.dispatch.data.storage.firebase
 
+import android.util.Log
 import com.example.dispatch.data.storage.MessageStorage
 import com.example.dispatch.domain.models.FromToUser
 import com.example.dispatch.domain.models.Message
@@ -142,7 +143,7 @@ class FirebaseMessageStorage : MessageStorage {
         callbackFlow {
             trySend(Response.Loading())
 
-            val refLatestMessages = fDatabase.getReference("/latest-messages/$fromUserUid")
+            val refLatestMessages = fDatabase.getReference("/latest-messages/$fromUserUid/")
 
             refLatestMessages.addListenerForSingleValueEvent(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -159,7 +160,6 @@ class FirebaseMessageStorage : MessageStorage {
                 override fun onCancelled(error: DatabaseError) {
                     trySend(Response.Fail(e = error.toException()))
                 }
-
             })
 
             awaitClose { this.cancel() }
