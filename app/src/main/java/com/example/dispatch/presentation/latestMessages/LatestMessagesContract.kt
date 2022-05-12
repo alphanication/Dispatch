@@ -32,6 +32,16 @@ interface LatestMessagesContract {
         fun latestMessagesListObserver()
 
         /**
+         * Observer progressBarLoadLatestMessagesList LiveData from [LatestMessagesViewModel]
+         */
+        fun progressBarLoadLatestMessagesListObserver()
+
+        /**
+         * Observer loadLatestMessagesList LiveData from [LatestMessagesViewModel]
+         */
+        fun loadLatestMessagesListObserver()
+
+        /**
          * Shows progress bar load user details
          */
         fun showProgressBarLoadUserDetails()
@@ -40,6 +50,16 @@ interface LatestMessagesContract {
          * Hides progress bar load user details
          */
         fun hideProgressBarLoadUserDetails()
+
+        /**
+         * Shows progress bar load latest messages
+         */
+        fun showProgressBarLoadLatestMessages()
+
+        /**
+         * Hides progress bar load latest messages
+         */
+        fun hideProgressBarLoadLatestMessages()
 
         /**
          * Show toast Toast.LENGTH_LONG type
@@ -58,6 +78,13 @@ interface LatestMessagesContract {
          * @param user - [UserDetailsPublic] model
          */
         fun adapterAddLatestMessage(message: Message, user: UserDetailsPublic)
+
+        /**
+         * Navigate to DetailsMessagesFragment, passing the uid of the user selected
+         * in the adapter to the fragment
+         * @param selectedUserUid - selected user (uid) from adapter
+         */
+        fun navigateToDetailsMessagesFragmentTransferSelectedUser(selectedUserUid: String)
     }
 
     interface LatestMessagesViewModel {
@@ -77,5 +104,10 @@ interface LatestMessagesContract {
          * @param uid - [String] uid user
          */
         fun getUserDetailsPublicOnUid(uid: String): Flow<UserDetailsPublic>
+
+        /**
+         * Clear latestMessagesList LiveData from [LatestMessagesViewModel]
+         */
+        fun latestMessagesListClear()
     }
 }

@@ -15,6 +15,7 @@ import com.example.dispatch.databinding.ItemContainerLatestMessageBinding
 import com.example.dispatch.domain.models.Message
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetailsPublic
+import com.example.dispatch.presentation.detailsMessages.view.DetailsMessagesFragment
 import com.example.dispatch.presentation.latestMessages.LatestMessagesContract
 import com.example.dispatch.presentation.latestMessages.viewmodel.LatestMessagesViewModel
 import com.squareup.picasso.Picasso
@@ -22,7 +23,6 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.viewbinding.GroupieViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessagesFragment {
+
     private lateinit var binding: FragmentLatestMessagesBinding
     private val viewModel: LatestMessagesViewModel by viewModels()
     private val adapter = GroupAdapter<GroupieViewHolder<ItemContainerLatestMessageBinding>>()
@@ -47,14 +48,32 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
 
         setOnClickListeners()
         progressBarLoadUserDetailsObserver()
+        progressBarLoadLatestMessagesListObserver()
         loadCurrentUserDetailsSuccessObserver()
+        loadLatestMessagesListObserver()
         userDetailsObserver()
         latestMessagesListObserver()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.getCurrentUserDetails()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.latestMessagesListClear()
+        adapter.clear()
     }
 
     override fun setOnClickListeners() {
         binding.imageViewAddNewCompanion.setOnClickListener {
             navigateToListUsersFragment()
+        }
+
+        adapter.setOnItemClickListener { item, _ ->
+            val latestMessageItem = item as LatestMessageItem
+            navigateToDetailsMessagesFragmentTransferSelectedUser(latestMessageItem.companionUser.uid)
         }
     }
 
@@ -79,9 +98,8 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
     override fun loadCurrentUserDetailsSuccessObserver() {
         viewModel.loadCurrentUserDetailsSuccess.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Response.Loading -> {}
                 is Response.Fail -> showToastLengthLong(text = "Load current user details false: ${result.e}")
-                is Response.Success -> {}
+                else -> {}
             }
         }
     }
@@ -99,6 +117,22 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
         }
     }
 
+    override fun progressBarLoadLatestMessagesListObserver() {
+        viewModel.progressBarLoadLatestMessagesList.observe(viewLifecycleOwner) { result ->
+            if (result) showProgressBarLoadLatestMessages()
+            else hideProgressBarLoadLatestMessages()
+        }
+    }
+
+    override fun loadLatestMessagesListObserver() {
+        viewModel.loadLatestMessagesList.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Response.Fail -> showToastLengthLong("Load latest messages list false: ${result.e}")
+                else -> {}
+            }
+        }
+    }
+
     override fun showProgressBarLoadUserDetails() {
         binding.textViewProfileFullname.visibility = View.INVISIBLE
         binding.progressBarUserDetailsLoad.visibility = View.VISIBLE
@@ -107,6 +141,14 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
     override fun hideProgressBarLoadUserDetails() {
         binding.progressBarUserDetailsLoad.visibility = View.INVISIBLE
         binding.textViewProfileFullname.visibility = View.VISIBLE
+    }
+
+    override fun showProgressBarLoadLatestMessages() {
+        binding.progressBarLatestMessagesLoad.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBarLoadLatestMessages() {
+        binding.progressBarLatestMessagesLoad.visibility = View.INVISIBLE
     }
 
     override fun showToastLengthLong(text: String) {
@@ -118,8 +160,16 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
         findNavController().navigate(R.id.action_latestMessagesFragment_to_listUsersFragment)
     }
 
+    override fun navigateToDetailsMessagesFragmentTransferSelectedUser(selectedUserUid: String) {
+        findNavController().navigate(
+            R.id.action_latestMessagesFragment_to_detailsMessagesFragment,
+            Bundle().apply {
+                putString(DetailsMessagesFragment.SELECTED_USER_UID, selectedUserUid)
+            })
+    }
+
     override fun adapterAddLatestMessage(message: Message, user: UserDetailsPublic) {
-        adapter.add(LatestMessage(message = message, companionUser = user))
+        adapter.add(LatestMessageItem(message = message, companionUser = user))
         binding.recyclerViewLatestMessages.adapter = adapter
     }
 }
