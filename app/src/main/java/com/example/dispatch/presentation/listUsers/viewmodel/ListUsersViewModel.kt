@@ -26,11 +26,7 @@ class ListUsersViewModel @Inject constructor(
     private val _progressBarListUsers = MutableLiveData<Boolean>()
     val progressBarListUsers: LiveData<Boolean> = _progressBarListUsers
 
-    init {
-        getCurrentUserListUsers()
-    }
-
-    override fun getCurrentUserListUsers() {
+    override fun getUsersList() {
         viewModelScope.launch(Dispatchers.IO) {
             getUsersListUseCase.execute().collect { result ->
                 when (result) {

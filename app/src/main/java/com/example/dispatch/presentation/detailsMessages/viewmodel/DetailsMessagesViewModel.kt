@@ -37,10 +37,6 @@ class DetailsMessagesViewModel @Inject constructor(
     private val _currUserUid = MutableLiveData<String>()
     val currUserUid: LiveData<String> = _currUserUid
 
-    init {
-        getCurrentUserUid()
-    }
-
     override fun getUserDetailsPublicOnUid(uid: String): LiveData<Response<UserDetailsPublic>> =
         liveData(Dispatchers.IO) {
             try {

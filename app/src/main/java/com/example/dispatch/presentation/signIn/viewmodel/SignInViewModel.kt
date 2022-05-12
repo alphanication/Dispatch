@@ -33,11 +33,6 @@ class SignInViewModel @Inject constructor(
     private val _loadRussianEnglishPack = MutableLiveData<Response<Boolean>>()
     val loadRussianEnglishPack: LiveData<Response<Boolean>> = _loadRussianEnglishPack
 
-    init {
-        checkUserAuthSignedIn()
-        downloadLangRussianEnglishPack()
-    }
-
     override fun signInUserAuth(userAuth: UserAuth) {
         viewModelScope.launch(Dispatchers.IO) {
             signInUserAuthUseCase.execute(userAuth = userAuth).collect { result ->

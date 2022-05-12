@@ -35,6 +35,9 @@ class SignInFragment : Fragment(), SignInContract.SignInFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.checkUserAuthSignedIn()
+        viewModel.downloadLangRussianEnglishPack()
+
         setOnClickListeners()
         progressBarSignInObserver()
         signInSuccessObserver()
