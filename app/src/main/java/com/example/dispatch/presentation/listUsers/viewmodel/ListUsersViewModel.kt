@@ -40,4 +40,8 @@ class ListUsersViewModel @Inject constructor(
             }
         }
     }
+
+    override fun usersListClear() {
+        _usersList.value?.clear()
+    }
 }
