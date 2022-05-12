@@ -53,5 +53,10 @@ interface ListUsersContract {
          * Get list users
          */
         fun getUsersList()
+
+        /**
+         * Clear usersList LiveData
+         */
+        fun usersListClear()
     }
 }
