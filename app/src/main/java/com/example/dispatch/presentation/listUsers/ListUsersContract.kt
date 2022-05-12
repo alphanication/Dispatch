@@ -52,6 +52,6 @@ interface ListUsersContract {
         /**
          * Get list users
          */
-        fun getCurrentUserListUsers()
+        fun getUsersList()
     }
 }

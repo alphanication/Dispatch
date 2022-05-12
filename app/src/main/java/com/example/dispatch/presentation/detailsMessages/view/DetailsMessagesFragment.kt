@@ -55,6 +55,11 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         currentUserUidObserver()
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.getCurrentUserUid()
+    }
+
     override fun setOnClickListeners() {
         binding.layoutSend.setOnClickListener {
             layoutSendClick()
