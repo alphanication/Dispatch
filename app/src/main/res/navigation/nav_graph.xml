@@ -63,7 +63,7 @@
         tools:layout="@layout/fragment_list_users">
         <action
             android:id="@+id/action_listUsersFragment_to_detailsMessagesFragment"
-            app:popUpTo="@id/latestMessagesFragment"
+            app:popUpTo="@id/listUsersFragment"
             app:popUpToInclusive="true"
             app:destination="@id/detailsMessagesFragment" />
     </fragment>
