@@ -49,6 +49,12 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
         viewModel.getUsersList()
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.usersListClear()
+        adapter.clear()
+    }
+
     override fun setOnClickListeners() {
         binding.imageViewBack.setOnClickListener {
             navigateToPopBackStack()
