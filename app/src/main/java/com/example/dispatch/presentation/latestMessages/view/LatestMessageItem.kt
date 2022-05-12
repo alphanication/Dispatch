@@ -9,9 +9,9 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.viewbinding.BindableItem
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 
-class LatestMessage(
-    private val message: Message,
-    private val companionUser: UserDetailsPublic
+class LatestMessageItem(
+    val message: Message,
+    val companionUser: UserDetailsPublic
 ) : BindableItem<ItemContainerLatestMessageBinding>() {
     override fun bind(viewBinding: ItemContainerLatestMessageBinding, position: Int) {
         viewBinding.latestMessage.text = message.englishMessage

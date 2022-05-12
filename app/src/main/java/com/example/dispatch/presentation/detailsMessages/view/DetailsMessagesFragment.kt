@@ -1,7 +1,6 @@
 package com.example.dispatch.presentation.detailsMessages.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,6 @@ import com.example.dispatch.domain.models.Message
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.presentation.detailsMessages.DetailsMessagesContract
 import com.example.dispatch.presentation.detailsMessages.viewmodel.DetailsMessagesViewModel
-import com.example.dispatch.presentation.listUsers.view.ListUsersFragment
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -34,6 +32,10 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     private lateinit var binding: FragmentDetailsMessagesBinding
     private val viewModel: DetailsMessagesViewModel by viewModels()
     private val adapter = GroupAdapter<GroupieViewHolder>()
+
+    companion object {
+        const val SELECTED_USER_UID = "selected_user_uid"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,8 +70,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     }
 
     override fun getCompanionUidFromListUsersFragment() {
-        viewModel._companionUid.value =
-            requireArguments().getString(ListUsersFragment.SELECTED_USER_UID).toString()
+        viewModel._companionUid.value = requireArguments().getString(SELECTED_USER_UID).toString()
     }
 
     override fun companionUidObserver() {
@@ -178,7 +179,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
 
     override fun saveMessageObserver(message: Message) {
         viewModel.saveMessage(message = message).observe(viewLifecycleOwner) { result ->
-            when(result) {
+            when (result) {
                 is Response.Loading -> {}
                 is Response.Fail -> {}
                 is Response.Success -> viewModel.saveLatestMessage(message = message)

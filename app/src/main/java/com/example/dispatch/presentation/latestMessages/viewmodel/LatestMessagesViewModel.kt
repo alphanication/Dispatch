@@ -40,9 +40,11 @@ class LatestMessagesViewModel @Inject constructor(
     private val _latestMessagesList = MutableLiveData<ArrayList<Message>>()
     val latestMessagesList: LiveData<ArrayList<Message>> = _latestMessagesList
 
-    init {
-        getCurrentUserDetails()
-    }
+    private val _progressBarLoadLatestMessagesList = MutableLiveData<Boolean>()
+    val progressBarLoadLatestMessagesList: LiveData<Boolean> = _progressBarLoadLatestMessagesList
+
+    private val _loadLatestMessagesList = MutableLiveData<Response<Boolean>>()
+    val loadLatestMessagesList: LiveData<Response<Boolean>> = _loadLatestMessagesList
 
     override fun getCurrentUserDetails() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -55,8 +57,9 @@ class LatestMessagesViewModel @Inject constructor(
                     }
                     is Response.Success -> {
                         _progressBarLoadUserDetails.postValue(false)
-                        getLatestMessages(currentUserUid = result.data.uid)
+                        _loadCurrentUserDetailsSuccess.postValue(Response.Success(data = true))
                         this@LatestMessagesViewModel._userDetails.postValue(result.data)
+                        getLatestMessages(currentUserUid = result.data.uid)
                     }
                 }
             }
@@ -67,8 +70,16 @@ class LatestMessagesViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getLatestMessagesUseCase.execute(fromUserUid = currentUserUid).collect { result ->
                 when (result) {
-                    is Response.Success -> this@LatestMessagesViewModel._latestMessagesList.postValue(result.data)
-                    else -> {}
+                    is Response.Loading -> _progressBarLoadLatestMessagesList.postValue(true)
+                    is Response.Fail -> {
+                        _progressBarLoadLatestMessagesList.postValue(false)
+                        _loadLatestMessagesList.postValue(Response.Fail(e = result.e))
+                    }
+                    is Response.Success -> {
+                        _progressBarLoadLatestMessagesList.postValue(false)
+                        _loadLatestMessagesList.postValue(Response.Success(data = true))
+                        this@LatestMessagesViewModel._latestMessagesList.postValue(result.data)
+                    }
                 }
             }
         }
@@ -76,10 +87,14 @@ class LatestMessagesViewModel @Inject constructor(
 
     override fun getUserDetailsPublicOnUid(uid: String): Flow<UserDetailsPublic> = flow {
         getUserDetailsPublicOnUidUseCase.execute(uid = uid).collect { result ->
-            when(result) {
+            when (result) {
                 is Response.Success -> emit(result.data)
                 else -> {}
             }
         }
+    }
+
+    override fun latestMessagesListClear() {
+        _latestMessagesList.value?.clear()
     }
 }

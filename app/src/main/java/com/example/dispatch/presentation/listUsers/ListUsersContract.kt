@@ -43,7 +43,7 @@ interface ListUsersContract {
         /**
          * Navigate to DetailsMessagesFragment, passing the uid of the user selected
          * in the adapter to the fragment
-         * @param userUid - selected user (uid) from adapter
+         * @param selectedUserUid - selected user (uid) from adapter
          */
         fun navigateToDetailsMessagesFragmentTransferSelectedUser(selectedUserUid: String)
     }

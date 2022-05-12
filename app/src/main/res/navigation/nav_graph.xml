@@ -52,6 +52,9 @@
         <action
             android:id="@+id/action_latestMessagesFragment_to_listUsersFragment"
             app:destination="@id/listUsersFragment" />
+        <action
+            android:id="@+id/action_latestMessagesFragment_to_detailsMessagesFragment"
+            app:destination="@id/detailsMessagesFragment" />
     </fragment>
     <fragment
         android:id="@+id/listUsersFragment"

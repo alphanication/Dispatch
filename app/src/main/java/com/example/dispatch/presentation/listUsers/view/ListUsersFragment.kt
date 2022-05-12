@@ -11,6 +11,7 @@ import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentListUsersBinding
 import com.example.dispatch.databinding.ItemContainerUserBinding
 import com.example.dispatch.domain.models.UserDetailsPublic
+import com.example.dispatch.presentation.detailsMessages.view.DetailsMessagesFragment
 import com.example.dispatch.presentation.listUsers.ListUsersContract
 import com.example.dispatch.presentation.listUsers.viewmodel.ListUsersViewModel
 import com.xwray.groupie.GroupAdapter
@@ -22,13 +23,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
+
     private lateinit var binding: FragmentListUsersBinding
     private val viewModel: ListUsersViewModel by viewModels()
     private val adapter = GroupAdapter<GroupieViewHolder<ItemContainerUserBinding>>()
-
-    companion object {
-        const val SELECTED_USER_UID = "selected_user_uid"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,7 +91,7 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
 
     override fun navigateToDetailsMessagesFragmentTransferSelectedUser(selectedUserUid: String) {
         findNavController().navigate(R.id.action_listUsersFragment_to_detailsMessagesFragment, Bundle().apply {
-            putString(SELECTED_USER_UID, selectedUserUid)
+            putString(DetailsMessagesFragment.SELECTED_USER_UID, selectedUserUid)
         })
     }
 }
