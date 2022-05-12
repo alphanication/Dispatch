@@ -57,7 +57,15 @@ interface UserDetailsRepository {
      */
     suspend fun changePassword(newPassword: String): Flow<Response<Boolean>>
 
+    /**
+     * Get all users list
+     * @return [ArrayList]-[UserDetailsPublic]
+     */
     suspend fun getUsersList(): Flow<Response<ArrayList<UserDetailsPublic>>>
 
+    /**
+     * Getting details of a specific user by uid
+     * @return [UserDetailsPublic] model
+     */
     suspend fun getUserDetailsPublicOnUid(uid: String): Flow<Response<UserDetailsPublic>>
 }
