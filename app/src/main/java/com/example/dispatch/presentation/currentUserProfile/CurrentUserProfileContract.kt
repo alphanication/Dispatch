@@ -57,13 +57,6 @@ interface CurrentUserProfileContract {
         fun changeUserDetailsFullnameObserver(newFullname: String)
 
         /**
-         * Observer LiveData-function changeUserDetailsDateBirth(newDateBirth: String)
-         * from [CurrentUserProfileViewModel]
-         * @param newDateBirth - [String] model
-         */
-        fun changeUserDetailsDateBirthObserver(newDateBirth: String)
-
-        /**
          * Observer LiveData-function changeUserAuthEmail(userAuth: UserAuth, newEmail: String)
          * from [CurrentUserProfileViewModel]
          * @param userAuth - [UserAuth] model to authenticate the user to request a password change
@@ -273,13 +266,6 @@ interface CurrentUserProfileContract {
          * @return [Boolean], displaying the result of the operation
          */
         fun changeUserDetailsFullname(newFullname: String): LiveData<Response<Boolean>>
-
-        /**
-         * Change date birth user details
-         * @param newDateBirth - [String] new date birth
-         * @return [Boolean], displaying the result of the operation
-         */
-        fun changeUserDetailsDateBirth(newDateBirth: String): LiveData<Response<Boolean>>
 
         /**
          * Save imageUriStr LiveData in [CurrentUserProfileViewModel]

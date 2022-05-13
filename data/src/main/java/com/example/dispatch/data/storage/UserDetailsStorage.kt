@@ -18,8 +18,6 @@ interface UserDetailsStorage {
 
     suspend fun changeFullname(newFullname: String): Flow<Response<Boolean>>
 
-    suspend fun changeDateBirth(newDateBirth: String): Flow<Response<Boolean>>
-
     suspend fun changeEmailAddress(newEmail: String): Flow<Response<Boolean>>
 
     suspend fun changePassword(newPassword: String): Flow<Response<Boolean>>

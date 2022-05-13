@@ -40,12 +40,6 @@ interface UserDetailsRepository {
     suspend fun changeFullname(newFullname: String): Flow<Response<Boolean>>
 
     /**
-     * Function returns [Boolean] value of attempt to change user date birth in saved [UserDetails]
-     * @param newDateBirth - new user date birth
-     */
-    suspend fun changeDateBirth(newDateBirth: String): Flow<Response<Boolean>>
-
-    /**
      * Function returns [Boolean] value of attempt to change email address in saved [UserDetails]
      * @param newEmail - new user email
      */

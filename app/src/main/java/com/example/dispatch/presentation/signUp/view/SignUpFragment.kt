@@ -126,7 +126,6 @@ class SignUpFragment : Fragment(), SignUpContract.SignUpFragment {
     override fun userDetailsEditTextInit() {
         viewModel.userDetails = UserDetails(
             fullname = binding.edittextFullname.text.toString(),
-            dateBirth = binding.edittextDateBirth.text.toString(),
             email = binding.edittextEmail.text.toString(),
             password = binding.edittextPassword.text.toString(),
             photoProfileUrl = viewModel.cropImageView.value.toString()
@@ -138,7 +137,6 @@ class SignUpFragment : Fragment(), SignUpContract.SignUpFragment {
         val email = binding.edittextEmail.text.toString()
         val password = binding.edittextPassword.text.toString()
         val confirmPassword = binding.edittextConfirmPassword.text.toString()
-        val date = binding.edittextDateBirth
 
         var valid = false
 
@@ -146,10 +144,6 @@ class SignUpFragment : Fragment(), SignUpContract.SignUpFragment {
             fullname.isEmpty() -> {
                 binding.edittextFullname.setError("Enter name!", null)
                 binding.edittextFullname.requestFocus()
-            }
-            !date.isDone -> {
-                binding.edittextDateBirth.setError("Enter correct date!", null)
-                binding.edittextDateBirth.requestFocus()
             }
             email.isEmpty() -> {
                 binding.edittextEmail.setError("Enter email address.", null)

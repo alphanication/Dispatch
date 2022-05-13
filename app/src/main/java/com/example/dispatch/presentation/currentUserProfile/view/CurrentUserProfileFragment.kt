@@ -89,7 +89,6 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
 
             binding.textviewCurrentUserName.text = userDetailsGet.fullname
             binding.edittextFullname.setText(userDetailsGet.fullname)
-            binding.edittextDateBirth.setText(userDetailsGet.dateBirth)
             binding.edittextEmail.setText(userDetailsGet.email)
 
             if (userDetailsGet.photoProfileUrl.isNotEmpty()) {
@@ -115,10 +114,6 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
             validEditTextUserDetails.fullname -> {
                 val newFullname = binding.edittextFullname.text.toString()
                 changeUserDetailsFullnameObserver(newFullname = newFullname)
-            }
-            validEditTextUserDetails.dateBirth -> {
-                val newDateBirth = binding.edittextDateBirth.text.toString()
-                changeUserDetailsDateBirthObserver(newDateBirth = newDateBirth)
             }
             validEditTextUserDetails.email -> {
                 val userAuth = UserAuth(email = userDetails.email, password = userDetails.password)
@@ -175,23 +170,6 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
                     is Response.Fail -> {
                         hideProgressBarUpdateProfile()
                         showToastLengthLong(text = "Update fullname false :(")
-                    }
-                    is Response.Success -> {
-                        hideProgressBarUpdateProfile()
-                        getCurrentUserDetailsObserver()
-                    }
-                }
-            }
-    }
-
-    override fun changeUserDetailsDateBirthObserver(newDateBirth: String) {
-        viewModel.changeUserDetailsDateBirth(newDateBirth = newDateBirth)
-            .observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is Response.Loading -> showProgressBarUpdateProfile()
-                    is Response.Fail -> {
-                        hideProgressBarUpdateProfile()
-                        showToastLengthLong(text = "Update date birth false :(")
                     }
                     is Response.Success -> {
                         hideProgressBarUpdateProfile()
@@ -360,17 +338,12 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
         val valid = ValidEditTextUserDetails()
 
         val fullnameStr = binding.edittextFullname.text.toString()
-        val dateBirth = binding.edittextDateBirth
         val emailStr = binding.edittextEmail.text.toString()
 
         when {
             fullnameStr.isEmpty() -> {
                 binding.edittextFullname.setError("Enter name!", null)
                 binding.edittextFullname.requestFocus()
-            }
-            !dateBirth.isDone -> {
-                binding.edittextDateBirth.setError("Enter correct date!", null)
-                binding.edittextDateBirth.requestFocus()
             }
             emailStr.isEmpty() -> {
                 binding.edittextEmail.setError("Enter email address.", null)
@@ -383,9 +356,6 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
             else -> {
                 if (fullnameStr != userDetails.fullname) {
                     valid.fullname = true
-                }
-                if (dateBirth.text.toString() != userDetails.dateBirth) {
-                    valid.dateBirth = true
                 }
                 if (emailStr != userDetails.email) {
                     valid.email = true

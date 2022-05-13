@@ -90,22 +90,6 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         awaitClose { this.cancel() }
     }
 
-    override suspend fun changeDateBirth(newDateBirth: String): Flow<Response<Boolean>> = callbackFlow {
-        trySend(Response.Loading())
-
-        val uidCurrentUser = fAuth.currentUser?.uid.toString()
-        val refCurrentUser = fDatabase.getReference("/users/$uidCurrentUser")
-
-        refCurrentUser.child("dateBirth").setValue(newDateBirth)
-            .addOnSuccessListener {
-                trySend(Response.Success(data = true))
-            }.addOnFailureListener { e ->
-                trySend(Response.Fail(e = e))
-            }
-
-        awaitClose { this.cancel() }
-    }
-
     override suspend fun changeImageProfileUri(newImageUriStr: String): Flow<Response<Boolean>> = callbackFlow {
         trySend(Response.Loading())
 
@@ -167,13 +151,7 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
                 snapshot.children.forEach {
                     val user = it.getValue(UserDetails::class.java)
                     if (user != null) {
-                        val userPublic = UserDetailsPublic(
-                            uid = user.uid,
-                            fullname = user.fullname,
-                            dateBirth = user.dateBirth,
-                            email = user.email,
-                            photoProfileUrl = user.photoProfileUrl
-                        )
+                        val userPublic = userDetailsToUserDetailsPublicModel(userDetails = user)
                         listUsers.add(userPublic)
                     }
                 }
@@ -197,13 +175,7 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         refUserUid.get().addOnSuccessListener { result ->
             val user: UserDetails? = result.getValue(UserDetails::class.java)
             if (user != null) {
-                val userPublic = UserDetailsPublic(
-                    uid = user.uid,
-                    fullname = user.fullname,
-                    dateBirth = user.dateBirth,
-                    email = user.email,
-                    photoProfileUrl = user.photoProfileUrl
-                )
+                val userPublic = userDetailsToUserDetailsPublicModel(userDetails = user)
                 trySend(Response.Success(data = userPublic))
             } else {
                 trySend(Response.Fail(e = Exception("user null")))
@@ -213,5 +185,14 @@ class FirebaseUserDetailsStorage : UserDetailsStorage {
         }
 
         awaitClose { this.cancel() }
+    }
+
+    private fun userDetailsToUserDetailsPublicModel(userDetails: UserDetails) : UserDetailsPublic {
+        return UserDetailsPublic(
+            uid = userDetails.uid,
+            fullname = userDetails.fullname,
+            email = userDetails.email,
+            photoProfileUrl = userDetails.photoProfileUrl
+        )
     }
 }

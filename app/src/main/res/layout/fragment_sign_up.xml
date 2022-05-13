@@ -91,35 +91,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
-            android:hint="@string/fragmentSignUp_date_birth"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp"
-            app:endIconMode="clear_text"
-            app:expandedHintEnabled="false"
-            app:hintAnimationEnabled="false"
-            app:hintEnabled="true"
-            app:startIconDrawable="@drawable/ic_calendar_month">
-
-            <com.santalu.maskara.widget.MaskEditText
-                android:id="@+id/edittext_date_birth"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/background_edittext"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="date"
-                android:textColor="@color/primary_text"
-                app:mask="xx/xx/xxxx"
-                app:maskCharacter="x"
-                app:maskStyle="completable"
-                app:textInputLayoutFocusedRectEnabled="true" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
             android:hint="@string/fragmentSignUp_email"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"

@@ -83,11 +83,6 @@ class DomainModule {
     }
 
     @Provides
-    fun providesChangeUserDetailsDateBirthUseCase(userDetailsRepository: UserDetailsRepository): ChangeUserDetailsDateBirthUseCase {
-        return ChangeUserDetailsDateBirthUseCase(userDetailsRepository = userDetailsRepository)
-    }
-
-    @Provides
     fun providesChangeUserDetailsFullnameUseCase(userDetailsRepository: UserDetailsRepository): ChangeUserDetailsFullnameUseCase {
         return ChangeUserDetailsFullnameUseCase(userDetailsRepository = userDetailsRepository)
     }
