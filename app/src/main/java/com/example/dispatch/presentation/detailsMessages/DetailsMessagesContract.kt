@@ -90,11 +90,6 @@ interface DetailsMessagesContract {
         fun hideProgressBarLoadMessages()
 
         /**
-         * Scrolls the recycler view to the last item in its position
-         */
-        fun recyclerViewScrollPositionDown()
-
-        /**
          * Navigate to pop back stack
          */
         fun navigateToPopBackStack()
@@ -114,6 +109,11 @@ interface DetailsMessagesContract {
          * Shows alert dialog delete messages
          */
         fun showAlertDialogDeleteMessages()
+
+        /**
+         * Scroll recyclerview messages adapter
+         */
+        fun recyclerViewScrollDown()
     }
 
     interface DetailsMessagesViewModel {

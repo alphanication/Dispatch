@@ -1,6 +1,7 @@
 package com.example.dispatch.presentation.detailsMessages.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
 import com.example.dispatch.domain.constants.LanguageCodeConstants
@@ -48,16 +50,14 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getCurrentUserUid()
+
         setOnClickListeners()
         getCompanionUidFromListUsersFragment()
         companionUidObserver()
         companionDetailsObserver()
         currentUserUidObserver()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.getCurrentUserUid()
+        recyclerViewScrollDown()
     }
 
     override fun setOnClickListeners() {
@@ -89,6 +89,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
             when (result) {
                 is Response.Fail -> showToastLengthLong(text = "Load user info false :( ")
                 is Response.Success -> viewModel._companionDetails.value = result.data
+                else -> {}
             }
         }
     }
@@ -116,6 +117,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                     )
                     saveMessageObserver(message = message)
                 }
+                else -> {}
             }
         }
     }
@@ -134,6 +136,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                     )
                     saveMessageObserver(message = message)
                 }
+                else -> {}
             }
         }
     }
@@ -147,6 +150,7 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                     else -> showToastLengthLong(text = "The text must be in English or Russian.")
                 }
                 is Response.Fail -> showToastLengthLong(text = "Language identifier false :(")
+                else -> {}
             }
         }
     }
@@ -176,7 +180,6 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
                     }
 
                     binding.recyclerViewMessages.adapter = adapter
-                    recyclerViewScrollPositionDown()
                 }
             }
         }
@@ -207,10 +210,6 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
         }
     }
 
-    override fun recyclerViewScrollPositionDown() {
-        binding.recyclerViewMessages.smoothScrollToPosition(adapter.itemCount - 1)
-    }
-
     override fun navigateToPopBackStack() {
         findNavController().popBackStack()
     }
@@ -238,6 +237,16 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
 
     override fun showAlertDialogDeleteMessages() {
         DeleteMessagesDialog(dialogClickListener = this).show(childFragmentManager, "DeleteMessagesFragment")
+    }
+
+    override fun recyclerViewScrollDown() {
+        binding.recyclerViewMessages.viewTreeObserver.addOnGlobalLayoutListener {
+            val heightDiff: Int =
+                binding.recyclerViewMessages.rootView.height - binding.recyclerViewMessages.height
+            if (heightDiff > 100) {
+                if (adapter.itemCount > 0) binding.recyclerViewMessages.smoothScrollToPosition(adapter.itemCount - 1)
+            }
+        }
     }
 
     override fun onClickPositive() {
