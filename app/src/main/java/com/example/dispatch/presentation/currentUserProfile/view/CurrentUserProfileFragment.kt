@@ -66,10 +66,6 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
             signOutUserAuthObserver()
         }
 
-        binding.imageviewDeleteCurrentUser.setOnClickListener {
-            deleteUserImageProfileObserver()
-        }
-
         binding.shapeableimagePhotoUser.setOnClickListener {
             cropImageActivityStart()
         }
@@ -84,7 +80,7 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
     }
 
     override fun userDetailsGetObserver() {
-        viewModel.userDetailsGet.observe(viewLifecycleOwner) { userDetailsGet ->
+        viewModel.userDetails.observe(viewLifecycleOwner) { userDetailsGet ->
             userDetails = userDetailsGet
 
             binding.textviewCurrentUserName.text = userDetailsGet.fullname
@@ -156,6 +152,7 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
                     is Response.Success -> {
                         hideProgressBarChangePassword()
                         getCurrentUserDetailsObserver()
+                        showToastLengthLong(text = "Change password success!")
                         binding.edittextPassword.text = null
                     }
                 }
@@ -199,12 +196,8 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
         viewModel.changeUserDetailsEmail(newEmail = newEmail)
             .observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is Response.Loading -> {
-                        showProgressBarUpdateProfile()
-                    }
-                    is Response.Fail -> {
-                        hideProgressBarUpdateProfile()
-                    }
+                    is Response.Loading -> showProgressBarUpdateProfile()
+                    is Response.Fail -> hideProgressBarUpdateProfile()
                     is Response.Success -> {
                         hideProgressBarUpdateProfile()
                         getCurrentUserDetailsObserver()
@@ -246,54 +239,16 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
             }
     }
 
-    override fun deleteCurrentUserAuthObserver() {
-        viewModel.deleteCurrentUserAuth().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Response.Loading -> showProgressBarDeleteUser()
-                is Response.Fail -> {
-                    hideProgressBarDeleteUser()
-                    showToastLengthLong(text = "Delete user false :(")
-                }
-                is Response.Success -> {
-                    signOutUserAuthObserver()
-                    showToastLengthLong(text = "Delete user success!")
-                }
-            }
-        }
-    }
-
     override fun signOutUserAuthObserver() {
         viewModel.signOutUserAuth().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Response.Loading -> {}
                 is Response.Fail -> {
-                    hideProgressBarDeleteUser()
                     showToastLengthLong(text = "User sign out error :( ")
                 }
                 is Response.Success -> {
-                    hideProgressBarDeleteUser()
                     navigateToSignInFragment()
                 }
-            }
-        }
-    }
-
-    override fun deleteCurrentUserDetailsObserver() {
-        viewModel.deleteCurrentUserDetails().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Response.Loading -> showProgressBarDeleteUser()
-                is Response.Fail -> deleteCurrentUserAuthObserver()
-                is Response.Success -> deleteCurrentUserAuthObserver()
-            }
-        }
-    }
-
-    override fun deleteUserImageProfileObserver() {
-        viewModel.deleteUserImageProfile().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Response.Loading -> showProgressBarDeleteUser()
-                is Response.Fail -> deleteCurrentUserDetailsObserver()
-                is Response.Success -> deleteCurrentUserDetailsObserver()
             }
         }
     }
@@ -308,7 +263,7 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
                 }
                 is Response.Success -> {
                     hideProgressBarLoadInfoUser()
-                    viewModel._userDetailsGet.value = result.data
+                    viewModel._userDetails.value = result.data
                 }
             }
         }
@@ -400,16 +355,6 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
     override fun hideProgressBarLoadInfoUser() {
         binding.progressbarUserInfoLoad.visibility = View.INVISIBLE
         binding.textviewCurrentUserName.visibility = View.VISIBLE
-    }
-
-    override fun showProgressBarDeleteUser() {
-        binding.imageviewDeleteCurrentUser.visibility = View.INVISIBLE
-        binding.progressbarUserDelete.visibility = View.VISIBLE
-    }
-
-    override fun hideProgressBarDeleteUser() {
-        binding.progressbarUserDelete.visibility = View.INVISIBLE
-        binding.imageviewDeleteCurrentUser.visibility = View.VISIBLE
     }
 
     override fun showProgressBarChangePassword() {

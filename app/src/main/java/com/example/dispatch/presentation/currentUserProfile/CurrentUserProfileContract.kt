@@ -86,28 +86,10 @@ interface CurrentUserProfileContract {
         fun changeUserPhotoProfileUrlObserver(imageUriStr: String)
 
         /**
-         * Observer LiveData-function deleteCurrentUserAuth() from
-         * [CurrentUserProfileViewModel]
-         */
-        fun deleteCurrentUserAuthObserver()
-
-        /**
          * Observer LiveData-function signOutUserAuth() from
          * [CurrentUserProfileViewModel]
          */
         fun signOutUserAuthObserver()
-
-        /**
-         * Observer LiveData-function deleteCurrentUserDetails() from
-         * [CurrentUserProfileViewModel]
-         */
-        fun deleteCurrentUserDetailsObserver()
-
-        /**
-         * Observer LiveData-function deleteUserImageProfile() from
-         * [CurrentUserProfileViewModel]
-         */
-        fun deleteUserImageProfileObserver()
 
         /**
          * Observer LiveData-function getCurrentUserDetails() from
@@ -160,16 +142,6 @@ interface CurrentUserProfileContract {
         fun hideProgressBarLoadInfoUser()
 
         /**
-         * Shows progress bar delete user
-         */
-        fun showProgressBarDeleteUser()
-
-        /**
-         * Shows progress bar delete user
-         */
-        fun hideProgressBarDeleteUser()
-
-        /**
          * Shows progress bar change password
          */
         fun showProgressBarChangePassword()
@@ -191,24 +163,6 @@ interface CurrentUserProfileContract {
          * @return [Boolean], displaying the result of the operation
          */
         fun signOutUserAuth(): LiveData<Response<Boolean>>
-
-        /**
-         * Delete user image profile (user details)
-         * @return [Boolean], displaying the result of the operation
-         */
-        fun deleteUserImageProfile(): LiveData<Response<Boolean>>
-
-        /**
-         * Delete current user auth
-         * @return [Boolean], displaying the result of the operation
-         */
-        fun deleteCurrentUserAuth(): LiveData<Response<Boolean>>
-
-        /**
-         * Delete current user details
-         * @return [Boolean], displaying the result of the operation
-         */
-        fun deleteCurrentUserDetails(): LiveData<Response<Boolean>>
 
         /**
          * Gets the details of the current user
