@@ -48,6 +48,7 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
         super.onStart()
         viewModel.usersListClear()
         adapter.clear()
+        viewModel.getCurrentUserUid()
         viewModel.getUsersList()
     }
 
@@ -67,7 +68,9 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
     override fun usersListObserver() {
         viewModel.usersList.observe(viewLifecycleOwner) { usersList ->
             usersList.forEach { userDetailsPublic ->
-                adapterAddItemUser(userDetailsPublic = userDetailsPublic)
+                if (userDetailsPublic.uid != viewModel.currentUserUid.value) {
+                    adapterAddItemUser(userDetailsPublic = userDetailsPublic)
+                }
             }
         }
     }
