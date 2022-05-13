@@ -29,7 +29,6 @@ class CurrentUserProfileViewModel @Inject constructor(
     private val changeUserDetailsEmailUseCase: ChangeUserDetailsEmailUseCase,
     private val changeUserDetailsPasswordUseCase: ChangeUserDetailsPasswordUseCase,
     private val changeUserDetailsFullnameUseCase: ChangeUserDetailsFullnameUseCase,
-    private val changeUserDetailsDateBirthUseCase: ChangeUserDetailsDateBirthUseCase
 ) : ViewModel(), CurrentUserProfileContract.CurrentUserProfileViewModel {
 
     private val _cropImageView = MutableLiveData("")
@@ -138,16 +137,6 @@ class CurrentUserProfileViewModel @Inject constructor(
         liveData(Dispatchers.IO) {
             try {
                 changeUserDetailsFullnameUseCase.execute(newFullname = newFullname).collect { emit(it) }
-            } catch (e: Exception) {
-                emit(Response.Fail(e = e))
-            }
-        }
-
-    override fun changeUserDetailsDateBirth(newDateBirth: String): LiveData<Response<Boolean>> =
-        liveData(Dispatchers.IO) {
-            try {
-                changeUserDetailsDateBirthUseCase.execute(newDateBirth = newDateBirth)
-                    .collect { emit(it) }
             } catch (e: Exception) {
                 emit(Response.Fail(e = e))
             }

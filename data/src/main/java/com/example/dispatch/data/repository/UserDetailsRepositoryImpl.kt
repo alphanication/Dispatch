@@ -27,10 +27,6 @@ class UserDetailsRepositoryImpl(private val userDetailsStorage: UserDetailsStora
         return userDetailsStorage.changeFullname(newFullname = newFullname)
     }
 
-    override suspend fun changeDateBirth(newDateBirth: String): Flow<Response<Boolean>> {
-        return userDetailsStorage.changeDateBirth(newDateBirth = newDateBirth)
-    }
-
     override suspend fun changeImageProfileUri(newImageUriStr: String): Flow<Response<Boolean>> {
         return userDetailsStorage.changeImageProfileUri(newImageUriStr = newImageUriStr)
     }
