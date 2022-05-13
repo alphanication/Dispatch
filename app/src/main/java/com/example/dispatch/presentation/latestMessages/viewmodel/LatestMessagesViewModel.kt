@@ -9,6 +9,7 @@ import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserDetails
 import com.example.dispatch.domain.models.UserDetailsPublic
 import com.example.dispatch.domain.usecase.GetCurrentUserDetailsUseCase
+import com.example.dispatch.domain.usecase.GetCurrentUserUidUseCase
 import com.example.dispatch.domain.usecase.GetLatestMessagesUseCase
 import com.example.dispatch.domain.usecase.GetUserDetailsPublicOnUidUseCase
 import com.example.dispatch.presentation.latestMessages.LatestMessagesContract
@@ -25,7 +26,8 @@ import javax.inject.Inject
 class LatestMessagesViewModel @Inject constructor(
     private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase,
     private val getLatestMessagesUseCase: GetLatestMessagesUseCase,
-    private val getUserDetailsPublicOnUidUseCase: GetUserDetailsPublicOnUidUseCase
+    private val getUserDetailsPublicOnUidUseCase: GetUserDetailsPublicOnUidUseCase,
+    private val getCurrentUserUidUseCase: GetCurrentUserUidUseCase
 ) : ViewModel(), LatestMessagesContract.LatestMessagesViewModel {
 
     private val _userDetails = MutableLiveData(UserDetails())
@@ -45,6 +47,9 @@ class LatestMessagesViewModel @Inject constructor(
 
     private val _loadLatestMessagesList = MutableLiveData<Response<Boolean>>()
     val loadLatestMessagesList: LiveData<Response<Boolean>> = _loadLatestMessagesList
+
+    private val _currentUserUid = MutableLiveData<String>()
+    val currentUserUid: LiveData<String> = _currentUserUid
 
     override fun getCurrentUserDetails() {
         viewModelScope.launch(Dispatchers.IO) {

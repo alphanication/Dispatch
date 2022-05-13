@@ -103,10 +103,15 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
     override fun latestMessagesListObserver() {
         viewModel.latestMessagesList.observe(viewLifecycleOwner) { listMessages ->
             listMessages.forEach { message ->
-                val toUserUid = message.toUserUid
                 lifecycleScope.launch {
-                    viewModel.getUserDetailsPublicOnUid(uid = toUserUid).collect { user ->
-                        adapterAddLatestMessage(message = message, user = user)
+                    if (message.fromUserUid == viewModel.userDetails.value?.uid) {
+                        viewModel.getUserDetailsPublicOnUid(uid = message.toUserUid).collect { user ->
+                            adapterAddLatestMessage(message = message, user = user)
+                        }
+                    } else {
+                        viewModel.getUserDetailsPublicOnUid(uid = message.fromUserUid).collect { user ->
+                            adapterAddLatestMessage(message = message, user = user)
+                        }
                     }
                 }
             }
