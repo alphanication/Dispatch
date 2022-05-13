@@ -77,11 +77,6 @@ interface SignInContract {
         fun signInUserAuth(userAuth: UserAuth)
 
         /**
-         * Checking if the user is already logged in
-         */
-        fun checkUserAuthSignedIn()
-
-        /**
          * Download language ru-en pack (ml kit translate)
          */
         fun downloadLangRussianEnglishPack()

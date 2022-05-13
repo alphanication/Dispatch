@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dispatch.domain.models.Response
 import com.example.dispatch.domain.models.UserAuth
-import com.example.dispatch.domain.usecase.CheckUserAuthSignedInUseCase
 import com.example.dispatch.domain.usecase.DownloadLangRussianEnglishPackUseCase
 import com.example.dispatch.domain.usecase.SignInUserAuthUseCase
 import com.example.dispatch.presentation.signIn.SignInContract
@@ -20,7 +19,6 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class SignInViewModel @Inject constructor(
     private val signInUserAuthUseCase: SignInUserAuthUseCase,
-    private val checkUserAuthSignedInUseCase: CheckUserAuthSignedInUseCase,
     private val downloadLangRussianEnglishPackUseCase: DownloadLangRussianEnglishPackUseCase
 ) : ViewModel(), SignInContract.SignInViewModel {
 
@@ -46,18 +44,6 @@ class SignInViewModel @Inject constructor(
                         _progressBarSignIn.postValue(false)
                         _signInSuccess.postValue(Response.Success(data = true))
                     }
-                }
-            }
-        }
-    }
-
-    override fun checkUserAuthSignedIn() {
-        viewModelScope.launch(Dispatchers.IO) {
-            checkUserAuthSignedInUseCase.execute().collect { result ->
-                when (result) {
-                    is Response.Loading -> {}
-                    is Response.Fail -> {}
-                    is Response.Success -> _signInSuccess.postValue(Response.Success(data = true))
                 }
             }
         }

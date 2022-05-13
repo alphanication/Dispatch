@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/primary"
-    tools:context=".presentation.splash.SplashScreenFragment">
+    tools:context=".presentation.splash.view.SplashScreenFragment">
 
     <ImageView
         android:layout_height="@dimen/_100sdp"

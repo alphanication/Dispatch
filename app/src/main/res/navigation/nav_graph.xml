@@ -47,9 +47,6 @@
         android:label="fragment_latest_messages"
         tools:layout="@layout/fragment_latest_messages">
         <action
-            android:id="@+id/action_latestMessagesFragment_to_currentUserProfileFragment"
-            app:destination="@id/currentUserProfileFragment" />
-        <action
             android:id="@+id/action_latestMessagesFragment_to_listUsersFragment"
             app:destination="@id/listUsersFragment" />
         <action
@@ -69,7 +66,7 @@
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
-        android:name="com.example.dispatch.presentation.splash.SplashScreenFragment"
+        android:name="com.example.dispatch.presentation.splash.view.SplashScreenFragment"
         android:label="fragment_splash_screen"
         tools:layout="@layout/fragment_splash_screen">
         <action
@@ -77,6 +74,9 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true"
             app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_latestMessagesFragment"
+            app:destination="@id/latestMessagesFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailsMessagesFragment"
