@@ -46,13 +46,9 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
 
     override fun onStart() {
         super.onStart()
-        viewModel.getUsersList()
-    }
-
-    override fun onStop() {
-        super.onStop()
         viewModel.usersListClear()
         adapter.clear()
+        viewModel.getUsersList()
     }
 
     override fun setOnClickListeners() {

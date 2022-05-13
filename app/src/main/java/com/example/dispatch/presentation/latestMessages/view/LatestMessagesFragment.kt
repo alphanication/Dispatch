@@ -57,13 +57,9 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
 
     override fun onStart() {
         super.onStart()
-        viewModel.getCurrentUserDetails()
-    }
-
-    override fun onStop() {
-        super.onStop()
         viewModel.latestMessagesListClear()
         adapter.clear()
+        viewModel.getCurrentUserDetails()
     }
 
     override fun setOnClickListeners() {
