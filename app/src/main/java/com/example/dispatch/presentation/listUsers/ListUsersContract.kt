@@ -55,6 +55,11 @@ interface ListUsersContract {
         fun getUsersList()
 
         /**
+         * Get current user uid
+         */
+        fun getCurrentUserUid()
+
+        /**
          * Clear usersList LiveData
          */
         fun usersListClear()
