@@ -107,7 +107,10 @@ class SignUpFragment : Fragment(), SignUpContract.SignUpFragment {
             when (result) {
                 is Response.Loading -> {}
                 is Response.Fail -> showToastLengthLong(text = "User register false: ${result.e}")
-                is Response.Success -> navigateToPopBackStack()
+                is Response.Success -> {
+                    showToastLengthLong(text = "Sign up success! Authorize!")
+                    navigateToPopBackStack()
+                }
             }
         }
     }
