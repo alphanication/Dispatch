@@ -18,9 +18,6 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class CurrentUserProfileViewModel @Inject constructor(
     private val signOutUserAuthUseCase: SignOutUserAuthUseCase,
-    private val deleteUserImageProfileUseCase: DeleteUserImageProfileUseCase,
-    private val deleteCurrentUserAuthUseCase: DeleteCurrentUserAuthUseCase,
-    private val deleteCurrentUserDetailsUseCase: DeleteCurrentUserDetailsUseCase,
     private val getCurrentUserDetailsUseCase: GetCurrentUserDetailsUseCase,
     private val saveUserImageProfileUseCase: SaveUserImageProfileUseCase,
     private val changeUserDetailsPhotoProfileUrlUseCase: ChangeUserDetailsPhotoProfileUrlUseCase,
@@ -34,36 +31,12 @@ class CurrentUserProfileViewModel @Inject constructor(
     private val _cropImageView = MutableLiveData("")
     val cropImageView: LiveData<String> = _cropImageView
 
-    val _userDetailsGet = MutableLiveData<UserDetails>()
-    val userDetailsGet: LiveData<UserDetails> = _userDetailsGet
+    val _userDetails = MutableLiveData<UserDetails>()
+    val userDetails: LiveData<UserDetails> = _userDetails
 
     override fun signOutUserAuth(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
         try {
             signOutUserAuthUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
-        }
-    }
-
-    override fun deleteUserImageProfile(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            deleteUserImageProfileUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
-        }
-    }
-
-    override fun deleteCurrentUserAuth(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            deleteCurrentUserAuthUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
-        }
-    }
-
-    override fun deleteCurrentUserDetails(): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            deleteCurrentUserDetailsUseCase.execute().collect { emit(it) }
         } catch (e: Exception) {
             emit(Response.Fail(e = e))
         }
