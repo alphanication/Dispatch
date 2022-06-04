@@ -31,16 +31,16 @@ At https://youtube.com/playlist?list=PLHp7NVeHwucb-5u-yGrOEEU5x39rkwq2j , you ca
 ## Used tech
 
 * [Kotlin](https://kotlinlang.org/)
+* [Kotlin flows](https://developer.android.com/kotlin/flow)
 * [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) - Clean architecture in Android.
 * [MVVM](https://developer.android.com/jetpack/docs/guide) - Architectural pattern.
+* [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android) - Standard library to incorporate Dagger dependency injection into an Android application.
 * [Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) - Asynchronous programming.
 * [View Binding](https://developer.android.com/topic/libraries/data-binding/) - Declaratively bind observable data to UI elements.
-* [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) - Store UI-related data that isn't destroyed on app rotations. Easily schedule asynchronous tasks.
 * [Lifecycles](https://developer.android.com/topic/libraries/architecture/lifecycle) - Create a UI that automatically responds to lifecycle events.
 * [LiveData](https://developer.android.com/topic/libraries/architecture/livedata) - Build data objects that notify views when the underlying database changes.
 * [Navigation](https://developer.android.com/guide/navigation/) - Handle everything needed for in-app navigation.
 * [Firebase](https://firebase.google.com/docs) - Tools to develop high-quality apps.
-* [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android) - Standard library to incorporate Dagger dependency injection into an Android application.
 * [SDP](https://github.com/intuit/sdp) - Scalable size unit.
 * [SSP](https://github.com/intuit/sdp) - Scalable size unit for text.
 * [Android Image Cropper](https://github.com/ArthurHub/Android-Image-Cropper) - Powerful (Zoom, Rotation, Multi-Source), customizable (Shape, Limits, Style), optimized (Async, Sampling, Matrix) and simple image cropping library for Android.
