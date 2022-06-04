@@ -24,9 +24,10 @@ Firebase Authentication needs to allow user registration by email.
   <img width="400" height="800" src=github_images/example7.png>
 </p>
 
-## Youtube video playlist application demonstrations
 
-At https://youtube.com/playlist?list=PLHp7NVeHwucb-5u-yGrOEEU5x39rkwq2j , you can go to a youtube video playlist of short demo videos of the application.
+## Demonstration application on youtube video
+
+You can see the application in action on youtube video hosting at the link: https://youtu.be/KlT0G5GxQU4 .
 
 ## Used tech
 
