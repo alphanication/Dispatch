@@ -154,7 +154,7 @@ interface DetailsMessagesContract {
          * Stores the message in the database
          * @param message - [Message] model
          */
-        fun saveMessage(message: Message) : LiveData<Response<Boolean>>
+        fun saveMessage(message: Message): LiveData<Response<Boolean>>
 
         /**
          * Stores latest message in the database

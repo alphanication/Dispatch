@@ -16,9 +16,9 @@
         android:layout_marginStart="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_16sdp"
-        android:scaleType="centerCrop"
-        android:backgroundTint="@color/background_shapeableimageview"
         android:background="@drawable/ic_account_circle"
+        android:backgroundTint="@color/background_shapeableimageview"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/circleShapeableImageView" />
@@ -31,9 +31,9 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_16sdp"
         android:background="@drawable/ic_two_user_circle"
+        android:backgroundTint="@color/background_shapeableimageview"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:backgroundTint="@color/background_shapeableimageview" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:layout_width="0dp"

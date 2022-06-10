@@ -41,12 +41,12 @@ interface MessageRepository {
      * @param fromToUser - [FromToUser]
      * @return [Boolean] value result operation
      */
-    suspend fun deleteLatestMessageBothUsers(fromToUser: FromToUser) : Flow<Response<Boolean>>
+    suspend fun deleteLatestMessageBothUsers(fromToUser: FromToUser): Flow<Response<Boolean>>
 
     /**
      * Gets latest messages between users
      * @param fromUserUid - [String] user uid
      * @return [ArrayList]-[Message] all the latest messages of the user
      */
-    suspend fun getLatestMessages(fromUserUid: String) : Flow<Response<ArrayList<Message>>>
+    suspend fun getLatestMessages(fromUserUid: String): Flow<Response<ArrayList<Message>>>
 }

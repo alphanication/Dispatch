@@ -205,7 +205,10 @@ interface CurrentUserProfileContract {
          * @param newPassword - [String] new password
          * @return [Boolean], displaying the result of the operation
          */
-        fun changeUserAuthPassword(userAuth: UserAuth, newPassword: String): LiveData<Response<Boolean>>
+        fun changeUserAuthPassword(
+            userAuth: UserAuth,
+            newPassword: String
+        ): LiveData<Response<Boolean>>
 
         /**
          * Change password user details

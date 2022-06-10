@@ -7,7 +7,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
-class UserImagesRepositoryImpl(private val userImagesStorage: UserImagesStorage) : UserImagesRepository {
+class UserImagesRepositoryImpl(private val userImagesStorage: UserImagesStorage) :
+    UserImagesRepository {
     override suspend fun saveImageProfile(newImageUriStr: String): Flow<Response<String>> {
         return userImagesStorage.saveImageProfile(newImageUriStr = newImageUriStr)
     }

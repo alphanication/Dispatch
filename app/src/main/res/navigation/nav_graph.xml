@@ -37,9 +37,9 @@
         tools:layout="@layout/fragment_current_user_profile">
         <action
             android:id="@+id/action_currentUserProfileFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
             app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true"
-            app:destination="@id/signInFragment" />
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/latestMessagesFragment"
@@ -60,9 +60,9 @@
         tools:layout="@layout/fragment_list_users">
         <action
             android:id="@+id/action_listUsersFragment_to_detailsMessagesFragment"
+            app:destination="@id/detailsMessagesFragment"
             app:popUpTo="@id/listUsersFragment"
-            app:popUpToInclusive="true"
-            app:destination="@id/detailsMessagesFragment" />
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
@@ -71,9 +71,9 @@
         tools:layout="@layout/fragment_splash_screen">
         <action
             android:id="@+id/action_splashScreenFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
             app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true"
-            app:destination="@id/signInFragment" />
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_splashScreenFragment_to_latestMessagesFragment"
             app:destination="@id/latestMessagesFragment" />

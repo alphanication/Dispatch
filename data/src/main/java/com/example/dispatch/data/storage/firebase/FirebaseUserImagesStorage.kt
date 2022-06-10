@@ -18,26 +18,27 @@ class FirebaseUserImagesStorage : UserImagesStorage {
         private val fStorage = FirebaseStorage.getInstance()
     }
 
-    override suspend fun saveImageProfile(newImageUriStr: String): Flow<Response<String>> = callbackFlow {
-        trySend(Response.Loading())
+    override suspend fun saveImageProfile(newImageUriStr: String): Flow<Response<String>> =
+        callbackFlow {
+            trySend(Response.Loading())
 
-        val uidCurrentUser = fAuth.currentUser?.uid.toString()
-        val refImage = fStorage.getReference("/$uidCurrentUser/profile.jpg")
-        val imageProfileUri: Uri = Uri.parse(newImageUriStr)
+            val uidCurrentUser = fAuth.currentUser?.uid.toString()
+            val refImage = fStorage.getReference("/$uidCurrentUser/profile.jpg")
+            val imageProfileUri: Uri = Uri.parse(newImageUriStr)
 
-        refImage.putFile(imageProfileUri).addOnCompleteListener {
-            refImage.downloadUrl.addOnSuccessListener { uri ->
-                val uriStr = uri.toString()
-                trySend(Response.Success(data = uriStr))
+            refImage.putFile(imageProfileUri).addOnCompleteListener {
+                refImage.downloadUrl.addOnSuccessListener { uri ->
+                    val uriStr = uri.toString()
+                    trySend(Response.Success(data = uriStr))
+                }.addOnFailureListener { e ->
+                    trySend(Response.Fail(e = e))
+                }
             }.addOnFailureListener { e ->
                 trySend(Response.Fail(e = e))
             }
-        }.addOnFailureListener { e ->
-            trySend(Response.Fail(e = e))
-        }
 
-        awaitClose { this.cancel() }
-    }
+            awaitClose { this.cancel() }
+        }
 
     override suspend fun deleteImageProfile(): Flow<Response<Boolean>> = callbackFlow {
         trySend(Response.Loading())

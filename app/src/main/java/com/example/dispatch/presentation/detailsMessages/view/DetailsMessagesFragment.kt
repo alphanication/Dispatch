@@ -1,7 +1,6 @@
 package com.example.dispatch.presentation.detailsMessages.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.example.dispatch.R
 import com.example.dispatch.databinding.FragmentDetailsMessagesBinding
 import com.example.dispatch.domain.constants.LanguageCodeConstants
@@ -165,24 +163,25 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     }
 
     override fun listenFromToUserMessagesObserver(fromToUser: FromToUser) {
-        viewModel.listenFromToUserMessages(fromToUser = fromToUser).observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Response.Loading -> showProgressBarLoadMessages()
-                is Response.Fail -> hideProgressBarLoadMessages()
-                is Response.Success -> {
-                    hideProgressBarLoadMessages()
+        viewModel.listenFromToUserMessages(fromToUser = fromToUser)
+            .observe(viewLifecycleOwner) { result ->
+                when (result) {
+                    is Response.Loading -> showProgressBarLoadMessages()
+                    is Response.Fail -> hideProgressBarLoadMessages()
+                    is Response.Success -> {
+                        hideProgressBarLoadMessages()
 
-                    val message = result.data
-                    if (message.fromUserUid == viewModel.currUserUid.value) {
-                        adapter.add(MessageFromItem(message = message))
-                    } else {
-                        adapter.add(MessageToItem(message = message))
+                        val message = result.data
+                        if (message.fromUserUid == viewModel.currUserUid.value) {
+                            adapter.add(MessageFromItem(message = message))
+                        } else {
+                            adapter.add(MessageToItem(message = message))
+                        }
+
+                        binding.recyclerViewMessages.adapter = adapter
                     }
-
-                    binding.recyclerViewMessages.adapter = adapter
                 }
             }
-        }
     }
 
     override fun saveMessageObserver(message: Message) {
@@ -236,7 +235,10 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
     }
 
     override fun showAlertDialogDeleteMessages() {
-        DeleteMessagesDialog(dialogClickListener = this).show(childFragmentManager, "DeleteMessagesFragment")
+        DeleteMessagesDialog(dialogClickListener = this).show(
+            childFragmentManager,
+            "DeleteMessagesFragment"
+        )
     }
 
     override fun recyclerViewScrollDown() {
@@ -244,7 +246,9 @@ class DetailsMessagesFragment : Fragment(), DetailsMessagesContract.DetailsMessa
             val heightDiff: Int =
                 binding.recyclerViewMessages.rootView.height - binding.recyclerViewMessages.height
             if (heightDiff > 100) {
-                if (adapter.itemCount > 0) binding.recyclerViewMessages.smoothScrollToPosition(adapter.itemCount - 1)
+                if (adapter.itemCount > 0) binding.recyclerViewMessages.smoothScrollToPosition(
+                    adapter.itemCount - 1
+                )
             }
         }
     }
