@@ -18,12 +18,12 @@
         <TextView
             android:id="@+id/textview_current_user_name"
             android:layout_width="wrap_content"
-            android:textColor="@color/white"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/_60sdp"
             android:layout_marginEnd="@dimen/_60sdp"
             android:maxLines="1"
+            android:textColor="@color/white"
             android:textSize="@dimen/_14ssp"
             android:textStyle="bold" />
 
@@ -73,11 +73,11 @@
                 android:layout_width="@dimen/_125sdp"
                 android:layout_height="@dimen/_125sdp"
                 android:layout_gravity="center"
-                app:strokeWidth="@dimen/_1sdp"
-                app:strokeColor="@color/black"
                 android:background="@drawable/background_shapeableimageview"
                 android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/circleShapeableImageView" />
+                app:shapeAppearanceOverlay="@style/circleShapeableImageView"
+                app:strokeColor="@color/black"
+                app:strokeWidth="@dimen/_1sdp" />
 
         </FrameLayout>
 

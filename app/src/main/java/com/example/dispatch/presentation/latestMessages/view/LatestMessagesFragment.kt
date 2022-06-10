@@ -78,7 +78,8 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
             binding.textViewProfileFullname.text = userDetails.fullname
 
             if (userDetails.photoProfileUrl.isNotEmpty()) {
-                Picasso.get().load(userDetails.photoProfileUrl).transform(CropCircleTransformation())
+                Picasso.get().load(userDetails.photoProfileUrl)
+                    .transform(CropCircleTransformation())
                     .into(binding.shapeableImageViewProfileImage)
             }
         }
@@ -105,13 +106,15 @@ class LatestMessagesFragment : Fragment(), LatestMessagesContract.LatestMessages
             listMessages.forEach { message ->
                 lifecycleScope.launch {
                     if (message.fromUserUid == viewModel.userDetails.value?.uid) {
-                        viewModel.getUserDetailsPublicOnUid(uid = message.toUserUid).collect { user ->
-                            adapterAddLatestMessage(message = message, user = user)
-                        }
+                        viewModel.getUserDetailsPublicOnUid(uid = message.toUserUid)
+                            .collect { user ->
+                                adapterAddLatestMessage(message = message, user = user)
+                            }
                     } else {
-                        viewModel.getUserDetailsPublicOnUid(uid = message.fromUserUid).collect { user ->
-                            adapterAddLatestMessage(message = message, user = user)
-                        }
+                        viewModel.getUserDetailsPublicOnUid(uid = message.fromUserUid)
+                            .collect { user ->
+                                adapterAddLatestMessage(message = message, user = user)
+                            }
                     }
                 }
             }

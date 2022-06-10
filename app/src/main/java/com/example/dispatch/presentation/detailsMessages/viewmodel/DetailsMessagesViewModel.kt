@@ -46,29 +46,32 @@ class DetailsMessagesViewModel @Inject constructor(
             }
         }
 
-    override fun translateRussianEnglishText(text: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
-        try {
-            translateRussianEnglishTextUseCase.execute(text = text).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun translateRussianEnglishText(text: String): LiveData<Response<String>> =
+        liveData(Dispatchers.IO) {
+            try {
+                translateRussianEnglishTextUseCase.execute(text = text).collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
         }
-    }
 
-    override fun translateEnglishRussianText(text: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
-        try {
-            translateEnglishRussianTextUseCase.execute(text = text).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun translateEnglishRussianText(text: String): LiveData<Response<String>> =
+        liveData(Dispatchers.IO) {
+            try {
+                translateEnglishRussianTextUseCase.execute(text = text).collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
         }
-    }
 
-    override fun languageIdentifier(text: String): LiveData<Response<String>> = liveData(Dispatchers.IO) {
-        try {
-            languageIdentifierUseCase.execute(text = text).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun languageIdentifier(text: String): LiveData<Response<String>> =
+        liveData(Dispatchers.IO) {
+            try {
+                languageIdentifierUseCase.execute(text = text).collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
         }
-    }
 
     override fun getCurrentUserUid() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -76,19 +79,22 @@ class DetailsMessagesViewModel @Inject constructor(
                 when (result) {
                     is Response.Loading -> {}
                     is Response.Fail -> {}
-                    is Response.Success -> this@DetailsMessagesViewModel._currUserUid.postValue(result.data)
+                    is Response.Success -> this@DetailsMessagesViewModel._currUserUid.postValue(
+                        result.data
+                    )
                 }
             }
         }
     }
 
-    override fun saveMessage(message: Message): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            saveMessageUseCase.execute(message = message).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun saveMessage(message: Message): LiveData<Response<Boolean>> =
+        liveData(Dispatchers.IO) {
+            try {
+                saveMessageUseCase.execute(message = message).collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
         }
-    }
 
     override fun saveLatestMessage(message: Message) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -99,7 +105,8 @@ class DetailsMessagesViewModel @Inject constructor(
     override fun listenFromToUserMessages(fromToUser: FromToUser): LiveData<Response<Message>> =
         liveData(Dispatchers.IO) {
             try {
-                listenFromToUserMessagesUseCase.execute(fromToUser = fromToUser).collect { emit(it) }
+                listenFromToUserMessagesUseCase.execute(fromToUser = fromToUser)
+                    .collect { emit(it) }
             } catch (e: Exception) {
                 emit(Response.Fail(e = e))
             }

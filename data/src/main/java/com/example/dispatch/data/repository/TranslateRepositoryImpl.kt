@@ -7,7 +7,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
-class TranslateRepositoryImpl(private val translateStorage: TranslateStorage) : TranslateRepository {
+class TranslateRepositoryImpl(private val translateStorage: TranslateStorage) :
+    TranslateRepository {
     override suspend fun downloadLangRussianEnglishPack(): Flow<Response<Boolean>> {
         return translateStorage.downloadLangRussianEnglishPack()
     }

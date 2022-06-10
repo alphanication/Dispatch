@@ -82,18 +82,19 @@ class FirebaseUserAuthStorage : UserAuthStorage {
         awaitClose { this.cancel() }
     }
 
-    override suspend fun restorePasswordByEmail(email: String): Flow<Response<Boolean>> = callbackFlow {
-        trySend(Response.Loading())
+    override suspend fun restorePasswordByEmail(email: String): Flow<Response<Boolean>> =
+        callbackFlow {
+            trySend(Response.Loading())
 
-        fAuth.sendPasswordResetEmail(email)
-            .addOnSuccessListener {
-                trySend(Response.Success(data = true))
-            }.addOnFailureListener { e ->
-                trySend(Response.Fail(e = e))
-            }
+            fAuth.sendPasswordResetEmail(email)
+                .addOnSuccessListener {
+                    trySend(Response.Success(data = true))
+                }.addOnFailureListener { e ->
+                    trySend(Response.Fail(e = e))
+                }
 
-        awaitClose { this.cancel() }
-    }
+            awaitClose { this.cancel() }
+        }
 
     override suspend fun changeEmail(
         userAuth: UserAuth,

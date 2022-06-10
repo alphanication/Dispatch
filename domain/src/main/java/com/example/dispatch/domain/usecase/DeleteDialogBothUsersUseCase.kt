@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class DeleteDialogBothUsersUseCase(private val messageRepository: MessageRepository) {
-    suspend fun execute(fromToUser: FromToUser) : Flow<Response<Boolean>> {
+    suspend fun execute(fromToUser: FromToUser): Flow<Response<Boolean>> {
         return messageRepository.deleteDialogBothUsers(fromToUser = fromToUser)
     }
 }

@@ -34,53 +34,55 @@ class MlKitTranslateStorage : TranslateStorage {
         awaitClose { this.cancel() }
     }
 
-    override suspend fun translateRussianEnglishText(text: String): Flow<Response<String>> = callbackFlow {
-        trySend(Response.Loading())
+    override suspend fun translateRussianEnglishText(text: String): Flow<Response<String>> =
+        callbackFlow {
+            trySend(Response.Loading())
 
-        val options = TranslatorOptions.Builder()
-            .setSourceLanguage(TranslateLanguage.RUSSIAN)
-            .setTargetLanguage(TranslateLanguage.ENGLISH)
-            .build()
-        val russianEnglishTranslator = Translation.getClient(options)
+            val options = TranslatorOptions.Builder()
+                .setSourceLanguage(TranslateLanguage.RUSSIAN)
+                .setTargetLanguage(TranslateLanguage.ENGLISH)
+                .build()
+            val russianEnglishTranslator = Translation.getClient(options)
 
-        russianEnglishTranslator.downloadModelIfNeeded()
-            .addOnSuccessListener {
-                russianEnglishTranslator.translate(text)
-                    .addOnSuccessListener { textTranslated ->
-                        trySend(Response.Success(data = textTranslated))
-                    }.addOnFailureListener { e ->
-                        trySend(Response.Fail(e = e))
-                    }
-            }.addOnFailureListener { e ->
-                trySend(Response.Fail(e = e))
-            }
+            russianEnglishTranslator.downloadModelIfNeeded()
+                .addOnSuccessListener {
+                    russianEnglishTranslator.translate(text)
+                        .addOnSuccessListener { textTranslated ->
+                            trySend(Response.Success(data = textTranslated))
+                        }.addOnFailureListener { e ->
+                            trySend(Response.Fail(e = e))
+                        }
+                }.addOnFailureListener { e ->
+                    trySend(Response.Fail(e = e))
+                }
 
-        awaitClose { this.cancel() }
-    }
+            awaitClose { this.cancel() }
+        }
 
-    override suspend fun translateEnglishRussianText(text: String): Flow<Response<String>> = callbackFlow {
-        trySend(Response.Loading())
+    override suspend fun translateEnglishRussianText(text: String): Flow<Response<String>> =
+        callbackFlow {
+            trySend(Response.Loading())
 
-        val options = TranslatorOptions.Builder()
-            .setSourceLanguage(TranslateLanguage.ENGLISH)
-            .setTargetLanguage(TranslateLanguage.RUSSIAN)
-            .build()
-        val englishRussianTranslator = Translation.getClient(options)
+            val options = TranslatorOptions.Builder()
+                .setSourceLanguage(TranslateLanguage.ENGLISH)
+                .setTargetLanguage(TranslateLanguage.RUSSIAN)
+                .build()
+            val englishRussianTranslator = Translation.getClient(options)
 
-        englishRussianTranslator.downloadModelIfNeeded()
-            .addOnSuccessListener {
-                englishRussianTranslator.translate(text)
-                    .addOnSuccessListener { textTranslated ->
-                        trySend(Response.Success(data = textTranslated))
-                    }.addOnFailureListener { e ->
-                        trySend(Response.Fail(e = e))
-                    }
-            }.addOnFailureListener { e ->
-                trySend(Response.Fail(e = e))
-            }
+            englishRussianTranslator.downloadModelIfNeeded()
+                .addOnSuccessListener {
+                    englishRussianTranslator.translate(text)
+                        .addOnSuccessListener { textTranslated ->
+                            trySend(Response.Success(data = textTranslated))
+                        }.addOnFailureListener { e ->
+                            trySend(Response.Fail(e = e))
+                        }
+                }.addOnFailureListener { e ->
+                    trySend(Response.Fail(e = e))
+                }
 
-        awaitClose { this.cancel() }
-    }
+            awaitClose { this.cancel() }
+        }
 
     override suspend fun languageIndentifier(text: String): Flow<Response<String>> = callbackFlow {
         trySend(Response.Loading())

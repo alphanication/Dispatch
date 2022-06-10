@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class SaveLatestMessageUseCase(private val messageRepository: MessageRepository) {
-    suspend fun execute(message: Message) : Flow<Response<Boolean>> {
+    suspend fun execute(message: Message): Flow<Response<Boolean>> {
         return messageRepository.saveLatestMessage(message = message)
     }
 }

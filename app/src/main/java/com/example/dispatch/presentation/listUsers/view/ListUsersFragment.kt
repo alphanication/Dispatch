@@ -100,8 +100,10 @@ class ListUsersFragment : Fragment(), ListUsersContract.ListUsersFragment {
     }
 
     override fun navigateToDetailsMessagesFragmentTransferSelectedUser(selectedUserUid: String) {
-        findNavController().navigate(R.id.action_listUsersFragment_to_detailsMessagesFragment, Bundle().apply {
-            putString(DetailsMessagesFragment.SELECTED_USER_UID, selectedUserUid)
-        })
+        findNavController().navigate(
+            R.id.action_listUsersFragment_to_detailsMessagesFragment,
+            Bundle().apply {
+                putString(DetailsMessagesFragment.SELECTED_USER_UID, selectedUserUid)
+            })
     }
 }

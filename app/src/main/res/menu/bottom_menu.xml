@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:title="@string/bottomMenu_messages"
         android:id="@+id/latestMessagesFragment"
-        android:icon="@drawable/ic_mail" />
+        android:icon="@drawable/ic_mail"
+        android:title="@string/bottomMenu_messages" />
 
     <item
-        android:title="@string/bottomMenu_profile"
         android:id="@+id/currentUserProfileFragment"
-        android:icon="@drawable/ic_person" />
+        android:icon="@drawable/ic_person"
+        android:title="@string/bottomMenu_profile" />
 </menu>

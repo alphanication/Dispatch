@@ -42,18 +42,20 @@ class CurrentUserProfileViewModel @Inject constructor(
         }
     }
 
-    override fun getCurrentUserDetails(): LiveData<Response<UserDetails>> = liveData(Dispatchers.IO) {
-        try {
-            getCurrentUserDetailsUseCase.execute().collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
+    override fun getCurrentUserDetails(): LiveData<Response<UserDetails>> =
+        liveData(Dispatchers.IO) {
+            try {
+                getCurrentUserDetailsUseCase.execute().collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
         }
-    }
 
     override fun saveUserImageProfile(imageUriCache: String): LiveData<Response<String>> =
         liveData(Dispatchers.IO) {
             try {
-                saveUserImageProfileUseCase.execute(newImageUriStr = imageUriCache).collect { emit(it) }
+                saveUserImageProfileUseCase.execute(newImageUriStr = imageUriCache)
+                    .collect { emit(it) }
             } catch (e: Exception) {
                 emit(Response.Fail(e))
             }
@@ -69,7 +71,10 @@ class CurrentUserProfileViewModel @Inject constructor(
             }
         }
 
-    override fun changeUserAuthEmail(userAuth: UserAuth, newEmail: String): LiveData<Response<Boolean>> =
+    override fun changeUserAuthEmail(
+        userAuth: UserAuth,
+        newEmail: String
+    ): LiveData<Response<Boolean>> =
         liveData(Dispatchers.IO) {
             try {
                 changeUserAuthEmailUseCase.execute(userAuth = userAuth, newEmail = newEmail)
@@ -79,18 +84,25 @@ class CurrentUserProfileViewModel @Inject constructor(
             }
         }
 
-    override fun changeUserDetailsEmail(newEmail: String): LiveData<Response<Boolean>> = liveData(Dispatchers.IO) {
-        try {
-            changeUserDetailsEmailUseCase.execute(newEmail = newEmail).collect { emit(it) }
-        } catch (e: Exception) {
-            emit(Response.Fail(e = e))
-        }
-    }
-
-    override fun changeUserAuthPassword(userAuth: UserAuth, newPassword: String): LiveData<Response<Boolean>> =
+    override fun changeUserDetailsEmail(newEmail: String): LiveData<Response<Boolean>> =
         liveData(Dispatchers.IO) {
             try {
-                changeUserAuthPasswordUseCase.execute(userAuth = userAuth, newPassword = newPassword)
+                changeUserDetailsEmailUseCase.execute(newEmail = newEmail).collect { emit(it) }
+            } catch (e: Exception) {
+                emit(Response.Fail(e = e))
+            }
+        }
+
+    override fun changeUserAuthPassword(
+        userAuth: UserAuth,
+        newPassword: String
+    ): LiveData<Response<Boolean>> =
+        liveData(Dispatchers.IO) {
+            try {
+                changeUserAuthPasswordUseCase.execute(
+                    userAuth = userAuth,
+                    newPassword = newPassword
+                )
                     .collect { emit(it) }
             } catch (e: Exception) {
                 emit(Response.Fail(e = e))
@@ -100,7 +112,8 @@ class CurrentUserProfileViewModel @Inject constructor(
     override fun changeUserDetailsPassword(newPassword: String): LiveData<Response<Boolean>> =
         liveData(Dispatchers.IO) {
             try {
-                changeUserDetailsPasswordUseCase.execute(newPassword = newPassword).collect { emit(it) }
+                changeUserDetailsPasswordUseCase.execute(newPassword = newPassword)
+                    .collect { emit(it) }
             } catch (e: Exception) {
                 emit(Response.Fail(e = e))
             }
@@ -109,7 +122,8 @@ class CurrentUserProfileViewModel @Inject constructor(
     override fun changeUserDetailsFullname(newFullname: String): LiveData<Response<Boolean>> =
         liveData(Dispatchers.IO) {
             try {
-                changeUserDetailsFullnameUseCase.execute(newFullname = newFullname).collect { emit(it) }
+                changeUserDetailsFullnameUseCase.execute(newFullname = newFullname)
+                    .collect { emit(it) }
             } catch (e: Exception) {
                 emit(Response.Fail(e = e))
             }

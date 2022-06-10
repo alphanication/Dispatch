@@ -29,7 +29,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.CurrentUserProfileFragment {
+class CurrentUserProfileFragment : Fragment(),
+    CurrentUserProfileContract.CurrentUserProfileFragment {
     private lateinit var binding: FragmentCurrentUserProfileBinding
     private val viewModel: CurrentUserProfileViewModel by viewModels()
     private var userDetails: UserDetails = UserDetails()
@@ -88,7 +89,8 @@ class CurrentUserProfileFragment : Fragment(), CurrentUserProfileContract.Curren
             binding.edittextEmail.setText(userDetailsGet.email)
 
             if (userDetailsGet.photoProfileUrl.isNotEmpty()) {
-                Picasso.get().load(userDetailsGet.photoProfileUrl).transform(CropCircleTransformation())
+                Picasso.get().load(userDetailsGet.photoProfileUrl)
+                    .transform(CropCircleTransformation())
                     .into(binding.shapeableimagePhotoUser)
             }
         }
